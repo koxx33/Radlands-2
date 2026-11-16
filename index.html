@@ -5,7 +5,7 @@
 <meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="theme-color" content="#5a1e5e">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>Radlands 2 – Gangy pustiny</title>
-<meta name="version" content="2.7">
+<meta name="version" content="2.8">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -634,6 +634,73 @@ h1 .h2b{font-size:.5em!important;margin-left:2px!important;padding:6px 12px!impo
 .ucheck{display:flex;align-items:center;gap:10px;justify-content:center;background:#fff;border:2.5px solid #111;border-radius:10px;box-shadow:2px 2px 0 #111;padding:8px;margin:8px 0;font-weight:700;font-size:16px}
 .ucheck input{width:22px;height:22px;accent-color:#ff3d7f}
 .ctrl.ucol{flex-direction:column}.ctrl.ucol .btn{width:100%}
+
+/* ===== 2.8 prostředí, úvod, menu, pravidla ===== */
+body{background:#1c0b2b!important}
+#scene{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;transition:filter .8s}
+#scene svg{position:absolute;inset:0;width:100%;height:100%}
+#app{position:relative;z-index:1}
+body.sc-game #scene{filter:brightness(.42) saturate(.85)}
+body.sc-game.sc-ai #scene{filter:brightness(.38) saturate(1.3) hue-rotate(-18deg)}
+.sc-sun{animation:scSun 6s ease-in-out infinite;transform-origin:200px 410px}
+@keyframes scSun{50%{transform:translateY(-6px) scale(1.02)}}
+.sc-cloud{animation:scCloud 70s linear infinite}.sc-cloud.c2{animation-duration:95s;animation-delay:-40s}
+@keyframes scCloud{from{transform:translateX(-180px)}to{transform:translateX(440px)}}
+.sc-bird{animation:scBird 24s linear infinite}
+@keyframes scBird{0%{transform:translate(-40px,200px) scale(.8)}50%{transform:translate(200px,150px) scale(1)}100%{transform:translate(440px,210px) scale(.8)}}
+.sc-stars{animation:scTw 4s ease-in-out infinite}@keyframes scTw{50%{opacity:.5}}
+.sc-dust{position:absolute;inset:-20%;background:radial-gradient(circle,rgba(255,220,170,.55) 0 1.2px,transparent 2px) 0 0/53px 47px,radial-gradient(circle,rgba(255,200,150,.35) 0 1px,transparent 1.8px) 20px 10px/31px 37px;animation:scDust 18s linear infinite;opacity:.7}
+@keyframes scDust{to{transform:translate(-106px,47px)}}
+body.noanim #scene *{animation:none!important}
+@media (prefers-reduced-motion:reduce){#scene *{animation:none!important}}
+#app.game .board{background:rgba(30,8,14,.45)!important;border:2px solid rgba(255,190,120,.25)!important;box-shadow:inset 0 0 18px rgba(0,0,0,.55)}
+/* splash */
+body.splashing #app{opacity:0}#app{transition:opacity .5s}
+#splash{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 70%,rgba(255,150,60,.0),rgba(20,6,30,.55));cursor:pointer;transition:opacity .5s,transform .5s;font-family:Bangers,Impact,sans-serif}
+#splash.out{opacity:0;transform:scale(1.15)}
+.sp-logo{position:relative;text-align:center;margin-top:-18vh}
+.sp-h1{font-size:min(17vw,96px);letter-spacing:2px;color:#ffe14d;-webkit-text-stroke:3px #111;text-shadow:5px 5px 0 #111;white-space:nowrap}
+.sp-h1 span{display:inline-block;animation:spDrop .55s cubic-bezier(.3,1.6,.5,1) both}
+.sp-h1 span:nth-child(1){animation-delay:.25s}.sp-h1 span:nth-child(2){animation-delay:.33s}.sp-h1 span:nth-child(3){animation-delay:.41s}.sp-h1 span:nth-child(4){animation-delay:.49s}.sp-h1 span:nth-child(5){animation-delay:.57s}.sp-h1 span:nth-child(6){animation-delay:.65s}.sp-h1 span:nth-child(7){animation-delay:.73s}.sp-h1 span:nth-child(8){animation-delay:.81s}
+@keyframes spDrop{0%{transform:translateY(-70vh) rotate(-25deg)}100%{transform:none}}
+.sp-2{position:absolute;right:-6%;top:-28%;width:min(18vw,90px);height:min(18vw,90px);display:flex;align-items:center;justify-content:center;font-size:min(13vw,68px);color:#111;background:#ff3d7f;border:4px solid #111;clip-path:polygon(50% 0,61% 18%,82% 8%,80% 30%,100% 38%,84% 54%,96% 74%,74% 76%,70% 98%,52% 84%,32% 100%,28% 78%,6% 78%,16% 58%,0 40%,20% 30%,16% 8%,38% 18%);animation:spStamp .45s cubic-bezier(.3,1.8,.5,1) 1.25s both}
+@keyframes spStamp{0%{transform:scale(4) rotate(-90deg);opacity:0}100%{transform:rotate(12deg);opacity:1}}
+.sp-sub{display:inline-block;margin-top:10px;font-size:min(8vw,40px);letter-spacing:4px;color:#111;background:#e8e8e8;border:3px solid #111;box-shadow:4px 4px 0 #111;padding:2px 16px;transform:rotate(-2deg);animation:spSub .5s ease-out 1.55s both}
+@keyframes spSub{0%{transform:translateX(-120vw) rotate(-2deg)}80%{transform:translateX(12px) rotate(-2deg)}100%{transform:rotate(-2deg)}}
+.sp-burst{position:absolute;left:50%;top:41%;width:140vmax;height:140vmax;margin:-70vmax 0 0 -70vmax;background:repeating-conic-gradient(rgba(255,225,77,.18) 0 8deg,transparent 8deg 16deg);border-radius:50%;z-index:-1;animation:spBurst 1s ease-out 1.1s both,artSpin 40s linear 2.1s infinite}
+@keyframes spBurst{0%{transform:scale(0);opacity:0}100%{transform:scale(1);opacity:1}}
+.sp-tap{position:absolute;bottom:16vh;font-size:min(7vw,34px);color:#fff;-webkit-text-stroke:1.5px #111;text-shadow:3px 3px 0 #111;letter-spacing:2px;opacity:0;transition:opacity .4s}
+#splash.ready .sp-tap{opacity:1;animation:spBlink 1.1s ease-in-out infinite}
+@keyframes spBlink{50%{transform:scale(1.08)}}
+.sp-skip{position:absolute;bottom:4vh;font-family:"Patrick Hand",sans-serif;font-size:14px;color:#ffe9c9;opacity:.7}
+body.noanim #splash *{animation:none!important}
+/* menu */
+#app.menu .logo{display:flex;flex-direction:column;align-items:center;gap:clamp(4px,1vh,12px)}
+#app.menu .mgap{flex:1 1 auto;min-height:clamp(10px,6vh,120px)}
+#app.menu{justify-content:flex-start!important;padding-top:clamp(14px,6vh,70px)!important}
+#app.menu .btn.mresume{background:#ffe14d;color:#111}
+.mplayers{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center;justify-content:center;width:100%;font-family:"Patrick Hand",sans-serif;font-size:clamp(14px,2vh,19px);background:#fff4d6;border:2.5px solid #111;border-radius:12px;box-shadow:3px 3px 0 #111;padding:clamp(5px,.9vh,10px) 8px;cursor:pointer;color:#111}
+.mplayers b{font-family:Bangers,sans-serif;letter-spacing:.5px;font-weight:400;font-size:1.1em}
+.mplayers .ed{margin-left:auto}
+.mtiles{display:grid;grid-auto-columns:minmax(0,1fr);grid-auto-flow:column;gap:var(--g,8px)}
+.mtile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:#fff4d6;border:2.5px solid #111;border-radius:12px;box-shadow:3px 3px 0 #111;padding:clamp(5px,1vh,12px) 2px;cursor:pointer;color:#111;min-width:0}
+.mtile .ti{font-size:clamp(22px,3.4vh,36px);line-height:1;display:flex}.mtile .ti .ic{width:clamp(22px,3.4vh,36px);height:clamp(22px,3.4vh,36px)}
+.mtile .tl{font-family:Bangers,sans-serif;font-size:clamp(13px,1.9vh,19px);letter-spacing:.5px;white-space:nowrap}
+.mtile.off{background:#d8cfc0;opacity:.85}
+.mtile:active,.mplayers:active{transform:translate(2px,2px);box-shadow:1px 1px 0 #111}
+#app.menu .foot{opacity:.92}
+/* pravidla po stránkách */
+.rsheet{height:min(66dvh,560px);display:flex;flex-direction:column;overflow:hidden!important}
+.rpage{flex:1 1 auto;overflow:auto;padding:2px 2px 6px;font-size:18px}
+.rpage>h3:first-child{margin-top:4px}
+.rin-r{animation:rinR .25s ease-out}.rin-l{animation:rinL .25s ease-out}
+@keyframes rinR{from{transform:translateX(40%);opacity:0}}@keyframes rinL{from{transform:translateX(-40%);opacity:0}}
+.rnav{display:flex;align-items:center;gap:8px;margin-top:6px}
+.rnav .btn{flex:0 0 54px;font-size:26px;padding:2px 0}
+.rdots{flex:1;display:flex;justify-content:center;gap:7px}
+.rdots span{width:12px;height:12px;border-radius:50%;border:2px solid #111;background:#fff;cursor:pointer}
+.rdots span.on{background:#ff3d7f;transform:scale(1.25)}
+.rhint{text-align:center;font-size:13px!important;opacity:.7}
 </style>
 </head>
 <body>
@@ -641,7 +708,7 @@ h1 .h2b{font-size:.5em!important;margin-left:2px!important;padding:6px 12px!impo
 <div id="rotate"><div class="rotbox"><div class="rotph">📱</div><h2>OTOČ TELEFON!</h2><p>Radlands se hraje na výšku.</p></div></div>
 <script>
 /* ===================== ZÁKLAD ===================== */
-const APP_VERSION='2.7';
+const APP_VERSION='2.8';
 let UID=1; const nid=()=>UID++;
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
@@ -1182,8 +1249,7 @@ function detailHTML(g){const I=infoByKey(g,g.detail);if(!I)return'';const d=I.de
 function promptHTML(g){const pr=g.prompt;const hc=pr.options.filter(o=>o.ref&&o.ref.t==='hand');
  const handRow=hc.length?`<div class="pcards">${hc.map(o=>{const h=g.pl[o.ref.p].hand.find(x=>x.uid===o.ref.uid);return h?cardFace(g,DEF(h.id),{k:'h'+h.uid}):'';}).join('')}</div>`:'';
  return `<div class="prompt"><div class="in"><div class="t">🎯 ${g.names[pr.p]}: ${pr.text}</div><div style="font-size:12px;opacity:.7;margin-bottom:6px">${hc.length?'Klepni na kartu – zobrazí se velká a pak ji potvrdíš.':'Klepni na zvýrazněnou kartu nebo na tlačítko.'}</div>${handRow}<div class="opts">${pr.options.filter(o=>!(o.ref&&o.ref.t==='hand')).map((o)=>{const i=pr.options.indexOf(o);return `<button class="btn ${o.ref?'sec':''}" data-act="opt" data-arg="${i}">${o.label||(o.ref?nameRef(g,o.ref)+(o.ref.p!==viewer(g)?' (soupeř)':''):'?')}</button>`;}).join('')}${pr.optional?'<button class="btn sec" data-act="skip">Zrušit</button>':''}</div></div></div>`;}
-function rulesHTML(){return `<div class="sheet-bg"><div class="sheet rules"><div class="dname">📖 Pravidla v kostce <span style="font-size:15px;opacity:.6">· verze ${APP_VERSION}</span></div>
-<h3>Symboly</h3><div class="legend"><div>${ic('water')} voda / cena</div><div>${ic('waterPlus')} voda navíc</div><div>${ic('damage')} poškoď</div><div>${ic('injure')} zraň (jen lidi)</div><div>${ic('restore')} obnov</div><div>${ic('draw')} dober kartu</div><div>${ic('raid')} nájezd</div><div>${ic('punk')} přiveď pankáče</div><div>${ic('destroy')} znič</div><div>${ic('bomb',2)} pozice události</div><div><b style="color:#19b34a">[ ]</b> vlastnost</div></div>
+function rulesSrc(){return `<h3>Symboly</h3><div class="legend"><div>${ic('water')} voda / cena</div><div>${ic('waterPlus')} voda navíc</div><div>${ic('damage')} poškoď</div><div>${ic('injure')} zraň (jen lidi)</div><div>${ic('restore')} obnov</div><div>${ic('draw')} dober kartu</div><div>${ic('raid')} nájezd</div><div>${ic('punk')} přiveď pankáče</div><div>${ic('destroy')} znič</div><div>${ic('bomb',2)} pozice události</div><div><b style="color:#19b34a">[ ]</b> vlastnost</div></div>
 <h3>Cíl</h3>Znič všechny 3 tábory soupeře dřív, než on zničí tvoje.
 <h3>Příprava</h3>Každý dostane 6 táborů a vybere si 3. Do ruky si dobereš tolik karet, kolik je součet čísel 🃏 na tvých táborech. Každý má Nájezdníky a Vodní silo. Začínající hráč má v prvním tahu jen 1 💧.
 <h3>Tah</h3><b>1. Události</b> – událost na pozici 1 se vyhodnotí, ostatní se posunou o 1 dopředu.<br><b>2. Doplnění</b> – dober 1 kartu, dostaneš 3 💧 (nevyužitá voda propadá).<br><b>3. Akce</b> v libovolném pořadí: zahrát kartu · recyklovat kartu z ruky (odhodit pro efekt v pravém rohu) · dobrat kartu za 2 💧 · vzít Vodní silo za 1 💧 · použít schopnost připravené karty.
@@ -1195,7 +1261,7 @@ function rulesHTML(){return `<div class="sheet-bg"><div class="sheet rules"><div
 <h3>Konec</h3>Když balíček dojde, odhozené karty se zamíchají. Když dojde podruhé, je remíza. Plný stůl? Můžeš nejdřív zničit svého člověka a uvolnit místo (pravidla v1.2).
 <h3>Ovládání</h3>Klepni na kartu – uvidíš celý text a tlačítka (Zahrát, Recyklovat, Použít). Při výběru cíle se karty zvýrazní.
 <h3>Poznámka</h3>Neoficiální fanouškovská verze. Texty karet jsou převyprávěné a zjednodušené, názvy nemusí odpovídat českému vydání a ceny jsou orientační. Chybí tábory Obelisk, Staveniště a Tábor žoldáků; Vyvýšené místo neumí přeskládat lidi. Oficiální pravidla: <a href="https://www.tlamagames.com/user/documents/upload/pravidla/Radlands_CZ_WEB_12.pdf">PDF od TLAMA games</a>.
-<div class="ctrl"><button class="btn" data-act="closeRules">Zavřít</button></div></div></div>`;}
+`;}
 
 function mlogHTML(g){const me=viewer(g),opn=g.names[1-me];const L=g.log.slice(-8).reverse();
  return `<div class="mlbg" data-act="mlClose"></div><div class="mlog">${L.map((x,i)=>`<div class="${x.includes(opn)?'op':''} ${i===0?'top':''}">${x}</div>`).join('')||'<div>Zatím nic.</div>'}<button class="btn sec" data-act="log">📜 Celý záznam</button></div>`;}
@@ -1207,7 +1273,7 @@ function discHTML(g){const n=g.discard.length;if(!n)return `<div class="sheet-bg
  <div class="ln" style="opacity:.75">V odhazovacím balíčku: ${n} ${n===1?'karta':n<5?'karty':'karet'}. Klepnutím na kartu níže ji zobrazíš.</div><div class="pcards">${row}</div><div class="ctrl"><button class="btn" data-act="discClose">Zavřít</button></div></div></div>`;}
 
 /* ---------- aktualizace jen po potvrzení ---------- */
-const CHANGES={'2.7':['Detail karty na průhledném pozadí – karta vyskočí nad stůl.','Aktualizace jen po potvrzení: Aktualizovat / Teď ne / Přeskočit tuto verzi.','U nové verze se ukáže, co se opravilo a co přibylo.','V menu je tlačítko verze s panelem aktualizací.'],
+const CHANGES={'2.8':['Úvodní animace – klepnutím vstoupíš do hry a zapneš zvuk.','Nové uspořádání menu s ikonami, jména a tábory v okně ✏️.','Živá scéna pustiny se západem slunce v menu i za herním stolem (v tahu Automy zrudne).','Pravidla po stránkách – listuj přejetím prstem.'],'2.7':['Detail karty na průhledném pozadí – karta vyskočí nad stůl.','Aktualizace jen po potvrzení: Aktualizovat / Teď ne / Přeskočit tuto verzi.','U nové verze se ukáže, co se opravilo a co přibylo.','V menu je tlačítko verze s panelem aktualizací.'],
  '2.6':['Animované obrázky na kartách.','Vysouvací okna.','Prohlížení odhozených karet (🗑).','Mini-záznam po klepnutí na prostřední řádek.'],
  '2.5':['Hudba ve 4 stylech a zvuky pustiny.']};
 const UPDKEY='radlands2_upd_v1';let UPDS={auto:true,skip:''};try{Object.assign(UPDS,JSON.parse(localStorage.getItem(UPDKEY)||'{}'));}catch(e){}
@@ -1233,18 +1299,66 @@ function updPanelHTML(){const st={checking:'🔄 Kontroluji…',latest:'✅ Má�
  <div class="ln"><b>Co je nového ve verzi ${APP_VERSION}:</b></div>${notesHTML(CHANGES[APP_VERSION])}
  <div class="ctrl">${UPD.newer?'<button class="btn" data-act="updShow">🆕 Zobrazit novou verzi</button>':`<button class="btn sec" data-act="updCheck">🔄 Zkontrolovat teď</button>`}<button class="btn sec" data-act="updClose">Zavřít</button></div>
  <div class="ln" style="font-size:13px;opacity:.75;text-align:center">Bez tvého potvrzení se hra sama nezmění.</div></div></div>`;}
+
+const RPAGES=[{t:'🎯 Cíl a příprava',s:[1,2]},{t:'🔄 Průběh tahu',s:[3]},{t:'🛡 Sloupce a ochrana',s:[4,6]},{t:'💢 Poškození',s:[5]},{t:'💣 Události a nájezd',s:[7,8]},{t:'🔣 Symboly',s:[0]},{t:'🏁 Konec a ovládání',s:[9,10,11]}];
+function rulesHTML(){const sec=rulesSrc().split('<h3>').slice(1).map(x=>'<h3>'+x);const n=RPAGES.length,i=Math.max(0,Math.min(n-1,UI.rpage||0)),P=RPAGES[i];
+ return `<div class="sheet-bg"><div class="sheet rules rsheet"><div class="dname">📖 ${P.t}</div>
+ <div class="rpage ${UI.rdir>0?'rin-r':UI.rdir<0?'rin-l':''}">${P.s.map(k=>sec[k]||'').join('').replace(/^<h3>[^<]*<\/h3>/,'')}</div>
+ <div class="rnav"><button class="btn sec" data-act="rpg" data-arg="-1" ${i?'':'disabled'}>‹</button><div class="rdots">${RPAGES.map((_,k)=>`<span class="${k===i?'on':''}" data-act="rgo" data-arg="${k}"></span>`).join('')}</div><button class="btn sec" data-act="rpg" data-arg="1" ${i<n-1?'':'disabled'}>›</button></div>
+ <div class="ln rhint">Listuj přejetím prstem · strana ${i+1}/${n} · verze ${APP_VERSION}</div>
+ <div class="ctrl"><button class="btn" data-act="closeRules">Zavřít</button></div></div></div>`;}
+let _tx=null,_ty=null;
+document.addEventListener('touchstart',e=>{if(UI.rules&&e.target.closest&&e.target.closest('.rsheet')){_tx=e.touches[0].clientX;_ty=e.touches[0].clientY;}else _tx=null;},{passive:true});
+document.addEventListener('touchend',e=>{if(_tx==null||!UI.rules)return;const dx=e.changedTouches[0].clientX-_tx,dy=e.changedTouches[0].clientY-_ty;_tx=null;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.3)handle('rpg',dx<0?'1':'-1');},{passive:true});
+
+/* ---------- prostředí: scéna pustiny a úvodní animace ---------- */
+const SCENE_SVG=`<svg viewBox="0 0 400 800" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+<defs><linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c0b2b"/><stop offset=".25" stop-color="#5a1e5e"/><stop offset=".42" stop-color="#c2384a"/><stop offset=".52" stop-color="#ff8a3d"/><stop offset=".58" stop-color="#ffc463"/></linearGradient>
+<linearGradient id="sunG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3a0"/><stop offset=".55" stop-color="#ffb23e"/><stop offset="1" stop-color="#ff5a3c"/></linearGradient>
+<clipPath id="sunC"><rect x="0" y="0" width="400" height="604"/></clipPath>
+<pattern id="dotP" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" fill="#000" opacity=".22"/></pattern></defs>
+<rect width="400" height="800" fill="url(#skyG)"/><g transform="translate(0,-150)">
+<g class="sc-stars" fill="#fff">${Array.from({length:26},(_,i)=>`<circle cx="${(i*97)%400}" cy="${(i*53)%300}" r="${i%3?1:1.6}" opacity="${.35+(i%4)*.15}"/>`).join('')}</g>
+<g class="sc-sun" clip-path="url(#sunC)"><circle cx="200" cy="560" r="112" fill="url(#sunG)" stroke="#111" stroke-width="4"/>
+<g fill="#c2384a">${[0,1,2,3,4,5].map(i=>`<rect x="${98+Math.abs(i-2.5)*3}" y="${520+i*14}" width="${204-Math.abs(i-2.5)*6}" height="${3+i*1.3}"/>`).join('')}</g></g>
+<g class="sc-cloud c1"><path d="M-10 250 q30-22 60-6 q22-18 50 0 q26-4 30 14 h-140z" fill="#ff8fa0" opacity=".55"/></g>
+<g class="sc-cloud c2"><path d="M0 330 q40-26 80-8 q28-16 56 2 q24 0 26 14 h-162z" fill="#ffb37a" opacity=".5"/></g>
+<g class="sc-bird"><path d="M0 0 q8-8 16 0 q8-8 16 0" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round"/></g>
+<path d="M0 600 L30 560 L60 585 L95 540 L130 578 L160 552 L200 590 L240 548 L275 575 L310 535 L350 570 L400 545 V800 H0Z" fill="#7a2448" stroke="#111" stroke-width="3"/>
+<g fill="#3d1530" stroke="#111" stroke-width="3"><path d="M18 610 v-52 h14 v-10 h10 v10 h12 v52z"/><path d="M60 610 v-74 l8-6 l6 8 h12 v72z"/><path d="M300 610 v-58 h10 l4-10 l6 10 h16 v58z"/><path d="M342 610 v-36 h26 v36z"/>
+<path d="M330 548 l-8-50 h42 l-8 50z M326 498 h34 v-14 h-34z"/></g>
+<path d="M0 640 Q60 596 130 626 T260 618 T400 612 V800 H0Z" fill="#a8452f" stroke="#111" stroke-width="3"/>
+<path d="M0 700 Q90 654 190 690 T400 672 V800 H0Z" fill="#6b2a26" stroke="#111" stroke-width="3"/>
+<g fill="#2a0f1a" stroke="#111" stroke-width="3" stroke-linejoin="round">
+<path d="M52 704 v-46 q0-8 8-8 q8 0 8 8 v22 h8 v-14 q0-6 6-6 q6 0 6 6 v22 q0 8-8 8 h-12 v8z"/>
+<path d="M250 700 l10-22 h50 l16 12 h22 l6 12z"/><circle cx="274" cy="704" r="9"/><circle cx="330" cy="704" r="9"/>
+<path d="M150 694 q14-20 30 0 v6 h-30z"/></g>
+<path d="M0 760 Q120 724 240 752 T400 744 V800 H0Z" fill="#3a1420" stroke="#111" stroke-width="3"/>
+</g><rect x="0" y="600" width="400" height="200" fill="#3a1420"/><rect width="400" height="800" fill="url(#dotP)"/>
+</svg><div class="sc-dust"></div>`;
+function sceneInit(){if(typeof document.createElement!=='function'||document.getElementById('scene'))return;const d=document.createElement('div');d.id='scene';d.innerHTML=SCENE_SVG;document.body.insertBefore(d,document.body.firstChild);}
+function sceneMode(){if(!document.body||!document.body.classList)return;const b=document.body.classList;const inGame=UI.screen==='game'&&G&&!G.pass;b.toggle('sc-game',!!inGame);b.toggle('sc-ai',!!(inGame&&!G.over&&!G.pick&&isAI(G,G.cur)));b.toggle('noanim',!SET.anim);}
+function splashShow(){if(typeof document.createElement!=='function')return;sceneInit();const sp=document.createElement('div');sp.id='splash';
+ sp.innerHTML=`<div class="sp-logo"><div class="sp-h1"><span>R</span><span>A</span><span>D</span><span>L</span><span>A</span><span>N</span><span>D</span><span>S</span></div><div class="sp-2">2</div><div class="sp-sub">GANGY PUSTINY</div></div><div class="sp-burst"></div><div class="sp-tap">KLEPNI PRO VSTUP</div><div class="sp-skip">fanouškovská verze ${APP_VERSION}</div>`;
+ document.body.appendChild(sp);document.body.classList.add('splashing');let done=false;const go=()=>{if(done)return;done=true;try{if(SET.mOn&&(SET.sfx||SET.muOn||SET.amOn)){ac();sfx('boom');audioUpdate();}}catch(e){}sp.classList.add('out');document.body.classList.remove('splashing');setTimeout(()=>sp.remove(),520);};
+ sp.addEventListener('click',go);setTimeout(()=>sp.classList.add('ready'),SET.anim?2300:50);}
 function logHTML(g){return `<div class="sheet-bg"><div class="sheet logsheet"><div class="dname">📜 Záznam hry</div><div class="loglist">${g.log.slice().reverse().map(s=>`<div>${s}</div>`).join('')}</div><div class="ctrl"><button class="btn" data-act="closeLog">Zavřít</button></div></div></div>`;}
 function menuHTML(){const sv=loadSaved();let cont='';
- if(sv){const g=sv.g;const alive=q=>3-g.pl[q].camps.filter(c=>c.destroyed).length;cont=`<button class="btn big" data-act="resume">▶ Pokračovat v rozehrané hře</button><div class="svinfo">${g.names[0]} (${alive(0)} tábory) vs. ${g.names[1]} (${alive(1)} tábory) · uloženo ${new Date(sv.t).toLocaleString('cs-CZ',{day:'numeric',month:'numeric',hour:'2-digit',minute:'2-digit'})} · v${sv.v||'?'} <span data-act="delsave" class="dl">smazat</span></div>`;}
- return `<h1>RADLANDS<span class="h2b">2</span></h1><div class="sub">GANGY PUSTINY</div>
+ if(sv){const g=sv.g;const alive=q=>3-g.pl[q].camps.filter(c=>c.destroyed).length;cont=`<button class="btn big mresume" data-act="resume">▶ Pokračovat ve hře</button><div class="svinfo">${g.names[0]} (${alive(0)}🏕) vs. ${g.names[1]} (${alive(1)}🏕) · ${new Date(sv.t).toLocaleString('cs-CZ',{day:'numeric',month:'numeric',hour:'2-digit',minute:'2-digit'})} · v${sv.v||'?'} <span data-act="delsave" class="dl">smazat</span></div>`;}
+ const tile=(act,icon,label,on)=>`<button class="mtile ${on===false?'off':''}" data-act="${act}"><span class="ti">${icon}</span><span class="tl">${label}</span></button>`;
+ return `<div class="logo"><h1>RADLANDS<span class="h2b">2</span></h1><div class="sub">GANGY PUSTINY</div></div>
+ <div class="mgap"></div>
  ${cont}
- <div class="names"><label>Tvé jméno<input data-name="n1" maxlength="14" placeholder="Hráč" value="${(UI.n1||'').replace(/"/g,'&quot;')}"></label><label>Hráč 2 (na jednom zařízení)<input data-name="n2" maxlength="14" placeholder="Hráč 2" value="${(UI.n2||'').replace(/"/g,'&quot;')}"></label></div>
- <button class="btn big ${sv?'sec':''}" data-act="newAI">🤖 Nová hra proti Automě</button>
- <button class="btn big teal" data-act="newHot">👥 Nová hra ve dvou</button>
- <div class="row2"><button class="btn big ${UI.starter?'teal':'sec'} fsb" data-act="starterT">${UI.starter?'✔':'🏕️'} Výchozí tábory</button>${FS_OK?`<button class="btn big sec fsb" data-act="fs">${ic(isFS()?'fsOff':'fsOn')} ${isFS()?'Zmenšit':'Celá obrazovka'}</button>`:""}</div>
- <div class="row2"><button class="btn big ${SET.mOn&&SET.sfx?'teal':'sec'} fsb" data-act="snd">${SET.mOn&&SET.sfx?'🔊':'🔇'} Zvuk</button><button class="btn big ${SET.anim?'teal':'sec'} fsb" data-act="tAnim">${SET.anim?'✨':'⏸'} Animace</button></div>
- <div class="row2"><button class="btn big sec" data-act="rules">📖 Pravidla</button><button class="btn big" data-act="quit" style="background:#3b2a24;color:#fff">🚪 Konec</button></div>
- <p class="foot"><button class="vbtn ${UPD.newer?'new':''}" data-act="upd">⬇️ Verze ${APP_VERSION}${UPD.newer?' · NOVÁ!':''}</button> · Rozehraná hra se ukládá automaticky. Neoficiální fanouškovská adaptace hry Daniela Piechnicka (Roxley / TLAMA games).</p>`;}
+ <button class="btn big ${sv?'sec':''}" data-act="newAI">🤖 Hrát proti Automě</button>
+ <button class="btn big teal" data-act="newHot">👥 Hra ve dvou</button>
+ <button class="mplayers" data-act="players"><span>👤 <b>${UI.n1||'Hráč'}</b></span><span>👥 <b>${UI.n2||'Hráč 2'}</b></span><span>${UI.starter?'🏕️ výchozí tábory':'🎲 výběr táborů'}</span><span class="ed">✏️</span></button>
+ <div class="mtiles">${tile('rules','📖','Pravidla')}${tile('snd',SET.mOn?'🔊':'🔇','Zvuk',SET.mOn)}${tile('tAnim',SET.anim?'✨':'⏸','Animace',SET.anim)}${FS_OK?tile('fs',ic(isFS()?'fsOff':'fsOn'),isFS()?'Zmenšit':'Na celou'):''}${tile('quit','🚪','Konec')}</div>
+ <p class="foot"><button class="vbtn ${UPD.newer?'new':''}" data-act="upd">⬇️ Verze ${APP_VERSION}${UPD.newer?' · NOVÁ!':''}</button> · Neoficiální fanouškovská adaptace hry Daniela Piechnicka (Roxley / TLAMA games).</p>`;}
+function playersHTML(){return `<div class="sheet-bg"><div class="sheet"><div class="dname">👤 Hráči a nastavení hry</div>
+ <div class="names"><label>Tvé jméno<input data-name="n1" maxlength="14" placeholder="Hráč" value="${(UI.n1||'').replace(/"/g,'&quot;')}"></label><label>Hráč 2 (na jednom telefonu)<input data-name="n2" maxlength="14" placeholder="Hráč 2" value="${(UI.n2||'').replace(/"/g,'&quot;')}"></label></div>
+ <button class="btn big ${UI.starter?'teal':'sec'}" data-act="starterT" style="width:100%">${UI.starter?'✔ Výchozí tábory (bez výběru)':'🎲 Tábory si vybíráš sám'}</button>
+ <div class="ln" style="font-size:14px;opacity:.75">Výchozí tábory = každý hráč dostane pevnou trojici táborů, výběr se přeskočí. Proti Automě hraješ pod svým jménem.</div>
+ <div class="ctrl"><button class="btn" data-act="playersClose">Hotovo</button></div></div></div>`;}
 function passHTML(g){return `<div class="full"><div style="font-size:60px">📱</div><h2>PŘEDEJ ZAŘÍZENÍ!</h2><p><b>${g.names[g.pass.p]}</b> ${g.pass.what}.</p><button class="btn big" data-act="pass">Jsem připraven</button></div>`;}
 function pickHTML(g){const pk=g.pick;return `<div class="dname" style="margin-top:8px;color:#fff;text-shadow:2px 2px 0 #111">${g.names[pk.p]}: vyber 3 tábory</div><div style="font-size:16px;background:#fff;border:2px solid #111;border-radius:8px;padding:3px 6px">Číslo ${ic('draw')} = kolik karet si na začátku dobereš.</div>
  <div class="picks">${pk.opts.map(id=>`<div class="pkc">${cardFace(g,CAMPS[id],{act:'pickT',arg:id,cls:pk.sel.includes(id)?'sel':''})}${pk.sel.includes(id)?'<span class="pkok">✔</span>':''}</div>`).join('')}</div>
@@ -1257,9 +1371,9 @@ function render(){let h='';const g=G;
  else if(g.pick)h=pickHTML(g);
  else if(!g.pl[0].camps.length||!g.pl[1].camps.length)h='<div class="status">Příprava…</div>';
  else{h=gameHTML(g);if(g.detail)h+=detailHTML(g);if(g.prompt)h+=promptHTML(g);if(UI.disc!=null&&UI.disc!==false)h+=discHTML(g);if(g.over&&!UI.log)h+=overHTML(g);if(UI.log)h+=logHTML(g);}
- if(g&&UI.screen==='game')saveGame(g);if(UI.snd)h+=sndHTML();if(UI.upd)h+=updPanelHTML();if(UI.updAsk&&UPD.newer&&UPD.info&&(UI.screen==='menu'||!g)&&!UI.quit)h+=updAskHTML();if(UI.rules)h+=rulesHTML();$app.className=((g&&UI.screen==='game'&&!g.pass)?(g.pick?'pickmode':'game'):((UI.screen==='menu'||!g)&&!UI.quit?'menu':''))+(SET.anim?'':' noanim');
+ if(g&&UI.screen==='game')saveGame(g);if(UI.snd)h+=sndHTML();if(UI.players)h+=playersHTML();if(UI.upd)h+=updPanelHTML();if(UI.updAsk&&UPD.newer&&UPD.info&&(UI.screen==='menu'||!g)&&!UI.quit)h+=updAskHTML();if(UI.rules)h+=rulesHTML();$app.className=((g&&UI.screen==='game'&&!g.pass)?(g.pick?'pickmode':'game'):((UI.screen==='menu'||!g)&&!UI.quit?'menu':''))+(SET.anim?'':' noanim');
  try{$app.style.setProperty('--adl',(-(performance.now()/1000)%16).toFixed(2)+'s');}catch(e){}
- const _old=grabRects();$app.innerHTML=h;fitCards();runFX(_old);sheetIn();audioUpdate();UI._newLog=false;}
+ const _old=grabRects();$app.innerHTML=h;fitCards();runFX(_old);sheetIn();audioUpdate();sceneMode();UI._newLog=false;UI.rdir=0;}
 function sheetIn(){if(typeof document.querySelector!=='function')return;const sh=document.querySelectorAll('.sheet');const key=[...sh].map(x=>x.firstElementChild?x.firstElementChild.textContent.slice(0,40):'').join('|')+(G&&G.detail||'');
  if(SET.anim&&sh.length&&key!==UI._sheetKey){const last=sh[sh.length-1];last.classList.add('sin');if(last.parentElement)last.parentElement.classList.add('bgin');}UI._sheetKey=sh.length?key:'';}
 
@@ -1291,12 +1405,12 @@ document.addEventListener('visibilitychange',()=>audioUpdate());
 document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('.btn'))sfx('click');if(e.target.closest('input[data-name]'))return;const a=e.target.closest('[data-act]');
  if(a){const act_=a.dataset.act,arg=a.dataset.arg;handle(act_,arg,a);return;}
  const k=e.target.closest('[data-k]');if(k&&G){const key=k.dataset.k;if(G.prompt){const o=G.prompt.options.find(o=>o.ref&&keyOf(o.ref)===key);if(o&&o.ref.t!=='hand'){resolvePrompt(o);return;}}G.detail=key;render();return;}
- if(e.target.classList.contains('sheet-bg')){if(G)G.detail=null;UI.rules=false;UI.log=false;UI.snd=false;UI.disc=false;UI.upd=false;if(!UPD.busy)UI.updAsk=false;render();}});
+ if(e.target.classList.contains('sheet-bg')){if(G)G.detail=null;UI.rules=false;UI.log=false;UI.snd=false;UI.disc=false;UI.upd=false;UI.players=false;if(!UPD.busy)UI.updAsk=false;render();}});
 function handle(a,arg,el){const g=G;const p=g?g.cur:0;
  switch(a){
  case 'newAI':newGame('ai');break;case 'newHot':newGame('hot');break;
  case 'starter':UI.starter=el.checked;break;
- case 'rules':UI.rules=true;render();break;case 'closeRules':UI.rules=false;render();break;
+ case 'rules':UI.rules=true;UI.rpage=UI.rpage||0;render();break;case 'closeRules':UI.rules=false;render();break;
  case 'upd':UI.upd=true;render();break;case 'updClose':UI.upd=false;render();break;case 'updCheck':checkUpdate(true);break;case 'updShow':UI.upd=false;UI.updAsk=true;render();break;
  case 'updAuto':UPDS.auto=el.checked;saveUpd();break;case 'updGo':doUpdate();break;case 'updLater':UI.updAsk=false;render();break;case 'updSkip':UPDS.skip=UPD.info?UPD.info.version:'';saveUpd();UI.updAsk=false;render();break;
  case 'log':UI.log=true;UI.mlog=false;render();break;case 'mlog':UI.mlog=!UI.mlog;render();break;case 'mlClose':UI.mlog=false;render();break;
@@ -1310,7 +1424,8 @@ function handle(a,arg,el){const g=G;const p=g?g.cur:0;
  case 'sndReset':Object.assign(SET,{sfx:true,anim:true,mOn:true,mV:90,eV:70,muOn:true,muV:50,amOn:true,aV:60,mus:'auto'});saveSet();busGains();audioUpdate();render();sfx('turn');break;
  case 'sw':SET[arg]=el.checked;saveSet();if(ac()){busGains();audioUpdate();}render();if(el.checked&&(arg==='sfx'||arg==='mOn'))sfx('turn');if(el.checked&&arg==='amOn'){try{aCrow();}catch(x){}}break;
  case 'tAnim':SET.anim=!SET.anim;saveSet();render();break;
- case 'starterT':UI.starter=!UI.starter;render();break;
+ case 'starterT':UI.starter=!UI.starter;render();break;case 'players':UI.players=true;render();break;case 'playersClose':UI.players=false;render();break;
+ case 'rpg':UI.rpage=Math.max(0,Math.min(RPAGES.length-1,(UI.rpage||0)+(+arg)));UI.rdir=+arg;render();break;case 'rgo':UI.rdir=(+arg>(UI.rpage||0))?1:-1;UI.rpage=+arg;render();break;
  case 'fs':toggleFS();break;
  case 'autofs':UI.autoFS=el.checked;saveFSPref();if(UI.autoFS)enterFS();else if(isFS())(document.exitFullscreen||document.webkitExitFullscreen).call(document);break;
  case 'quit':quitGame();break;
@@ -1329,7 +1444,7 @@ function handle(a,arg,el){const g=G;const p=g?g.cur:0;
  case 'junk':{const h=g.pl[p].hand.find(h=>h.uid===+arg);if(h&&myActionTime(g))act(()=>junkCard(g,p,h));break;}
  case 'ab':{const[k,i]=arg.split('|');const I=infoByKey(g,k);if(I&&myActionTime(g))act(()=>useAbility(g,p,I.ref,+i));break;}
  }}
-render();
+sceneInit();render();if(typeof location==='undefined'||!/[?&]nosplash/.test(location.search||''))splashShow();
 if('serviceWorker' in navigator&&IS_WEB){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').then(r=>{UPD.reg=r;if(UPDS.auto)setTimeout(()=>checkUpdate(false),1500);}).catch(()=>{});});
  navigator.serviceWorker.addEventListener('controllerchange',()=>{if(UPD.state==='updating')location.reload();});}
 </script>

@@ -1,10 +1,10 @@
 {
-  "version": "2.7",
+  "version": "2.8",
   "date": "2026-11-17",
   "notes": [
-    "Detail karty se zobrazí na průhledném pozadí – karta „vyskočí“ nad stůl.",
-    "Aktualizace jen po tvém potvrzení: Aktualizovat / Teď ne / Přeskočit tuto verzi.",
-    "U nové verze uvidíš, co se opravilo a co přibylo.",
-    "V menu je tlačítko verze s panelem aktualizací."
+    "Úvodní animace – klepnutím vstoupíš do hry a zapneš zvuk.",
+    "Nové uspořádání menu s ikonami, jména a tábory v okně ✏️.",
+    "Živá scéna pustiny se západem slunce v menu i za herním stolem (v tahu Automy zrudne).",
+    "Pravidla po stránkách – listuj přejetím prstem."
   ]
 }
