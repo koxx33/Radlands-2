@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="theme-color" content="#5a1e5e">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Radlands 2 – Gangy pustiny</title>
+<meta name="version" content="2.4.1">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Bangers&family=Patrick+Hand&family=Roboto+Condensed:wght@700;800&display=swap&subset=latin-ext" rel="stylesheet">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--ink:#111;--halft:radial-gradient(rgba(0,0,0,.22) 1px,transparent 1.5px) 0 0/6px 6px}
+html{background:#5a1e2e}
+body{margin:0;background:var(--halft),radial-gradient(circle at 50% 0,#ffb347,#e2552b 45%,#5a1e2e 100%);background-attachment:fixed;color:#111;font-family:"Patrick Hand","Comic Sans MS",system-ui,sans-serif;min-height:100vh}
+#app{max-width:520px;margin:0 auto;padding:6px 6px 90px}
+.cm{font-family:Bangers,Impact,"Arial Black",sans-serif;letter-spacing:.5px}
+h1{font-family:Bangers,Impact,sans-serif;letter-spacing:3px;color:#ffe14d;-webkit-text-stroke:2px #111;text-shadow:5px 5px 0 #111;font-size:64px;margin:18px 0 0;text-align:center;transform:rotate(-3deg)}
+.sub{text-align:center;margin:6px auto 14px;font-family:Bangers,sans-serif;font-size:24px;letter-spacing:3px;background:#fff;border:3px solid #111;box-shadow:4px 4px 0 #111;display:table;padding:2px 14px;transform:rotate(2deg)}
+.btn{background:#ff3d7f;color:#fff;border:3px solid #111;border-radius:10px;padding:8px 12px;font-family:Bangers,sans-serif;letter-spacing:1px;font-size:17px;cursor:pointer;box-shadow:3px 3px 0 #111}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 #111}
+.btn.sec{background:#fff4d6;color:#111}
+.btn.teal{background:#1fc7b6;color:#111}
+.btn:disabled{opacity:.4;box-shadow:none}
+.btn.big{display:block;width:100%;font-size:24px;padding:12px;margin:12px 0}
+.bar{display:flex;align-items:center;gap:6px;font-size:14px;padding:4px 6px;background:#fff4d6;border:2.5px solid #111;box-shadow:3px 3px 0 #111;border-radius:8px;margin:5px 0;flex-wrap:wrap}
+.bar .who{font-family:Bangers,sans-serif;font-size:19px;letter-spacing:1px}
+.board{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.col{display:flex;flex-direction:column;gap:5px}
+.ic{display:inline-block;width:20px;height:20px;vertical-align:middle;line-height:0}
+.ic svg{width:100%;height:100%;overflow:visible}
+.card{position:relative;border-radius:7px;height:62px;padding:2px;font-size:11px;line-height:1.05;overflow:hidden;cursor:pointer;border:2.5px solid var(--ink);box-shadow:2px 2px 0 var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;text-align:center;transition:transform .15s}
+.card .art{position:absolute;inset:3px 3px 17px;border:2px solid var(--ink);border-radius:4px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.35) 0 8deg,transparent 8deg 20deg),var(--halft),var(--artbg,#ffd84d)}
+.art span,.bc-art span{filter:drop-shadow(1.5px 0 0 #111) drop-shadow(-1.5px 0 0 #111) drop-shadow(0 1.5px 0 #111) drop-shadow(0 -1.5px 0 #111) drop-shadow(2px 3px 0 rgba(0,0,0,.45));font-size:24px;line-height:1}
+.card .nm{position:relative;z-index:1;font-family:Bangers,sans-serif;font-size:12.5px;letter-spacing:.4px;color:#fff;text-shadow:1.5px 1.5px 0 #111,-1px 1px 0 #111,1px -1px 0 #111,-1px -1px 0 #111;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 2px}
+.card .cost{position:absolute;top:1px;left:1px;width:22px;height:22px;z-index:2}
+.card .jk{position:absolute;top:1px;right:1px;z-index:2;width:22px;height:22px;background:#fff;border:2px solid #111;border-radius:50%;padding:1px}
+.card .drawv,.bigcard .drawv{position:absolute;top:1px;left:1px;z-index:2;display:flex;align-items:center;background:#fff;border:2px solid #111;border-radius:5px;padding:0 2px;font-family:Bangers,sans-serif;font-size:13px}
+.card .drawv .ic{width:13px;height:13px}
+.person{background:#fff;--artbg:#36d1c4}
+.person.unq{--artbg:#b072ff}
+.punk{background:#fff;--artbg:#8a8a8a}
+.punk .art{background:repeating-linear-gradient(45deg,#555 0 6px,#3b3b3b 6px 12px)}
+.camp{background:#2a1a12;--artbg:#ff9a3d}
+.camp .nm{color:#ffe14d}
+.event{background:repeating-linear-gradient(45deg,#ffd400 0 7px,#111 7px 14px);--artbg:#ff5a3d}
+.event .nm{background:#111;border-radius:3px}
+.silo{background:#fff;--artbg:#6cc6ff}
+.dmg{transform:rotate(-6deg) scale(.95)}
+.dmg .art{--artbg:#ff3b3b}
+.dmg::after{content:"";position:absolute;right:0;bottom:12px;width:24px;height:24px;z-index:3;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpolygon points='12,0 14.5,7 22,4 17.5,10.5 24,14 16.5,15 18,23 12,18 6,23 7.5,15 0,14 6.5,10.5 2,4 9.5,7' fill='%23ff2a2a' stroke='%23111' stroke-width='1.5'/%3E%3C/svg%3E") center/contain no-repeat}
+.dead{filter:grayscale(1) brightness(.55)}
+.dead .nm::after{content:' ☠'}
+.nr{opacity:.55}
+.tgt{outline:4px solid #ff2d75;outline-offset:1px;animation:pulse .8s infinite alternate;z-index:5}
+@keyframes pulse{from{outline-color:#ff2d75}to{outline-color:#ffe14d}}
+.empty{border:2px dashed rgba(17,17,17,.45);background:rgba(255,255,255,.12);cursor:default;height:62px;border-radius:7px}
+.camp.card{height:66px}
+.mid{display:flex;gap:6px;align-items:center;font-size:14px;padding:4px 8px;margin:7px 0;background:#fff;border:2.5px solid #111;border-radius:14px;box-shadow:3px 3px 0 #111;cursor:pointer;position:relative}
+.mid::before{content:"";position:absolute;left:18px;bottom:-9px;border:8px solid transparent;border-top-color:#111;border-bottom:0}
+.mid .lg{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.evq{display:flex;gap:3px}
+.evs{width:60px;height:30px;border:2px dashed #111;border-radius:6px;font-size:11px;display:flex;align-items:center;gap:2px;padding:0 3px;overflow:hidden;white-space:nowrap;background:rgba(255,255,255,.5)}
+.evs b{font-family:Bangers,sans-serif;font-size:15px}
+.evs.evfull{background:repeating-linear-gradient(45deg,#ffd400 0 5px,#111 5px 10px);border:2px solid #111;cursor:pointer;padding:2px}
+.evs.evfull span{background:#fff;border-radius:3px;padding:0 2px;overflow:hidden;text-overflow:ellipsis;font-family:Bangers,sans-serif;font-size:11px}
+.chip{background:#fff;border:2px solid #111;border-radius:6px;padding:1px 5px;font-size:13px;display:inline-flex;align-items:center;gap:2px}
+.chip .ic{width:16px;height:16px}
+.water{display:flex;gap:1px;min-width:60px}
+.water .ic{width:22px;height:22px}
+.ctrl{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:6px 0}
+.hand{display:flex;gap:7px;overflow-x:auto;padding:6px 3px 12px}
+.hand .card{flex:0 0 86px;height:120px}
+.hand .card .art{inset:24px 4px 30px}
+.hand .card .art span{font-size:32px}
+.hand .card .nm{font-size:13px;position:absolute;bottom:13px;left:0;right:0}
+.hand .card .ty{position:absolute;bottom:1px;left:0;right:0;font-size:11px;display:flex;justify-content:center;align-items:center;gap:2px}
+.hand .event .ty{color:#fff;background:#111}
+.hand .card .ty .ic{width:14px;height:14px}
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;justify-content:center;z-index:30}
+.sheet{background:var(--halft),#fff4d6;width:100%;max-width:520px;border-radius:18px 18px 0 0;padding:14px 14px 24px;max-height:88vh;overflow:auto;border:3px solid #111}
+.ln{margin:6px 0;font-size:17px;line-height:1.3}
+.ab{background:#fff;border:2.5px solid #111;box-shadow:3px 3px 0 #111;border-radius:10px;padding:6px 8px;margin:8px 0;display:flex;gap:8px;align-items:center;justify-content:space-between;font-size:16px}
+/* velká karta */
+.bigcard{position:relative;width:250px;margin:4px auto 12px;border:3.5px solid #111;border-radius:14px;box-shadow:6px 6px 0 #111;padding:8px;transform:rotate(-1deg)}
+.bigcard.dmg{transform:rotate(-6deg)}
+.bc-top{display:flex;align-items:center;gap:6px;min-height:36px}
+.bc-top .cost{width:34px;height:34px;flex:0 0 34px}
+.bc-top .drawv{position:static;font-size:20px}
+.bc-top .drawv .ic{width:20px;height:20px}
+.bc-name{flex:1;font-family:Bangers,sans-serif;font-size:25px;letter-spacing:1px;line-height:1;color:#fff;text-shadow:2px 2px 0 #111,-1px 1px 0 #111,1px -1px 0 #111,-1px -1px 0 #111}
+.bc-top .junk{width:34px;height:34px;background:#fff;border:2.5px solid #111;border-radius:50%;padding:3px;flex:0 0 34px}
+.bc-top .junk .ic{width:100%;height:100%}
+.bc-art{position:relative;height:150px;margin:6px 0;border:3px solid #111;border-radius:6px;display:flex;align-items:center;justify-content:center;background:repeating-conic-gradient(from 0deg at 50% 60%,rgba(255,255,255,.4) 0 7deg,transparent 7deg 18deg),var(--halft),var(--artbg,#ffd84d);overflow:hidden}
+.bc-art span{font-size:84px}
+.bc-art .bomb{position:absolute;right:6px;bottom:8px;width:44px;height:44px;display:block;font-size:0;line-height:0;filter:none}
+.bc-art .pow{position:absolute;left:6px;top:6px;font-family:Bangers,sans-serif;font-size:22px;color:#ffe14d;-webkit-text-stroke:1.5px #111;transform:rotate(-12deg)}
+.bc-body{background:#fff;border:2.5px solid #111;border-radius:6px;padding:6px;font-size:16px;line-height:1.2;color:#111;min-height:60px}
+.abl{display:flex;align-items:center;gap:5px;margin:4px 0}
+.abl .abc{display:inline-flex;align-items:center;justify-content:center;background:#111;border-radius:5px;padding:2px;flex:0 0 auto}
+.abl .abc .ic{width:24px;height:24px}
+.abl>.ic{width:24px;height:24px;flex:0 0 24px}
+.trait{margin:3px 0}
+.trait b{color:#19b34a;font-family:Bangers,sans-serif;font-size:22px;-webkit-text-stroke:.5px #111}
+.etext{margin:3px 0}
+.bc-en{text-align:right;font-size:12px;opacity:.75;margin-top:3px}
+.camp .bc-en,.event .bc-en{color:#fff;opacity:.9;text-shadow:1px 1px 0 #111}
+.event .bc-top,.event .bc-name{}
+.event.bigcard .bc-name{background:#111;border-radius:5px;padding:2px 5px}
+.bstate{text-align:center;font-family:Bangers,sans-serif;font-size:20px;letter-spacing:1px}
+.prompt{position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--halft),#ffe14d;border-top:3px solid #111;padding:10px;box-shadow:0 -4px 0 #111}
+.prompt .in{max-width:520px;margin:0 auto;max-height:40vh;overflow:auto}
+.prompt .t{font-family:Bangers,sans-serif;font-size:20px;letter-spacing:.5px;margin-bottom:4px}
+.prompt .opts{display:flex;flex-wrap:wrap;gap:6px}
+.prompt .btn{padding:6px 9px;font-size:15px}
+.full{position:fixed;inset:0;background:var(--halft),#ffe14d;z-index:40;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center}
+.full h2{font-family:Bangers,sans-serif;font-size:38px;letter-spacing:2px;margin:6px 0;-webkit-text-stroke:1px #111;color:#ff3d7f;text-shadow:3px 3px 0 #111}
+.picks{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.pk{background:var(--halft),#ff9a3d;border:3px solid #111;box-shadow:3px 3px 0 #111;border-radius:10px;padding:7px;font-size:15px;line-height:1.15;cursor:pointer;text-align:left}
+.pk.sel{background:var(--halft),#1fc7b6;transform:rotate(-2deg);box-shadow:5px 5px 0 #111}
+.pk .h{font-family:Bangers,sans-serif;font-size:20px;letter-spacing:.5px}
+.pk .ic{width:18px;height:18px}
+.rules{line-height:1.4;font-size:17px}
+.rules h3{font-family:Bangers,sans-serif;font-size:22px;letter-spacing:1px;color:#ff3d7f;-webkit-text-stroke:.5px #111;margin:14px 0 2px}
+.rules .ic{width:20px;height:20px}
+.dname{font-family:Bangers,sans-serif;font-size:26px;letter-spacing:1px}
+a{color:#c4005a}
+.tog{display:flex;align-items:center;gap:8px;justify-content:center;margin:10px 0;font-size:18px;background:#fff;border:2.5px solid #111;border-radius:10px;padding:6px;box-shadow:3px 3px 0 #111}
+.status{font-family:Bangers,sans-serif;font-size:18px;letter-spacing:1px;text-align:center;color:#fff;-webkit-text-stroke:.6px #111;text-shadow:2px 2px 0 #111;margin:4px 0;min-height:20px}
+.legend{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;font-size:16px}
+
+/* ===== jedna obrazovka ===== */
+#app.game{height:100vh;height:100dvh;display:flex;flex-direction:column;gap:4px;padding:4px 5px 5px;overflow:hidden}
+#app.game .bar{margin:0;padding:2px 5px;flex-wrap:nowrap;flex:0 0 auto;box-shadow:2px 2px 0 #111;border-width:2px}
+#app.game .bar .who{font-size:17px;white-space:nowrap}
+.sp{flex:1}
+#app.game .board{flex:1 1 0;min-height:0}
+#app.game .col{display:grid;grid-template-rows:repeat(3,minmax(0,1fr));gap:4px;min-height:0}
+#app.game .board .card,#app.game .board .empty{height:auto;min-height:0}
+#app.game .board .card .art{inset:2px 2px 15px}
+#app.game .board .card .nm{font-size:12px}
+#app.game .evs{width:30px;height:24px;justify-content:center;padding:0}
+#app.game .evs.evfull span{background:#fff;font-size:15px;padding:0 1px}
+#app.game .chip{padding:0 3px}
+.chip.off{opacity:.35}
+#app.game .mid{margin:0;padding:2px 6px;flex:0 0 auto;border-width:2px;box-shadow:2px 2px 0 #111}
+#app.game .mid::before{display:none}
+#app.game .mid .lg{font-size:14px;cursor:pointer}
+.mbtn{font-size:18px;cursor:pointer;padding:0 3px;border-left:2px solid #111}
+#app.game .water{display:flex;align-items:center;gap:0;min-width:0}
+#app.game .water .ic{width:18px;height:18px}
+#app.game .ctrl{margin:0;flex:0 0 auto;flex-wrap:nowrap;gap:5px}
+#app.game .ctrl .btn{padding:5px 8px;font-size:16px;box-shadow:2px 2px 0 #111;white-space:nowrap}
+#app.game .ctrl .btn .ic{width:18px;height:18px}
+#app.game .ctrl .btn:last-child{flex:1}
+#app.game .hand{flex:0 0 auto;padding:2px 2px 3px;gap:5px}
+#app.game .hand .card{flex:0 0 70px;height:92px}
+#app.game .hand .card .art{inset:20px 3px 27px}
+#app.game .hand .card .art span{font-size:24px}
+#app.game .hand .card .nm{font-size:11.5px;bottom:13px;line-height:1}
+#app.game .hand .card .ty{font-size:9px;line-height:11px;height:12px;bottom:1px}
+#app.game .hand .card .cost,#app.game .hand .card .jk{width:19px;height:19px}
+@media (max-height:640px){#app.game .hand .card{height:80px}#app.game .hand .card .art{inset:18px 3px 22px}#app.game .bar .who{font-size:15px}}
+
+/* ===== stůl s kartami ===== */
+#app.game .board{background:rgba(40,10,10,.22);border:2px solid rgba(17,17,17,.35);border-radius:12px;padding:4px;gap:4px}
+#app.game .col{display:flex;flex-direction:column;gap:4px;min-height:0}
+#app.game .campslot{flex:0 0 38%;min-height:0;display:flex;justify-content:center}
+#app.game .campslot .card{height:100%;aspect-ratio:63/88;max-width:100%;width:auto}
+#app.game .stack{flex:1 1 0;position:relative;min-height:0}
+#app.game .stack>.card,#app.game .stack>.empty{position:absolute;left:0;right:0;margin:0 auto;height:62%;width:auto;aspect-ratio:63/88;max-width:100%}
+#app.game .bot .stack .front{top:0;z-index:2}
+#app.game .bot .stack .back{bottom:0;z-index:1}
+#app.game .top .stack .back{top:0;z-index:1}
+#app.game .top .stack .front{bottom:0;z-index:2}
+#app.game .stack>.empty{border-radius:6px}
+#app.game .stack .card .art{inset:3px 3px 24px}
+#app.game .stack .card .nm{font-size:10.5px;line-height:1;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;height:21px;display:flex;align-items:center;justify-content:center;margin-bottom:1px}
+#app.game .stack .card .cost{width:19px;height:19px}
+#app.game .stack .card .art span{font-size:26px}
+#app.game .campslot .card .art{inset:3px 3px 24px}
+#app.game .campslot .card .nm{font-size:10.5px;line-height:1;white-space:normal;height:21px;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:1px}
+#app.game .campslot .card .art span{font-size:24px}
+#app.game .stack .card.tgt,#app.game .campslot .card.tgt{z-index:4}
+
+/* ===== výběr táborů jako karty ===== */
+.picks{gap:12px}
+.pk{background:none;border:0;box-shadow:none;padding:0;position:relative}
+.pk.sel{background:none;box-shadow:none;transform:none}
+.pk .bigcard{width:auto;margin:0;padding:5px;transform:rotate(0);box-shadow:4px 4px 0 #111;border-width:3px;border-radius:11px;transition:transform .15s}
+.pk:nth-child(odd) .bigcard{transform:rotate(-1.5deg)}
+.pk:nth-child(even) .bigcard{transform:rotate(1.5deg)}
+.pk.sel .bigcard{transform:rotate(0) translateY(-4px) scale(1.03);outline:4px solid #1fc7b6;outline-offset:2px;box-shadow:6px 6px 0 #111}
+.pk:not(.sel) .bigcard{filter:saturate(.85)}
+.pk .bc-top{min-height:26px;gap:4px}
+.pk .bc-top .drawv{font-size:16px}
+.pk .bc-top .drawv .ic{width:16px;height:16px}
+.pk .bc-name{font-size:17px}
+.pk .bc-art{height:78px;margin:4px 0}
+.pk .bc-art span{font-size:46px}
+.pk .bc-art .pow{font-size:15px;left:4px;top:3px}
+.pk .bc-body{font-size:13.5px;line-height:1.15;padding:4px;min-height:44px}
+.pk .abl .abc .ic,.pk .abl>.ic{width:19px;height:19px;flex-basis:19px}
+.pk .trait b{font-size:17px}
+.pk .bc-en{font-size:10px}
+.pkok{position:absolute;top:-8px;right:-6px;z-index:3;width:30px;height:30px;border-radius:50%;background:#1fc7b6;border:3px solid #111;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;box-shadow:2px 2px 0 #111}
+.btn.big[data-act=pickOK]{position:sticky;bottom:10px;z-index:5}
+.pk .abl{align-items:flex-start}
+
+/* ===== výběr táborů na jednu obrazovku ===== */
+#app.pickmode{height:100vh;height:100dvh;display:flex;flex-direction:column;gap:5px;padding:5px 5px 6px;overflow:hidden}
+#app.pickmode>.dname{margin:0!important;font-size:22px;line-height:1.1;flex:0 0 auto}
+#app.pickmode>.dname+div{flex:0 0 auto;font-size:14px!important;padding:1px 6px!important}
+#app.pickmode>.dname+div .ic{width:16px;height:16px}
+#app.pickmode .picks{flex:1 1 0;min-height:0;margin:2px 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:9px 7px}
+#app.pickmode .pk{min-height:0;display:flex}
+#app.pickmode .pk .bigcard{flex:1;min-width:0;display:flex;flex-direction:column;padding:4px;border-width:2.5px;border-radius:9px;box-shadow:3px 3px 0 #111}
+#app.pickmode .pk .bc-top{min-height:0;gap:3px;flex:0 0 auto;align-items:flex-start}
+#app.pickmode .pk .bc-top .drawv{font-size:13px;padding:0 2px;border-width:1.5px}
+#app.pickmode .pk .bc-top .drawv .ic{width:12px;height:12px}
+#app.pickmode .pk .bc-name{font-size:14px;line-height:1.05;letter-spacing:.3px;overflow-wrap:anywhere}
+#app.pickmode .pk .bc-art{flex:1 1 0;min-height:34px;height:auto;margin:3px 0;border-width:2px}
+#app.pickmode .pk .bc-art span{font-size:34px}
+#app.pickmode .pk .bc-art .pow{font-size:11px;left:2px;top:1px}
+#app.pickmode .pk .bc-body{flex:0 0 auto;font-size:12.5px;line-height:1.1;padding:3px;min-height:0;border-width:2px}
+#app.pickmode .pk .abl{gap:2px;margin:1px 0;align-items:flex-start}
+#app.pickmode .pk .abl .abc{padding:1px;border-radius:3px}
+#app.pickmode .pk .abl .abc .ic,#app.pickmode .pk .abl>.ic{width:14px;height:14px;flex-basis:14px}
+#app.pickmode .pk .trait b{font-size:13px}
+#app.pickmode .pk .bc-en{font-size:9px;margin-top:1px;flex:0 0 auto}
+#app.pickmode .pkok{width:24px;height:24px;font-size:13px;top:-7px;right:-5px}
+#app.pickmode .btn.big{flex:0 0 auto;margin:0;padding:8px;font-size:21px;position:static}
+
+/* ===== jednotná karta 63×88 ===== */
+.cb{position:relative;aspect-ratio:63/88;flex:0 0 auto;cursor:pointer}
+.rc{position:absolute;left:0;top:0;width:252px;height:352px;transform:scale(var(--s,.3));transform-origin:0 0;display:flex;flex-direction:column;border:4.54px solid #111;border-radius:15.12px;padding:7.56px;box-shadow:6.30px 6.30px 0 #111;overflow:hidden;font-size:16.13px;line-height:1.12;color:#111;transition:transform .15s;background:#fff}
+.rc .ic{width:100%;height:100%}
+.rc.person{--artbg:#36d1c4}.rc.unq{--artbg:#b072ff}
+.rc.camp{background:#2a1a12;--artbg:#ff9a3d}
+.rc.event{background:repeating-linear-gradient(45deg,#ffd400 0 10.08px,#111 10.08px 20.16px);--artbg:#ff5a3d}
+.rc.silo{--artbg:#6cc6ff}
+.rtop{display:flex;align-items:center;gap:5.04px;min-height:40.32px;flex:0 0 auto}
+.rcost,.rjunk{width:37.80px;height:37.80px;flex:0 0 37.80px;display:block}
+.rjunk{background:#fff;border:3.02px solid #111;border-radius:50%;padding:3.28px}
+.rdraw{display:flex;align-items:center;gap:1.26px;background:#fff;border:3.02px solid #111;border-radius:7.56px;padding:0 3.02px;font-family:Bangers,sans-serif;font-size:27.72px;line-height:1;height:35.28px;flex:0 0 auto}
+.rdraw .ic{width:22.68px;height:22.68px}
+.rname{flex:1;min-width:0;font-family:Bangers,Impact,sans-serif;font-size:27.72px;line-height:.95;letter-spacing:0.76px;color:#fff;text-shadow:2.27px 2.27px 0 #111,-1.51px 1.51px 0 #111,1.51px -1.51px 0 #111,-1.51px -1.51px 0 #111;overflow-wrap:anywhere}
+.rc.event .rname{background:#111;border-radius:5.04px;padding:2.02px 3.78px}
+.rart{position:relative;flex:1 1 0;min-height:22%;margin:6.30px 0;border:3.53px solid #111;border-radius:7.56px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:repeating-conic-gradient(from 0deg at 50% 60%,rgba(255,255,255,.4) 0 7deg,transparent 7deg 18deg),radial-gradient(rgba(0,0,0,.22) 1.76px,transparent 2.27px) 0 0/10.08px 10.08px,var(--artbg,#ffd84d)}
+.rart .em{font-size:90.72px;line-height:1;filter:drop-shadow(2.27px 0 0 #111) drop-shadow(-2.27px 0 0 #111) drop-shadow(0 2.27px 0 #111) drop-shadow(0 -2.27px 0 #111) drop-shadow(3.02px 4.54px 0 rgba(0,0,0,.45))}
+.rart .pow{position:absolute;left:5.04px;top:3.78px;font-family:Bangers,sans-serif;font-size:21.42px;color:#ffe14d;-webkit-text-stroke:1.26px #111;transform:rotate(-12deg)}
+.rbomb{position:absolute;right:5.04px;bottom:5.04px;width:45.36px;height:45.36px}
+.rbody{flex:0 0 auto;background:#fff;border:3.02px solid #111;border-radius:7.56px;padding:4.54px 5.54px;font-size:16.13px;line-height:1.13}
+.rabl{display:flex;align-items:flex-start;gap:3.53px;margin:1.51px 0}
+.rabc{background:#111;border-radius:5.04px;padding:1.51px;display:inline-flex;flex:0 0 auto;width:25.20px;height:25.20px}
+.rabl>.ic{width:22.68px;height:22.68px;flex:0 0 22.68px}
+.rtrait b{color:#19b34a;font-family:Bangers,sans-serif;font-size:22.68px;line-height:.8}
+.ren{flex:0 0 auto;text-align:right;font-size:11.59px;opacity:.8;margin-top:2.02px}
+.rc.camp .ren,.rc.event .ren{color:#fff;opacity:.95;text-shadow:1.01px 1.01px 0 #111}
+.rc.event .ren{background:#111;align-self:flex-end;padding:0 3.78px;border-radius:5.04px}
+.rc.punk{background:repeating-linear-gradient(45deg,#3d3d3d 0 12.60px,#2b2b2b 12.60px 25.20px);align-items:center;justify-content:center}
+.pb{display:flex;flex-direction:column;align-items:center;gap:7.56px}
+.pb .ic{width:138.60px;height:138.60px}
+.pn{font-family:Bangers,sans-serif;font-size:35.28px;color:#fff;text-shadow:2.02px 2.02px 0 #111}
+.cb.dmg{transform:rotate(-7deg)}
+.cb.dmg .rart{--artbg:#ff3b3b}
+.cb.dmg::after{content:"";position:absolute;right:-6%;top:30%;width:30%;aspect-ratio:1;z-index:3;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpolygon points='12,0 14.5,7 22,4 17.5,10.5 24,14 16.5,15 18,23 12,18 6,23 7.5,15 0,14 6.5,10.5 2,4 9.5,7' fill='%23ff2a2a' stroke='%23111' stroke-width='1.5'/%3E%3C/svg%3E") center/contain no-repeat}
+.cb.dead .rc{filter:grayscale(1) brightness(.5)}
+.cb.nr{opacity:.55}
+.cb.tgt{outline:3px solid #ff2d75;outline-offset:1px;border-radius:6%;animation:pulse .8s infinite alternate}
+.cb.tgt{z-index:6!important}
+/* stůl */
+#app.game .campslot .cb{height:100%;max-width:100%}
+#app.game .stack>.cb,#app.game .stack>.empty{position:absolute;left:0;right:0;margin:0 auto;height:62%;aspect-ratio:63/88;max-width:100%}
+#app.game .stack>.empty{width:auto;border-radius:5px}
+/* ruka */
+#app.game .hand .cb{height:96px}
+.hand .cb{height:110px}
+/* náhled */
+.cb.big{width:min(70vw,290px,calc((100dvh - 330px)*63/88));margin:4px auto 14px;cursor:default}
+
+/* výběr táborů */
+#app.pickmode .picks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:none;align-content:center;gap:14px 9px;flex:1 1 0;min-height:0}
+.pkc{position:relative;display:flex;justify-content:center;min-width:0}
+.pkc .cb{width:100%;max-height:100%}
+.pkc:nth-child(odd) .cb{transform:rotate(-1.5deg)}.pkc:nth-child(even) .cb{transform:rotate(1.5deg)}
+.pkc .cb.sel{transform:rotate(0) translateY(-3px) scale(1.04);outline:4px solid #1fc7b6;outline-offset:2px;border-radius:6%}
+#app.pickmode .pkok{width:24px;height:24px;font-size:13px;top:-9px;right:-4px}
+/* menu */
+.names{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.names label{display:flex;flex-direction:column;font-size:14px;font-weight:700;background:#fff;border:2.5px solid #111;border-radius:10px;padding:5px 7px;box-shadow:3px 3px 0 #111}
+.names input{font-family:Bangers,sans-serif;font-size:20px;letter-spacing:1px;border:0;border-bottom:2px dashed #111;background:transparent;outline:none;padding:2px 0;width:100%}
+.svinfo{text-align:center;font-size:15px;background:#fff;border:2px solid #111;border-radius:8px;padding:4px;margin:-4px 0 6px}
+.svinfo .dl{color:#c4005a;text-decoration:underline;cursor:pointer;margin-left:6px}
+
+
+/* ===== stůl: tábor + 2 řady lidí ===== */
+#app.game .col{display:grid;grid-template-rows:repeat(3,minmax(0,1fr));gap:3px;min-height:0}
+#app.game .slot{min-height:0;display:flex;justify-content:center;align-items:center}
+#app.game .slot>.cb,#app.game .slot>.empty{height:min(100%,96px);aspect-ratio:63/88;max-width:100%;width:auto}
+#app.game .slot>.empty{border-radius:5px}
+#app.game .board{padding:3px}
+.sheet{padding:10px 12px 16px}
+.sheet .bstate{font-size:17px;margin:-4px 0 0}
+.sheet .ab{margin:6px 0;padding:4px 7px}
+.sheet .ln{margin:4px 0;font-size:16px}
+
+/* ===== prostřední řádek jako lišty hráčů ===== */
+#app.game .bar,#app.game .mid{height:36px;min-height:36px;border:2px solid #111;border-radius:8px;box-shadow:2px 2px 0 #111;background:#fff4d6;padding:2px 5px;gap:6px}
+#app.game .mid .lg{font-size:14px;line-height:1.1}
+#app.game .mid .mbtn{font-size:16px;line-height:1;padding:0 4px;border-left:2px solid #111;display:flex;align-items:center;height:100%}
+#app.game .bar .chip,#app.game .mid .chip{height:26px;font-size:14px}
+#app.game .chip .ic{width:16px;height:16px}
+
+/* ===== menu: krémové pozadí místo bílého ===== */
+.svinfo,.names label,.tog,.foot{background:#fff4d6!important;border:2.5px solid #111;border-radius:10px;box-shadow:3px 3px 0 #111}
+.foot{font-size:14px;text-align:center;padding:5px 8px;margin:12px 0}
+.tog input{width:20px;height:20px;accent-color:#ff3d7f}
+
+/* ===== kompaktní menu na jednu obrazovku ===== */
+#app.menu{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;justify-content:center;padding:6px 8px 8px}
+#app.menu h1{font-size:50px;margin:2px 0 0}
+#app.menu .sub{font-size:19px;margin:2px auto 10px;padding:1px 12px}
+#app.menu .btn.big{font-size:20px;padding:9px;margin:0 0 9px}
+#app.menu .svinfo{font-size:13px;margin:-3px 0 9px;padding:3px}
+#app.menu .names{margin:0 0 9px;gap:7px}
+#app.menu .names label{font-size:12.5px;padding:3px 7px}
+#app.menu .names input{font-size:18px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:0 0 9px}
+.row2 .tog,.row2 .btn.big{margin:0!important}
+#app.menu .tog{font-size:15px;padding:6px 4px;margin:0}
+#app.menu .foot{font-size:12px;margin:0;padding:4px 6px;line-height:1.25}
+#app.menu .fsb{font-size:16px;white-space:nowrap;padding:6px 4px;display:flex;align-items:center;justify-content:center;gap:6px}
+#app.menu .fsb .ic{width:20px;height:20px}
+#app.game .mbtn .ic{width:18px;height:18px}
+
+/* ===== menu se přizpůsobí výšce obrazovky ===== */
+#app.menu{--g:clamp(7px,1.35vh,16px);gap:var(--g);justify-content:center}
+#app.menu>*{margin:0!important}
+#app.menu h1{font-size:clamp(40px,7.4vh,86px)}
+#app.menu .sub{font-size:clamp(16px,2.8vh,30px);margin:0 auto!important;padding:1px 14px}
+#app.menu .btn.big{font-size:clamp(18px,2.9vh,27px);padding:clamp(7px,1.4vh,16px) 8px}
+#app.menu .fsb{font-size:clamp(15px,2.2vh,21px)!important;padding:clamp(6px,1.25vh,15px) 4px!important}
+#app.menu .fsb .ic{width:clamp(18px,2.6vh,28px);height:clamp(18px,2.6vh,28px)}
+#app.menu .row2{gap:var(--g)}
+#app.menu .names{gap:var(--g)}
+#app.menu .names label{font-size:clamp(12px,1.8vh,18px)}
+#app.menu .names input{font-size:clamp(17px,2.6vh,27px)}
+#app.menu .svinfo{font-size:clamp(12px,1.85vh,18px);padding:clamp(3px,.6vh,8px)}
+#app.menu .foot{font-size:clamp(11px,1.75vh,16px);padding:clamp(4px,.7vh,9px) 8px}
+
+/* ===== rozvržení karet podle originálu ===== */
+.rc{padding:0!important;border:5px solid #111!important;border-radius:15px!important;background:#fff!important;box-shadow:6px 6px 0 #111!important}
+.rc.camp{background:#111!important}
+.rart{position:absolute!important;inset:9px!important;margin:0!important;border:3px solid #111!important;border-radius:5px!important;min-height:0!important;align-items:flex-start!important;justify-content:center!important}
+.rc.camp .rart{border-color:#222!important}
+.rc.event .rart{border:10px solid #ffd400!important;border-image:repeating-linear-gradient(45deg,#ffd400 0 9px,#111 9px 18px) 10!important;border-radius:0!important}
+.rart .em{font-size:104px!important;margin-top:62px;margin-left:30px}
+.rtab{position:absolute;left:7px;top:62px;z-index:3;background:#111;color:#fff;writing-mode:vertical-rl;transform:rotate(180deg);display:flex;align-items:center;gap:7px;padding:9px 7px 16px;max-height:236px;overflow:hidden;clip-path:polygon(0 0,100% 12px,100% 100%,0 100%)}
+.rc.camp .rtab{top:9px}
+.rc.event .rtab{background:#ffe45c;color:#111}
+.rtn{font-family:Bangers,Impact,sans-serif;letter-spacing:1px;line-height:1;white-space:nowrap}
+.rtc{display:block;width:36px;height:36px;transform:rotate(180deg);flex:0 0 36px}
+.rjunk{position:absolute!important;left:7px!important;top:7px!important;width:52px!important;height:52px!important;z-index:4;background:none!important;border:0!important;padding:0!important;border-radius:0!important;flex:none!important}
+.rbadge{left:auto!important;right:12px!important;top:14px!important}
+.rdrawn{position:absolute;left:12px;bottom:16px;z-index:3;min-width:30px;height:38px;padding:0 6px;background:#111;color:#fff;border:3px solid #fff;outline:2px solid #111;border-radius:5px;font-family:Bangers,sans-serif;font-size:28px;line-height:32px;text-align:center}
+.rbody2{position:absolute;left:16px;right:16px;bottom:16px;z-index:2;display:flex;flex-direction:column;gap:7px}
+.rc.camp .rbody2{left:56px}
+.rabs{display:flex;flex-direction:column;gap:18px;margin-top:16px}
+.rabs.row{flex-direction:row;gap:10px}
+.rab{position:relative;flex:1;background:#111;color:#fff;border-radius:3px;padding:16px 8px 8px;display:flex;box-shadow:0 0 0 2px rgba(255,255,255,.15)}
+.rab-c{position:absolute;top:-17px;left:50%;transform:translateX(-50%);width:32px;height:32px;display:block}
+.rab-b{display:flex;align-items:center;gap:6px;font-family:"Patrick Hand",sans-serif;font-weight:700;font-size:17px;line-height:1.05;width:100%}
+.rab-b .ic{width:36px;height:36px;flex:0 0 36px}
+.rab.pure .rab-b{justify-content:center}
+.rab.pure .rab-b .ic{width:58px;height:58px;flex-basis:58px}
+.rwhite{background:#fff;color:#111;border:3px solid #111;border-radius:3px;padding:5px 8px;font-size:16.5px;line-height:1.1;text-align:center}
+.gb{color:#19b34a;font-family:Bangers,sans-serif;font-size:22px;line-height:.8}
+.rev{position:relative;background:#ffe45c;color:#111;border:3px solid #111;border-radius:3px;padding:20px 9px 9px;font-size:18px;line-height:1.12;margin-top:18px}
+.rbomb{position:absolute!important;top:-22px!important;left:50%!important;right:auto!important;bottom:auto!important;transform:translateX(-50%);width:40px!important;height:40px!important}
+.rc.back{padding:9px!important;overflow:hidden}
+.rc.back svg{width:100%;height:100%;display:block;border-radius:5px}
+.rc.punkback{background:#fff!important}
+.rc.campback{background:#111!important}
+.cb.dead .rc.campback{filter:none!important}
+
+/* ===== doladění rámečků 1.6 ===== */
+.rbody2{left:13px!important;right:13px!important;bottom:13px!important}
+.rc.camp .rbody2{left:13px!important}
+.rrow{display:flex;align-items:flex-end;gap:8px}
+.rcol{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
+.rdrawn{position:static!important;flex:0 0 auto;min-width:34px;height:40px;line-height:34px;font-size:28px;border:3px solid #fff;outline:3px solid #111;margin:0 0 3px 3px}
+.rabs{gap:20px!important;margin-top:16px!important}
+.rabs.row{gap:10px!important}
+.rab{min-height:66px;padding:20px 10px 9px!important;border:3px solid #111;border-radius:6px!important;box-shadow:inset 0 0 0 2px #3a3a3a!important;align-items:center}
+.rab-c{top:-16px!important;width:30px!important;height:30px!important}
+.rab-b{justify-content:center;text-align:center;font-size:17.5px!important;line-height:1.08!important;gap:8px!important}
+.rab-b span{flex:1;text-align:left}
+.rab-b .ic{width:34px!important;height:34px!important;flex:0 0 34px!important}
+.rab.pure .rab-b .ic{width:54px!important;height:54px!important;flex-basis:54px!important}
+.rwhite{border-radius:6px!important;padding:6px 9px!important;font-size:17px!important;line-height:1.12!important;box-shadow:inset 0 0 0 2px #ddd}
+.gb{font-size:24px!important;vertical-align:-2px}
+.rev{border-radius:6px!important;padding:22px 10px 10px!important}
+
+/* ===== rámečky podle originálu 1.7 ===== */
+.rbody2{display:flex;flex-direction:column;gap:0!important}
+.rcol{gap:0!important}
+.rabs{gap:20px!important;margin-top:18px!important}
+.rabs.row{gap:12px!important}
+.rab{background:#111!important;border:0!important;border-radius:0!important;box-shadow:none!important;padding:22px 12px 14px!important;min-height:70px;overflow:visible}
+.rab-c{top:-17px!important;width:32px!important;height:32px!important;filter:drop-shadow(0 0 0 #111)}
+.rab{clip-path:none!important;position:relative}
+.rab::before{content:"";position:absolute;inset:0;background:#111;z-index:-1}
+.rab-b{font-family:"Patrick Hand",sans-serif;font-weight:700;font-size:18px!important;line-height:1.05!important;color:#fff;text-align:center;justify-content:center!important}
+.rab-b span{text-align:center!important}
+.rtraits{display:flex;flex-direction:column;gap:0}
+.rabs+.rtraits{margin-top:-4px}
+.rwhite{border:0!important;border-radius:0!important;box-shadow:none!important;background:#fff!important;padding:10px 12px 9px!important;font-size:17.5px!important;text-align:center;outline:3px solid #111;outline-offset:-3px}
+.rabs+.rtraits .rwhite{outline:none}
+.revwrap{position:relative;margin-top:22px}
+.rbombtab{position:absolute;top:-24px;left:50%;transform:translateX(-50%);width:46px;height:30px;background:#ffe45c;clip-path:polygon(18% 0,82% 0,100% 45%,100% 100%,0 100%,0 45%);display:flex;align-items:center;justify-content:center;z-index:2}
+.rbombtab .ic{width:28px;height:28px}
+.rev{background:#ffe45c!important;border:0!important;border-radius:0!important;padding:14px 12px 12px!important;font-size:18px!important;line-height:1.1!important;margin:0!important}
+.rc.person,.rc.punkback,.rc.silo{border-color:#111!important;background:#fff!important}
+.rc.person .rart,.rc.silo .rart{inset:13px!important;border:0!important;-webkit-mask:radial-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask:none;border-radius:2px!important;box-shadow:inset 0 0 0 4px #fff,inset 0 0 14px 6px rgba(255,255,255,.85)}
+.rc.camp .rart{inset:13px 13px 13px 13px!important;border:0!important;box-shadow:inset 0 0 14px 5px rgba(0,0,0,.75)}
+.rtab{padding:10px 8px 18px!important}
+.rbody2{z-index:5!important}
+.rjunk{z-index:6!important}
+
+/* ===== rámečky ve stylu 1.4 (verze 1.8) ===== */
+.q-body{background:#fff;color:#111;border:3px solid #111;border-radius:8px;padding:6px 8px;font-family:"Patrick Hand",sans-serif;font-size:16.5px;line-height:1.13;box-shadow:3px 3px 0 #111}
+.q-abl{display:flex;align-items:flex-start;gap:5px;margin:3px 0}
+.q-abc{background:#111;border-radius:5px;padding:2px;display:inline-flex;flex:0 0 auto;width:27px;height:27px}
+.q-abc .ic{width:100%;height:100%}
+.q-abl>.ic{width:25px;height:25px;flex:0 0 25px}
+.q-abl>span:last-child{padding-top:3px;flex:1 1 0;min-width:0;overflow-wrap:break-word}
+.q-body{overflow:hidden}
+.q-tr{overflow-wrap:break-word}
+.q-tr{margin:2px 0 4px;text-align:left}
+.rc.camp .rrow{align-items:flex-end}
+.rev{border:3px solid #111!important;border-radius:8px!important;box-shadow:3px 3px 0 #111}
+.rbombtab{top:-27px!important;background:#111!important;width:42px!important;height:32px!important}
+
+/* ===== 1.9 ===== */
+.rc,.cb .rc{transition:none!important}
+.rtc svg,.rtc{writing-mode:horizontal-tb!important}
+.rtc{transform:none!important}
+.rtab{max-height:none!important}
+.rc.event .rtab{top:62px}
+.q-dark{background:#111!important;color:#fff!important;border-color:#111!important;box-shadow:0 0 0 2px #fff,3px 3px 0 2px #111!important}
+.q-dark .q-abc{background:#fff}
+.q-trait{margin-top:6px;text-align:center}
+.rc.camp .rcol{gap:0!important}
+.rtc{position:relative;transform:rotate(180deg)!important;writing-mode:horizontal-tb!important}
+.rtcn{position:absolute;inset:0;writing-mode:horizontal-tb;display:flex;align-items:center;justify-content:center;padding-top:9px;font-family:Bangers,Impact,sans-serif;font-size:19px;font-weight:400;color:#fff;text-shadow:1.5px 1.5px 0 #111,-1px 1px 0 #111,1px -1px 0 #111,-1px -1px 0 #111}
+.rc.event .rbody2{left:54px!important}
+.rc.event .rev{font-size:16.5px!important;padding:16px 10px 10px!important}
+
+/* ===== 2.0 jednotné rozvržení ===== */
+.rc.camp .rtab,.rc.event .rtab{top:62px!important}
+.rc.camp .rtab{background:#111;color:#ffe14d;box-shadow:0 0 0 2px #444}
+.rc.event .rbody2,.rc.camp .rbody2{left:13px!important;right:13px!important}
+.rtab{gap:6px!important;padding:8px 6px 14px!important}
+.rtc{width:30px!important;height:30px!important;flex:0 0 30px!important}
+.rtcn{font-size:16px!important;padding-top:8px!important}
+.rtd{display:flex;align-items:center;justify-content:center;width:28px;height:30px;transform:rotate(180deg);writing-mode:horizontal-tb;background:#fff;border:3px solid #111;outline:2px solid #fff;border-radius:5px;flex:0 0 auto}
+.rtd b{font-family:Bangers,Impact,sans-serif;font-size:20px;color:#111;line-height:1}
+.rc.camp .rjunk{display:none}
+.q-dark{box-shadow:0 0 0 2px #fff,3px 3px 0 2px #111!important}
+.q-dark .q-tr{color:#fff}
+.rc.event .rev{font-size:16.5px!important}
+.logsheet{background:#fff4d6!important}
+.loglist{font-size:15px;line-height:1.35;background:#fff;border:2.5px solid #111;border-radius:10px;padding:4px 0;box-shadow:3px 3px 0 #111}
+.loglist>div{padding:3px 10px;border-bottom:1px solid #eee}
+.loglist>div:nth-child(odd){background:#fffaf0}
+
+/* ===== 2.1 jméno a ikony podle originálu ===== */
+.q-dark{box-shadow:3px 3px 0 #111!important;border-color:#111!important}
+.rtn{font-family:"Roboto Condensed","Arial Narrow",Arial,sans-serif!important;font-weight:800!important;text-transform:uppercase;letter-spacing:.3px!important}
+.rtab{top:58px!important;left:9px!important;padding:10px 7px 18px!important;clip-path:polygon(0 0,100% 0,100% calc(100% - 14px),0 100%)!important;transform:rotate(180deg)}
+.rc.camp .rtab{top:9px!important;color:#fff!important;background:#111!important;box-shadow:none!important;padding-top:14px!important}
+.rc.event .rtab{color:#111!important}
+.rtc{width:28px!important;height:28px!important;flex:0 0 28px!important}
+.rtcn{font-family:"Roboto Condensed",Arial,sans-serif!important;font-weight:800!important;font-size:14px!important;padding-top:7px!important}
+.rjunk{width:42px!important;height:42px!important;left:10px!important;top:10px!important}
+.rjunk .ic{filter:none!important}
+.rdraw2{display:inline-flex;align-self:flex-start;align-items:center;justify-content:center;min-width:30px;height:36px;padding:0 5px;margin:0 0 7px 0;background:#111;color:#fff;border:3px solid #fff;outline:2px solid #111;border-radius:5px;font-family:"Roboto Condensed",Arial,sans-serif;font-weight:800;font-size:22px;line-height:1}
+.rc.camp .rbody2{display:flex;flex-direction:column}
+
+/* ===== 2.2 lidé a události podle originálu ===== */
+.rjunk{width:34px!important;height:34px!important;left:12px!important;top:12px!important}
+.rtab{top:50px!important;padding:8px 6px 16px!important;gap:5px!important}
+.rc.camp .rtab{top:9px!important}
+.rtc{width:26px!important;height:26px!important;flex:0 0 26px!important}
+.rtcn{font-size:13px!important;padding-top:7px!important}
+/* schopnosti lidí: černý blok s kapkou nad ikonou */
+.p-abl{display:flex;align-items:stretch;gap:0;margin:4px 0 0}
+.p-abl+.p-abl{margin-top:6px}
+.p-blk{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:#111;border-radius:4px;padding:4px 6px;min-width:44px}
+.p-blk .ic:first-child{width:22px;height:22px}
+.p-blk .ic:nth-child(2){width:32px;height:32px}
+.p-txt{flex:1;display:flex;align-items:center;padding:2px 0 2px 8px;font-size:16px;line-height:1.1}
+.p-abl.pure .p-blk{flex-direction:row;gap:6px;padding:5px 10px}
+.q-body:not(.q-dark){padding:7px 8px!important}
+.q-tr{text-align:center}
+/* události: rámeček přes celou šířku, menší text */
+.rc.event .rbody2{left:13px!important;right:13px!important;bottom:13px!important}
+.rc.event .rev{font-size:15px!important;line-height:1.1!important;padding:13px 10px 10px!important}
+.rbombtab{top:-25px!important;height:28px!important;width:40px!important}
+.rbombtab .ic{width:24px!important;height:24px!important}
+/* nic neprosvítá */
+.rart{box-sizing:border-box}
+.rc.person .rbody2,.rc.silo .rbody2{bottom:12px!important;left:12px!important;right:12px!important}
+.q-body,.rev{background-clip:padding-box}
+
+/* ===== 2.3 animace ===== */
+@keyframes fxShake{0%,100%{translate:0 0}15%{translate:-5px 2px}30%{translate:5px -2px}45%{translate:-4px 1px}60%{translate:4px -1px}75%{translate:-2px 0}}
+@keyframes fxHeal{0%{filter:brightness(1)}35%{filter:brightness(1.6) drop-shadow(0 0 8px #2ccf5a)}100%{filter:brightness(1)}}
+@keyframes fxDrop{0%{translate:0 -40px;scale:1.25;opacity:0}60%{translate:0 3px;scale:.97;opacity:1}100%{translate:0 0;scale:1}}
+@keyframes fxPunk{0%{translate:0 -60px;rotate:-20deg;opacity:0}70%{translate:0 2px;rotate:3deg;opacity:1}100%{translate:0 0;rotate:0deg}}
+@keyframes fxFlash{0%{filter:brightness(2.5)}100%{filter:brightness(1)}}
+.cb.fx-hit{animation:fxShake .45s ease-out}
+.cb.fx-heal{animation:fxHeal .7s ease-out}
+.cb.fx-play{animation:fxDrop .45s cubic-bezier(.2,.9,.3,1.2)}
+.cb.fx-punk{animation:fxPunk .5s cubic-bezier(.2,.9,.3,1.2)}
+.cb.fx-destroy{animation:fxFlash .5s ease-out}
+.fxw{position:fixed;z-index:60;pointer-events:none;transform:translate(-50%,-50%);font-family:Bangers,Impact,sans-serif;font-size:30px;letter-spacing:1px;color:#ffe14d;-webkit-text-stroke:1.5px #111;text-shadow:3px 3px 0 #111;animation:fxWord .95s ease-out forwards;white-space:nowrap}
+.fxw.w-heal{color:#4ee07a}
+.fxw.w-destroy{font-size:38px;color:#ff3d7f}
+.fxw.w-punk{color:#ff7ab6}
+@keyframes fxWord{0%{transform:translate(-50%,-50%) scale(.3) rotate(-15deg);opacity:0}25%{transform:translate(-50%,-60%) scale(1.15) rotate(-6deg);opacity:1}70%{opacity:1}100%{transform:translate(-50%,-110%) scale(1) rotate(-4deg);opacity:0}}
+.fxboom{position:fixed;z-index:59;pointer-events:none;width:var(--sz);height:var(--sz);transform:translate(-50%,-50%);background:radial-gradient(circle,#fff 0 12%,#ffe14d 13% 30%,#ff9a3d 31% 48%,#ff3d7f 49% 60%,transparent 62%);clip-path:polygon(50% 0,61% 30%,95% 20%,72% 47%,100% 62%,66% 66%,75% 100%,50% 75%,25% 100%,34% 66%,0 62%,28% 47%,5% 20%,39% 30%);animation:fxBoom .75s ease-out forwards}
+@keyframes fxBoom{0%{scale:.1;opacity:1;rotate:0deg}40%{scale:1;opacity:1}100%{scale:1.4;opacity:0;rotate:25deg}}
+.fxbanner{position:fixed;left:0;right:0;top:42%;z-index:58;pointer-events:none;display:flex;justify-content:center;animation:fxBan 1.3s ease-in-out forwards}
+.fxbanner span{background:#ffe14d;border:4px solid #111;box-shadow:6px 6px 0 #111;padding:6px 26px;font-family:Bangers,Impact,sans-serif;font-size:40px;letter-spacing:2px;color:#111;transform:rotate(-3deg);white-space:nowrap}
+@keyframes fxBan{0%{transform:translateX(-110%)}18%{transform:translateX(0)}78%{transform:translateX(0);opacity:1}100%{transform:translateX(110%);opacity:0}}
+
+/* ===== 2.4 ===== */
+.pcards{display:flex;gap:7px;overflow-x:auto;padding:4px 2px 10px;margin-bottom:4px}
+.pcards .cb{height:118px;flex:0 0 auto}
+.prompt .in{max-height:52vh!important}
+.sndsheet{padding:14px 14px 20px}
+.sp-row{display:grid;grid-template-columns:44px 1fr 110px 50px;align-items:center;gap:8px;padding:9px 0;border-bottom:2px dashed rgba(0,0,0,.18);font-size:17px}
+.sp-row.off .sp-n,.sp-row.off .sp-val,.sp-row.off input[type=range]{opacity:.4}
+.sp-val{font-family:Bangers,sans-serif;font-size:17px;text-align:right}
+.sp-row input[type=range]{width:100%;accent-color:#ff3d7f}
+.sw2{position:relative;display:inline-block;width:42px;height:24px}
+.sw2 input{opacity:0;width:0;height:0}
+.sw2 span{position:absolute;inset:0;background:#ddd;border:2.5px solid #111;border-radius:20px;cursor:pointer;transition:.15s}
+.sw2 span::before{content:'';position:absolute;left:1px;top:1px;width:16px;height:16px;background:#fff;border:2px solid #111;border-radius:50%;transition:.15s}
+.sw2 input:checked+span{background:#1fc7b6}
+.sw2 input:checked+span::before{transform:translateX(17px)}
+#app.game .mbtn{font-size:16px!important;padding:0 3px!important}
+#rotate{display:none}
+@media (orientation:landscape) and (max-height:560px){
+ #rotate{display:flex;position:fixed;inset:0;z-index:100;align-items:center;justify-content:center;background:radial-gradient(rgba(0,0,0,.22) 1px,transparent 1.5px) 0 0/6px 6px,linear-gradient(160deg,#ffb347,#e2552b 55%,#5a1e2e)}
+ .rotbox{background:#fff4d6;border:4px solid #111;border-radius:16px;box-shadow:7px 7px 0 #111;padding:14px 34px;text-align:center;transform:rotate(-2deg)}
+ .rotbox h2{font-family:Bangers,Impact,sans-serif;font-size:42px;letter-spacing:2px;margin:4px 0;color:#ff3d7f;-webkit-text-stroke:1.2px #111;text-shadow:3px 3px 0 #111}
+ .rotbox p{margin:0;font-size:18px}
+ .rotph{font-size:56px;display:inline-block;animation:rotPh 1.6s ease-in-out infinite}
+ @keyframes rotPh{0%,20%{transform:rotate(-90deg)}60%,100%{transform:rotate(0)}}
+}
+
+/* ===== Radlands 2 ===== */
+h1 .h2b{display:inline-block;margin-left:6px;padding:0 10px;font-size:.62em;line-height:1.15;vertical-align:.32em;color:#111;-webkit-text-stroke:0;text-shadow:none;background:#ffe14d;border:4px solid #111;box-shadow:4px 4px 0 #111;clip-path:polygon(50% 0,62% 14%,80% 6%,82% 26%,100% 30%,90% 48%,100% 66%,82% 72%,82% 94%,62% 86%,50% 100%,38% 86%,18% 94%,18% 72%,0 66%,10% 48%,0 30%,18% 26%,20% 6%,38% 14%);padding:8px 16px;transform:rotate(8deg)}
+#app.menu h1{white-space:nowrap;font-size:min(7.4vh,12vw,86px)!important}
+h1 .h2b{font-size:.5em!important;margin-left:2px!important;padding:6px 12px!important}
+.row2>*{min-width:0}
+#app.menu .fsb{overflow:hidden;text-overflow:ellipsis;padding-left:2px!important;padding-right:2px!important}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="rotate"><div class="rotbox"><div class="rotph">📱</div><h2>OTOČ TELEFON!</h2><p>Radlands se hraje na výšku.</p></div></div>
+<script>
+/* ===================== ZÁKLAD ===================== */
+const APP_VERSION='2.4.1';
+let UID=1; const nid=()=>UID++;
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+class GameOver extends Error{}
+const JUNK={draw:{i:'🃏',t:'Dober kartu'},water:{i:'💧',t:'Získej 1 vodu navíc'},injure:{i:'🩸',t:'Zraň nechráněného nepřítele'},raid:{i:'🏴‍☠️',t:'Nájezd'},restore:{i:'🔧',t:'Obnov svou poškozenou kartu'},punk:{i:'👤',t:'Přiveď pankáče'}};
+
+
+function burst(cx,cy,r1,r2,n){let pts=[];for(let i=0;i<n*2;i++){const a=Math.PI*i/n-Math.PI/2,r=i%2?r2:r1;pts.push((cx+r*Math.cos(a)).toFixed(1)+','+(cy+r*Math.sin(a)).toFixed(1));}return pts.join(' ');}
+const K='stroke="#111" stroke-width="1.8" stroke-linejoin="round"';
+const SV={
+ water:n=>`<svg viewBox="0 0 24 24"><path d="M12 1.5C9 6.5 4.5 10.5 4.5 15.2a7.5 7.5 0 0015 0C19.5 10.5 15 6.5 12 1.5z" fill="#2fa8ff" ${K}/><path d="M8.3 14.5c0 2 1.2 3.6 3 4" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>${n!=null?`<text x="12" y="19" text-anchor="middle" font-family="Bangers,Impact,sans-serif" font-size="12" fill="#fff" stroke="#111" stroke-width="2.4" paint-order="stroke">${n}</text>`:''}</svg>`,
+ draw:()=>``,
+ damage:()=>``,
+ injure:()=>``,
+ restore:()=>``,
+ raid:()=>``,
+ punk:()=>``,
+ bomb:n=>`<svg viewBox="0 0 24 24"><path d="M15.5 6.5l2-2.5" stroke="#111" stroke-width="2"/><polygon points="${burst(19,3,3.5,1.5,6)}" fill="#ffe14d" stroke="#111" stroke-width="1"/><circle cx="11" cy="14" r="8.5" fill="#222" ${K}/><path d="M6.5 11a5 5 0 013-3" stroke="#888" stroke-width="1.6" fill="none" stroke-linecap="round"/>${n!=null?`<text x="11" y="18.5" text-anchor="middle" font-family="Bangers,Impact,sans-serif" font-size="12.5" fill="#ffe14d">${n}</text>`:''}</svg>`,
+ destroy:()=>``,
+ hand:()=>`<svg viewBox="0 0 24 24"><rect x="4" y="5" width="9" height="13" rx="2" fill="#fff" ${K} transform="rotate(-15 8 12)"/><rect x="11" y="5" width="9" height="13" rx="2" fill="#fff" ${K} transform="rotate(12 15 12)"/></svg>`,
+ deck:()=>`<svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="16" rx="2" fill="#5a3a7a" ${K}/><rect x="5" y="4" width="12" height="16" rx="2" fill="#7b4fa8" ${K}/><rect x="4" y="2" width="12" height="16" rx="2" fill="#a46ad6" ${K}/></svg>`,
+ trash:()=>`<svg viewBox="0 0 24 24"><path d="M5 7h14l-1.5 15h-11z" fill="#9a9a9a" ${K}/><path d="M3 7h18M9 4h6" stroke="#111" stroke-width="2" stroke-linecap="round"/></svg>`,
+ fsOn:()=>`<svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9V3h6M21 9V3h-6M3 15v6h6M21 15v6h-6"/></svg>`,
+ fsOff:()=>`<svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v6H3M15 3v6h6M9 21v-6H3M15 21v-6h6"/></svg>`,
+ silo:()=>`<svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="17" rx="3" fill="#6cc6ff" ${K}/><ellipse cx="12" cy="5" rx="7" ry="2.5" fill="#bfe6ff" ${K}/><path d="M12 10c-1.5 2.4-3 4-3 5.5a3 3 0 006 0c0-1.5-1.5-3.1-3-5.5z" fill="#2fa8ff" stroke="#111" stroke-width="1.2"/></svg>`,
+};
+
+function trefoil(cx,cy,r0,r1){let d='';[-90,30,150].forEach(c=>{const a1=(c-30)*Math.PI/180,a2=(c+30)*Math.PI/180,P=(r,a)=>(cx+r*Math.cos(a)).toFixed(2)+' '+(cy+r*Math.sin(a)).toFixed(2);d+=`M${P(r0,a1)}L${P(r1,a1)}A${r1} ${r1} 0 0 1 ${P(r1,a2)}L${P(r0,a2)}A${r0} ${r0} 0 0 0 ${P(r0,a1)}Z`;});return d;}
+Object.assign(SV,{
+ destroy:()=>`<svg viewBox="0 0 24 24"><polygon points="${burst(12,12,11.9,8.7,14)}" fill="#7b3fc4" stroke="#2a0f4a" stroke-width=".9"/><circle cx="12" cy="12" r="7.3" fill="#ffd21f" stroke="#111" stroke-width="1.1"/><path d="${trefoil(12,12,1.9,6.4)}" fill="#111"/><circle cx="12" cy="12" r="1.2" fill="#111"/></svg>`,
+ damage:()=>`<svg viewBox="0 0 24 24"><polygon points="${burst(12,12,11.9,7.6,13)}" fill="#7b3fc4" stroke="#2a0f4a" stroke-width=".9"/><polygon points="${burst(12,12,8.6,5.4,11)}" fill="#ff4fa3"/><circle cx="12" cy="12" r="4.3" fill="#ff9a3d"/><circle cx="12" cy="12" r="2.4" fill="#ffe14d"/></svg>`,
+ injure:()=>`<svg viewBox="0 0 24 24"><polygon points="${burst(12,12,11.9,8,14)}" fill="#ff8a9e" stroke="#b0164f" stroke-width=".9"/><path d="M12 5.6c-3.2 0-5 2.2-5 4.9 0 1.7.8 2.9 1.8 3.5v2.2h6.4V14c1-.6 1.8-1.8 1.8-3.5 0-2.7-1.8-4.9-5-4.9z" fill="#fff"/><circle cx="10" cy="10.6" r="1.4" fill="#ff8a9e"/><circle cx="14" cy="10.6" r="1.4" fill="#ff8a9e"/><path d="M10.5 16.2v1.4M12 16.2v1.4M13.5 16.2v1.4" stroke="#fff" stroke-width=".9"/></svg>`,
+ restore:()=>`<svg viewBox="0 0 24 24"><path d="M3.5 3.5h8v7h9v10.5h-17z" fill="#2bb24c" stroke="#145c26" stroke-width="1.2" stroke-linejoin="round"/><path d="M15.5 17.5c-3.4 0-5.2-1.9-5.2-5.2" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><path d="M8.2 13.6l2.1-2.6 2.1 2.6" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+ draw:()=>`<svg viewBox="0 0 24 24"><path d="M4 12.5l9-3.6 7 3v5.6l-9 3.6-7-3z" fill="#4b2489" stroke="#2a0f4a" stroke-width="1" stroke-linejoin="round"/><path d="M4 7l9-3.6 7 3v5.6l-9 3.6-7-3z" fill="#8a4fd6" stroke="#2a0f4a" stroke-width="1" stroke-linejoin="round"/><path d="M12 12.2V7.3M9.9 9.2L12 7l2.1 2.2" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+ waterPlus:()=>`<svg viewBox="0 0 24 24"><path d="M12 1.5C9 6.5 4.5 10.5 4.5 15.2a7.5 7.5 0 0015 0C19.5 10.5 15 6.5 12 1.5z" fill="#2a9fd0" stroke="#0b4a66" stroke-width="1.4"/><path d="M12 11.3v7.4M8.3 15h7.4" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/></svg>`,
+ punk:()=>`<svg viewBox="0 0 24 24"><rect x="4" y="1.5" width="16" height="21" rx="2.5" fill="#e83e8c" stroke="#8a1450" stroke-width="1"/><path d="M12 5l-1-3 1.2 1.8.8-2.3.4 2.5 1.3-1.4-.7 3.2z" fill="#111"/><path d="M7.5 21c0-3 1.6-4.3 3.2-4.7v-1.6c-1.4-.6-2.2-2-2.2-3.9 0-2.4 1.5-4 3.5-4s3.5 1.6 3.5 4c0 1.9-.8 3.3-2.2 3.9v1.6c1.6.4 3.2 1.7 3.2 4.7z" fill="#111"/><circle cx="10.6" cy="10.9" r="1.1" fill="#fff"/><circle cx="13.4" cy="10.9" r="1.1" fill="#fff"/></svg>`,
+ raid:()=>`<svg viewBox="0 0 24 24"><path d="M12.5 1.5c1.2 3 4.8 4.4 6.3 8.3 1.9 5-1.2 12.4-7 12.4-5.3 0-8.3-4.4-7.6-9 .4-2.6 1.9-4 3-5 .2 2 .9 3 2 3.6-.6-3.9 1.4-7.4 3.3-10.3z" fill="#8fdc2e" stroke="#2f6b0e" stroke-width="1"/><circle cx="12" cy="15.3" r="4.6" fill="#111"/><circle cx="12" cy="15.3" r="1.4" fill="#fff"/></svg>`,
+ punkBack:()=>`<svg viewBox="0 0 100 140" preserveAspectRatio="none"><rect width="100" height="140" fill="#a64fd4"/><path d="M50 24 L44 4 L51 15 L54 0 L57 16 L64 5 L60 27 Z" fill="#111" stroke="#55c7e8" stroke-width="1.2"/><path d="M6 140 C8 113 24 103 39 99 L39 87 C30 82 28 70 29 56 C30 39 38 27 50 27 C62 27 70 39 71 56 C72 70 70 82 61 87 L61 99 C76 103 92 113 94 140 Z" fill="#111" stroke="#55c7e8" stroke-width="1.6"/><circle cx="42" cy="56" r="6.5" fill="#fff"/><circle cx="58" cy="56" r="6.5" fill="#fff"/><path d="M64 106 l6 -15 l2 15 l7 -13 l1 17z" fill="#111" stroke="#55c7e8" stroke-width="1.2"/></svg>`,
+ campBack:()=>`<svg viewBox="0 0 100 140" preserveAspectRatio="none"><defs><linearGradient id="cbsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4fb8f0"/><stop offset="1" stop-color="#7a5cd6"/></linearGradient></defs><rect width="100" height="140" fill="url(#cbsky)"/><path d="M62 0 C55 22 78 32 66 52 C58 66 82 72 74 92" stroke="#f6d8f2" stroke-width="7" fill="none" opacity=".85"/><path d="M0 86 L9 86 L9 40 L27 40 L27 61 L35 61 L35 50 L45 50 L45 71 L59 71 L59 30 L69 30 L69 63 L81 63 L81 46 L90 46 L90 86 L100 86 L100 140 L0 140Z" fill="#2a1f5c" stroke="#7fd0ff" stroke-width="1"/><path d="M0 112 L20 93 L35 105 L52 89 L70 107 L88 95 L100 103 L100 140 L0 140Z" fill="#1a1238" stroke="#7fd0ff" stroke-width="1.3"/></svg>`
+});
+const junkIc=j=>j==='water'?'waterPlus':j;
+
+function ic(name,arg,cls){return `<span class="${cls||'ic'}">${SV[name](arg)}</span>`;}
+
+/* ---------- pomocné efekty ---------- */
+const hasDmgF=(g,p)=>targets(g,1-p).length>0;
+const dmgRun=(g,p)=>actDamage(g,p);
+const dmgAb=(cost,text='Poškoď.')=>({cost,text,icon:'damage',kind:'dmg',can:hasDmgF,run:dmgRun});
+const injAb=cost=>({cost,text:'Zraň.',icon:'injure',kind:'dmg',can:(g,p)=>targets(g,1-p,{peopleOnly:true}).length>0,run:(g,p)=>actDamage(g,p,{peopleOnly:true})});
+const raidAb=cost=>({cost,text:'Nájezd.',icon:'raid',can:(g,p)=>raidPossible(g,p),ai:()=>5,run:(g,p)=>doRaid(g,p)});
+const punkAb=cost=>({cost,text:'Přiveď pankáče.',icon:'punk',ai:(g,p)=>freeSlots(g.pl[p])>0?4:-1,can:(g,p)=>freeSlots(g.pl[p])>0||peopleCount(g.pl[p])>0,run:(g,p)=>gainPunk(g,p)});
+const restoreAb=cost=>({cost,text:'Obnov.',icon:'restore',can:(g,p,src)=>restoreTargets(g,p,src).length>0,ai:()=>5,run:(g,p,src)=>actRestore(g,p,{exclude:src})});
+const sacAi=(g,p)=>hasPunk(g,p)?5:-1;
+
+/* ===================== KARTY ===================== */
+const PEOPLE={
+ looter:{n:2,name:'Plenitel',en:'Looter',cost:1,junk:'water',art:'🎒',ab:[{cost:2,text:'Poškoď. Pokud zasáhneš tábor, dober kartu.',kind:'dmg',can:hasDmgF,run:async(g,p)=>{const r=await actDamage(g,p);if(r&&r.t==='camp')drawTo(g,p);}}]},
+ wounded:{n:2,name:'Raněný voják',en:'Wounded Soldier',cost:1,junk:'injure',art:'🤕',enter:'Když vstoupí do hry: dober kartu, pak poškoď tuto kartu.',onEnter:async(g,p,inst)=>{drawTo(g,p);damage(g,{p,t:'person',uid:inst.uid});},ab:[dmgAb(1)]},
+ cultleader:{n:2,name:'Vůdce kultu',en:'Cult Leader',cost:1,junk:'draw',art:'🕯️',ab:[{cost:0,text:'Znič jednoho svého člověka (i sebe), pak poškoď.',kind:'dmg',can:hasDmgF,ai:(g,p)=>hasPunk(g,p)?7:-1,run:async(g,p)=>{await sacrifice(g,p);await actDamage(g,p);}}]},
+ gunner:{n:2,name:'Kulometčík',en:'Gunner',cost:1,junk:'restore',art:'🔫',ab:[{cost:2,text:'Zraň všechny nechráněné nepřátele.',can:(g,p)=>targets(g,1-p,{peopleOnly:true}).length>0,ai:(g,p)=>3+2*targets(g,1-p,{peopleOnly:true}).length,run:(g,p)=>{targets(g,1-p,{peopleOnly:true}).forEach(r=>damage(g,r));}}]},
+ holdout:{n:2,name:'Držák',en:'Holdout',cost:2,junk:'raid',art:'🛡️',trait:'Do sloupce, kde máš zničený tábor, smíš zahrát tuto kartu za 0 💧.',ab:[dmgAb(1)]},
+ rabble:{n:2,name:'Buřič',en:'Rabble Rouser',cost:1,junk:'raid',art:'📢',ab:[punkAb(1),{cost:1,text:'Poškoď – jen pokud máš pankáče.',kind:'dmg',can:(g,p)=>hasPunk(g,p)&&hasDmgF(g,p),run:dmgRun}]},
+ repairbot:{n:2,name:'Opravobot',en:'Repair Bot',cost:3,junk:'injure',art:'🤖',enter:'Když vstoupí do hry: obnov.',onEnter:(g,p,inst)=>actRestore(g,p,{exclude:{p,t:'person',uid:inst.uid}}),ab:[restoreAb(2)]},
+ scientist:{n:2,name:'Vědec',en:'Scientist',cost:1,junk:'raid',art:'🧪',ab:[{cost:1,text:'Odhoď 3 vrchní karty balíčku. Můžeš použít recyklační efekt jedné z nich.',ai:()=>3,run:async(g,p)=>{const cs=[];for(let i=0;i<3;i++){const c=drawOne(g);if(c){cs.push(c);g.discard.push(c);}}
+   const opts=cs.map(id=>({label:`${DEF(id).name}: ${JUNK[DEF(id).junk].i} ${JUNK[DEF(id).junk].t}`,junk:DEF(id).junk,ai:junkVal(g,p,DEF(id).junk)}));opts.push({label:'Nic',junk:null,ai:0});
+   const c=await choose(g,p,{kind:'pick',text:'Vědec: vyber recyklační efekt',options:opts});if(c&&c.junk)await doJunk(g,p,c.junk);}}]},
+ mutant:{n:2,name:'Mutant',en:'Mutant',cost:1,junk:'injure',art:'🧟',ab:[{cost:0,text:'Poškoď a/nebo obnov, pak poškoď tuto kartu.',can:(g,p,src)=>hasDmgF(g,p)||restoreTargets(g,p,src).length>0,ai:(g,p)=>hasDmgF(g,p)?5:-1,run:async(g,p,src)=>{
+   const d=hasDmgF(g,p),r=restoreTargets(g,p,src).length>0;const o=[];if(d)o.push({label:'💥 Poškodit',v:'d',ai:2});if(r)o.push({label:'🔧 Obnovit',v:'r',ai:1});if(d&&r)o.push({label:'Obojí',v:'b',ai:3});
+   const c=await choose(g,p,{kind:'pick',text:'Mutant: co uděláš?',options:o});if(c.v!=='r')await actDamage(g,p);if(c.v!=='d')await actRestore(g,p,{exclude:src});damage(g,src);}}]},
+ sniper:{n:2,name:'Odstřelovač',en:'Sniper',cost:2,junk:'restore',art:'🎯',ab:[{cost:2,text:'Poškoď libovolnou kartu (ignoruje ochranu).',kind:'dmg',can:(g,p)=>targets(g,1-p,{any:true}).length>0,ai:()=>9,run:(g,p)=>actDamage(g,p,{any:true})}]},
+ pyro:{n:2,name:'Pyroman',en:'Pyromaniac',cost:1,junk:'injure',art:'🔥',ab:[{cost:1,text:'Poškoď nechráněný tábor.',kind:'dmg',can:(g,p)=>targets(g,1-p,{campsOnly:true}).length>0,ai:()=>9,run:(g,p)=>actDamage(g,p,{campsOnly:true})}]},
+ assassin:{n:2,name:'Zabiják',en:'Assassin',cost:2,junk:'raid',art:'🗡️',ab:[{cost:2,text:'Znič nechráněného člověka.',can:(g,p)=>targets(g,1-p,{peopleOnly:true}).length>0,ai:()=>7,run:async(g,p)=>{const c=await choose(g,p,{kind:'destroyEnemy',text:'Zabiják: vyber člověka ke zničení',options:targets(g,1-p,{peopleOnly:true}).map(ref=>({ref}))});if(c)destroyPerson(g,c.ref.uid);}}]},
+ exterminator:{n:2,name:'Dorážeč',en:'Exterminator',cost:1,junk:'draw',art:'☠️',ab:[{cost:1,text:'Znič všechny poškozené nepřátele.',can:(g,p)=>allPeople(g.pl[1-p]).some(x=>x.damaged),ai:()=>8,run:(g,p)=>{allPeople(g.pl[1-p]).filter(x=>x.damaged).forEach(x=>destroyPerson(g,x.uid));}}]},
+ doomsayer:{n:2,name:'Prorok zkázy',en:'Doomsayer',cost:1,junk:'draw',art:'📯',enter:'Když vstoupí do hry: můžeš posunout události soupeře o 1 dozadu.',onEnter:async(g,p)=>{const q=1-p;if(!g.pl[q].events.some(e=>e))return;const c=await choose(g,p,{kind:'pick',text:'Prorok zkázy: odsunout události soupeře o 1 dozadu?',options:[{label:'Ano',v:1,ai:1},{label:'Ne',v:0,ai:0}]});if(c.v){const E=g.pl[q].events;if(!E[2]&&E[1]){E[2]=E[1];E[1]=null;}if(!E[1]&&E[0]){E[1]=E[0];E[0]=null;}log(g,'Události soupeře odsunuty.');}},
+   ab:[{cost:1,text:'Poškoď – jen pokud má soupeř událost ve frontě.',kind:'dmg',can:(g,p)=>g.pl[1-p].events.some(e=>e)&&hasDmgF(g,p),run:dmgRun}]},
+ mimic:{n:2,name:'Napodobitel',en:'Mimic',cost:1,junk:'injure',art:'🎭',ab:[{cost:0,text:'Použij schopnost svého připraveného člověka nebo nepoškozeného nepřítele (zaplatíš její cenu).',can:(g,p,src)=>mimicOpts(g,p,src).length>0,ai:()=>4,run:async(g,p,src)=>{const o=mimicOpts(g,p,src);const c=await choose(g,p,{kind:'pick',text:'Napodobitel: vyber schopnost',options:o});if(!c)return;g.water-=abCost(g,p,c.ab);await c.ab.run(g,p,src);}}]},
+ muse:{n:2,name:'Múza',en:'Muse',cost:1,junk:'injure',art:'🎶',ab:[{cost:0,text:'Získej 1 vodu navíc.',ai:()=>10,run:g=>{g.water++;}}]},
+ rescue:{n:2,name:'Záchranáři',en:'Rescue Team',cost:1,junk:'injure',art:'🚑',readyTrait:true,trait:'Vstupují do hry připravení.',ab:[{cost:0,text:'Vrať jednoho svého člověka do ruky.',ai:()=>-1,run:async(g,p)=>{const c=await choose(g,p,{kind:'sacrifice',text:'Záchranáři: kterého člověka vrátit do ruky?',options:peopleRefs(g,p)});if(c)returnToHand(g,c.ref.uid);}}]},
+ vanguard:{n:2,name:'Předvoj',en:'Vanguard',cost:1,junk:'raid',art:'🚩',enter:'Když vstoupí do hry: přiveď pankáče.',onEnter:(g,p)=>gainPunk(g,p),ab:[{cost:1,text:'Poškoď, pak soupeř poškodí tebe (vybere tvou nechráněnou kartu).',kind:'dmg',can:hasDmgF,ai:()=>5,run:async(g,p)=>{await actDamage(g,p);const t=targets(g,p);if(!t.length)return;const c=await choose(g,1-p,{kind:'dmg',text:'Předvoj: vyber soupeřovu kartu k poškození',options:t.map(ref=>({ref}))});damage(g,c.ref);}}]},
+ vigilante:{n:2,name:'Hlídač',en:'Vigilante',cost:1,junk:'raid',art:'👮',ab:[injAb(1)]},
+ argo:{n:1,name:'Argo Yesky',en:'Argo Yesky',cost:3,junk:'punk',art:'🦾',trait:'Všichni tví lidé (i pankáči) mají schopnost „1💧: Poškoď".',ab:[dmgAb(1)]},
+ karli:{n:1,name:'Karli Blaze',en:'Karli Blaze',cost:3,junk:'punk',art:'🏍️',trait:'Tví lidé vstupují do hry připravení.',ab:[dmgAb(1)]},
+ magnus:{n:1,name:'Magnus Karv',en:'Magnus Karv',cost:3,junk:'punk',art:'🪓',ab:[{cost:2,text:'Poškoď všechny karty v jednom sloupci soupeře.',can:(g,p)=>colOpts(g,1-p,true).length>0,ai:()=>8,run:async(g,p)=>{const q=1-p;const c=await choose(g,p,{kind:'pick',text:'Magnus: vyber sloupec soupeře',options:colOpts(g,q,true)});const P=g.pl[q];P.cols[c.col].slice().reverse().forEach(x=>damage(g,{p:q,t:'person',uid:x.uid}));if(!P.camps[c.col].destroyed)damage(g,{p:q,t:'camp',i:c.col});}}]},
+ molgur:{n:1,name:'Molgur Stang',en:'Molgur Stang',cost:4,junk:'punk',art:'💣',ab:[{cost:1,text:'Znič libovolný tábor soupeře (i chráněný).',can:(g,p)=>g.pl[1-p].camps.some(c=>!c.destroyed),ai:()=>12,run:async(g,p)=>{const q=1-p;const c=await choose(g,p,{kind:'dmg',text:'Molgur: vyber tábor ke zničení',options:g.pl[q].camps.map((c,i)=>c.destroyed?null:{ref:{p:q,t:'camp',i}}).filter(Boolean)});destroyCamp(g,c.ref);}}]},
+ vera:{n:1,name:'Vera Vosh',en:'Vera Vosh',cost:3,junk:'injure',art:'⚡',trait:'Když poprvé v tahu použiješ schopnost nějaké karty, ta zůstane připravená.',ab:[]},
+ zeto:{n:1,name:'Zeto Kahn',en:'Zeto Kahn',cost:3,junk:'punk',art:'👑',trait:'První událost, kterou v tahu zahraješ, se vyhodnotí okamžitě.',ab:[{cost:1,text:'Dober 3 karty, pak 3 karty z ruky odhoď.',ai:()=>2,run:async(g,p)=>{drawTo(g,p,3);await discardN(g,p,3);}}]},
+};
+const EVENTS={
+ banish:{name:'Vyhnanství',en:'Banish',cost:1,slot:1,junk:'raid',art:'🚪',text:'Znič libovolného nepřítele (člověka, i chráněného).',ai:(g,p)=>peopleCount(g.pl[1-p])?6:-1,run:async(g,p)=>{const t=targets(g,1-p,{any:true,peopleOnly:true});if(!t.length)return;const c=await choose(g,p,{kind:'destroyEnemy',text:'Vyhnanství: vyber nepřítele ke zničení',options:t.map(ref=>({ref}))});destroyPerson(g,c.ref.uid);}},
+ bombard:{name:'Bombardování',en:'Bombardment',cost:4,slot:3,junk:'restore',art:'✈️',text:'Poškoď všechny tábory soupeře, pak dober kartu za každý zničený tábor soupeře.',ai:()=>9,run:(g,p)=>{const q=1-p;g.pl[q].camps.forEach((c,i)=>{if(!c.destroyed)damage(g,{p:q,t:'camp',i});});drawTo(g,p,destroyedCamps(g.pl[q]));}},
+ famine:{name:'Hladomor',en:'Famine',cost:1,slot:1,junk:'injure',art:'🦴',text:'Každý hráč zničí všechny své lidi kromě jednoho (sám si vybere).',ai:(g,p)=>peopleCount(g.pl[1-p])>=peopleCount(g.pl[p])+2?6:-1,run:async(g,p)=>{for(const q of [p,1-p]){const ps=allPeople(g.pl[q]);if(ps.length<=1)continue;const c=await choose(g,q,{kind:'keep',text:`Hladomor (${g.names[q]}): kterého člověka si ponecháš?`,options:peopleRefs(g,q)});ps.forEach(x=>{if(x.uid!==c.ref.uid)destroyPerson(g,x.uid);});}}},
+ highground:{name:'Vyvýšené místo',en:'High Ground',cost:0,slot:1,junk:'water',art:'⛰️',text:'V tomto tahu jsou všechny karty soupeře nechráněné.',ai:()=>3,run:(g,p)=>{g.tf.hg=p;log(g,'Vyvýšené místo: soupeř je v tomto tahu nechráněný!');}},
+ interrogate:{name:'Výslech',en:'Interrogate',cost:1,slot:0,junk:'water',art:'🔦',text:'Dober 4 karty, pak 3 karty z ruky odhoď.',ai:()=>4,run:async(g,p)=>{drawTo(g,p,4);await discardN(g,p,3);}},
+ napalm:{name:'Napalm',en:'Napalm',cost:2,slot:1,junk:'restore',art:'🧨',text:'Znič všechny nepřátele v jednom sloupci.',ai:(g,p)=>peopleCount(g.pl[1-p])?7:-1,run:async(g,p)=>{const q=1-p;const o=colOpts(g,q,false);if(!o.length)return;const c=await choose(g,p,{kind:'pick',text:'Napalm: vyber sloupec soupeře',options:o});g.pl[q].cols[c.col].slice().forEach(x=>destroyPerson(g,x.uid));}},
+ radiation:{name:'Radiace',en:'Radiation',cost:2,slot:1,junk:'raid',art:'☣️',text:'Zraň všechny lidi (i své).',ai:(g,p)=>peopleCount(g.pl[1-p])>peopleCount(g.pl[p])?5:-1,run:(g,p)=>{[0,1].forEach(q=>allPeople(g.pl[q]).forEach(x=>damage(g,{p:q,t:'person',uid:x.uid})));}},
+ strafe:{name:'Kropení',en:'Strafe',cost:2,slot:0,junk:'draw',art:'🛩️',text:'Zraň všechny nechráněné nepřátele.',ai:(g,p)=>targets(g,1-p,{peopleOnly:true}).length>=2?6:-1,run:(g,p)=>{targets(g,1-p,{peopleOnly:true}).forEach(r=>damage(g,r));}},
+ truce:{name:'Příměří',en:'Truce',cost:2,slot:0,junk:'injure',art:'🕊️',text:'Všichni lidé se vrátí do rukou svých majitelů.',ai:(g,p)=>peopleCount(g.pl[1-p])>peopleCount(g.pl[p])+1?5:-1,run:(g)=>{[0,1].forEach(q=>allPeople(g.pl[q]).forEach(x=>returnToHand(g,x.uid)));}},
+ uprising:{name:'Povstání',en:'Uprising',cost:1,slot:2,junk:'injure',art:'✊',text:'Přiveď 3 pankáče.',ai:(g,p)=>freeSlots(g.pl[p])>=2?5:-1,run:async(g,p)=>{for(let i=0;i<3;i++)await gainPunk(g,p);}},
+};
+const CAMPS={
+ railgun:{name:'Pulzní dělo',en:'Railgun',draw:0,art:'⚡',ab:[dmgAb(2)]},
+ garage:{name:'Garáž',en:'Garage',draw:0,art:'🚗',ab:[raidAb(1)]},
+ supply:{name:'Hangáry',en:'Supply Depot',draw:2,art:'📦',ab:[{cost:2,text:'Dober 2 karty, pak 1 kartu z ruky odhoď.',ai:()=>3,run:async(g,p)=>{drawTo(g,p,2);await discardN(g,p,1);}}]},
+ reactor:{name:'Reaktor',en:'Reactor',draw:1,art:'☢️',ab:[{cost:2,text:'Znič tento tábor a všechny lidi (obou hráčů).',ai:(g,p)=>peopleCount(g.pl[1-p])>=peopleCount(g.pl[p])+3?7:-1,run:(g,p,src)=>{[0,1].forEach(q=>allPeople(g.pl[q]).forEach(x=>destroyPerson(g,x.uid)));destroyCamp(g,src);}}]},
+ cannon:{name:'Kanón',en:'Cannon',draw:1,art:'💥',startDamaged:true,trait:'Začíná hru poškozený.',ab:[{cost:2,text:'Poškoď – jen pokud je tento tábor nepoškozený.',kind:'dmg',can:(g,p,src)=>!campOf(g,src).damaged&&hasDmgF(g,p),run:dmgRun}]},
+ totem:{name:'Totem vítězů',en:'Victory Totem',draw:1,art:'🗿',ab:[injAb(2),raidAb(2)]},
+ atomic:{name:'Atomová zahrada',en:'Atomic Garden',draw:1,art:'🌱',ab:[{cost:2,text:'Obnov poškozeného člověka – bude hned připravený.',can:(g,p)=>restoreTargets(g,p,null,true).length>0,ai:()=>5,run:async(g,p)=>{const r=await actRestore(g,p,{peopleOnly:true});if(r){const x=findP(g,r.uid);if(x)x.card.restored=false;}}}]},
+ pillbox:{name:'Bunkr',en:'Pillbox',draw:1,art:'🏰',ab:[{cost:3,costFn:(g,p)=>Math.max(0,3-destroyedCamps(g.pl[p])),text:'Poškoď. Stojí o 1 💧 méně za každý tvůj zničený tábor.',kind:'dmg',can:hasDmgF,run:dmgRun}]},
+ scud:{name:'Raketomet',en:'Scud Launcher',draw:0,art:'🚀',ab:[{cost:1,text:'Soupeř si vybere jednu svou kartu a poškodí ji.',ai:()=>7,can:(g,p)=>allCardRefs(g,1-p).length>0,run:async(g,p)=>{const q=1-p;const c=await choose(g,q,{kind:'ownDmg',text:'Raketomet: vyber svou kartu, která bude poškozena',options:allCardRefs(g,q).map(ref=>({ref}))});damage(g,c.ref);}}]},
+ catapult:{name:'Katapult',en:'Catapult',draw:0,art:'🏹',ab:[{cost:2,text:'Poškoď libovolnou kartu, pak znič jednoho svého člověka.',kind:'dmg',can:(g,p)=>peopleCount(g.pl[p])>0&&targets(g,1-p,{any:true}).length>0,ai:(g,p)=>hasPunk(g,p)?8:-1,run:async(g,p)=>{await actDamage(g,p,{any:true});await sacrifice(g,p);}}]},
+ nest:{name:'Doupě špehů',en:'Nest of Spies',draw:1,art:'🕵️',ab:[{cost:1,text:'Poškoď – jen pokud jsi v tomto tahu zahrál 2+ lidi.',kind:'dmg',can:(g,p)=>g.tf.peoplePlayed>=2&&hasDmgF(g,p),run:dmgRun}]},
+ command:{name:'Velitelství',en:'Command Post',draw:2,art:'📡',ab:[{cost:3,costFn:(g,p)=>Math.max(0,3-punkCount(g.pl[p])),text:'Poškoď. Stojí o 1 💧 méně za každého tvého pankáče.',kind:'dmg',can:hasDmgF,run:dmgRun}]},
+ octagon:{name:'Oktagon',en:'The Octagon',draw:0,art:'🥊',ab:[{cost:1,text:'Znič jednoho svého člověka. Pokud to uděláš, soupeř zničí jednoho svého.',can:(g,p)=>peopleCount(g.pl[p])>0,ai:(g,p)=>hasPunk(g,p)&&peopleCount(g.pl[1-p])>0?5:-1,run:async(g,p)=>{const r=await sacrifice(g,p);if(r&&peopleCount(g.pl[1-p]))await sacrifice(g,1-p,'Oktagon: znič jednoho svého člověka');}}]},
+ scav:{name:'Sběrný tábor',en:'Scavenger Camp',draw:1,art:'🔩',ab:[{cost:0,text:'Odhoď kartu z ruky, pak získej 1 vodu navíc, nebo přiveď pankáče.',can:(g,p)=>g.pl[p].hand.some(h=>h.id!=='silo'),ai:(g,p)=>g.pl[p].hand.length>=5?3:-1,run:async(g,p)=>{await discardN(g,p,1);const c=await choose(g,p,{kind:'pick',text:'Vyber odměnu',options:[{label:'💧 Voda navíc',v:'w',ai:1},{label:'👤 Pankáč',v:'p',ai:freeSlots(g.pl[p])?2:0}]});if(c.v==='w')g.water++;else await gainPunk(g,p);}}]},
+ outpost:{name:'Základna',en:'Outpost',draw:1,art:'⛺',ab:[raidAb(2),restoreAb(2)]},
+ mulcher:{name:'Drtička',en:'Mulcher',draw:0,art:'⚙️',ab:[{cost:0,text:'Znič jednoho svého člověka, pak dober kartu.',can:(g,p)=>peopleCount(g.pl[p])>0,ai:sacAi,run:async(g,p)=>{await sacrifice(g,p);drawTo(g,p);}}]},
+ blood:{name:'Krevní banka',en:'Blood Bank',draw:1,art:'🩸',ab:[{cost:0,text:'Znič jednoho svého člověka, pak získej 1 vodu navíc.',can:(g,p)=>peopleCount(g.pl[p])>0,ai:sacAi,run:async(g,p)=>{await sacrifice(g,p);g.water++;}}]},
+ arcade:{name:'Herna',en:'Arcade',draw:1,art:'🕹️',ab:[{cost:1,text:'Přiveď pankáče – jen pokud máš 0 nebo 1 člověka.',can:(g,p)=>peopleCount(g.pl[p])<=1,ai:()=>6,run:(g,p)=>gainPunk(g,p)}]},
+ training:{name:'Cvičiště',en:'Training Camp',draw:2,art:'🎖️',ab:[{cost:2,text:'Poškoď – jen pokud jsou v tomto sloupci 2 lidé.',kind:'dmg',can:(g,p,src)=>g.pl[p].cols[src.i].length===2&&hasDmgF(g,p),run:dmgRun}]},
+ omen:{name:'Hodiny zkázy',en:'Omen Clock',draw:1,art:'⏰',ab:[{cost:1,text:'Posuň libovolnou událost o 1 dopředu (z pozice 1 se hned vyhodnotí).',can:g=>omenOpts(g).length>0,ai:(g,p)=>omenOpts(g).some(o=>o.q===p)?4:-1,run:async(g,p)=>{const o=omenOpts(g).map(x=>({...x,ai:x.q===p?5:-5}));const c=await choose(g,p,{kind:'pick',text:'Hodiny zkázy: kterou událost posunout?',options:o});const E=g.pl[c.q].events;const e=E[c.k];if(c.k===0){E[0]=null;await resolveEvent(g,c.q,e);}else{E[c.k-1]=e;E[c.k]=null;log(g,`${evName(e)} posunuto.`);}}}]},
+ warehouse:{name:'Sklad',en:'Warehouse',draw:1,art:'🏚️',ab:[{cost:1,text:'Obnov – jen pokud má soupeř nechráněný tábor.',can:(g,p,src)=>[0,1,2].some(i=>!g.pl[1-p].camps[i].destroyed&&campUnprot(g,1-p,i))&&restoreTargets(g,p,src).length>0,ai:()=>5,run:(g,p,src)=>actRestore(g,p,{exclude:src})}]},
+ kolos:{name:'Kolos',en:'Juggernaut',draw:0,art:'🚜',ab:[{cost:1,text:'Posuň tuto kartu o jedno místo vpřed (lidé se posouvají za ni). Po třetím pohybu: vrať ji na počáteční místo, poté protivník zničí jeden svůj tábor.',ai:()=>6,run:async(g,p,src)=>{const c=campOf(g,src);c.moves=(c.moves||0)+1;
+   if(c.moves>=3){c.moves=0;c.kpos=0;log(g,'🚜 Kolos se vrací na místo – soupeř přichází o tábor!');const q=1-p;const o=g.pl[q].camps.map((cc,i)=>cc.destroyed?null:{ref:{p:q,t:'camp',i},ai:cc.damaged?5:1}).filter(Boolean);const ch=await choose(g,q,{kind:'ownCamp',text:'Kolos: vyber svůj tábor, který bude zničen',options:o});if(ch)destroyCamp(g,ch.ref);}
+   else{c.kpos=c.moves;log(g,`🚜 Kolos se posouvá vpřed (${c.moves}/3).`);}}}]},
+ oasis:{name:'Oáza',en:'Oasis',draw:1,art:'🌴',trait:'Lidé zahraní do tohoto sloupce stojí o 1 💧 méně.',ab:[]},
+ labor:{name:'Pracovní tábor',en:'Labor Camp',draw:1,art:'⛏️',ab:[{cost:0,text:'Znič jednoho svého člověka, pak obnov kartu (ne tento tábor).',can:(g,p,src)=>peopleCount(g.pl[p])>0&&restoreTargets(g,p,src).length>0,ai:(g,p)=>hasPunk(g,p)&&g.pl[p].camps.some(c=>c.damaged&&!c.destroyed)?6:-1,run:async(g,p,src)=>{await sacrifice(g,p);await actRestore(g,p,{exclude:src});}}]},
+ bonfire:{name:'Vatra',en:'Bonfire',draw:1,art:'🔥',trait:'Tuto kartu nelze obnovit.',ab:[{cost:0,text:'Poškoď tuto kartu, poté obnov libovolný počet karet.',can:(g,p,src)=>restoreTargets(g,p,src).length>0,ai:(g,p,src)=>!campOf(g,src).damaged&&restoreTargets(g,p,src).length>=2?6:-1,run:async(g,p,src)=>{damage(g,src);while(true){const t=restoreTargets(g,p,src);if(!t.length)break;const c=await choose(g,p,{kind:'restore',text:'Vatra: obnov kartu, nebo Hotovo',options:[...t.map(ref=>({ref})),{label:'Hotovo',done:true,ai:-1}]});if(!c||c.done)break;restore(g,c.ref);}}}]},
+ cache:{name:'Skrýš',en:'Cache',draw:1,art:'🗃️',ab:[{cost:2,text:'Nájezd a přiveď pankáče.',ai:()=>5,run:async(g,p)=>{await doRaid(g,p);await gainPunk(g,p);}}]},
+ watchtower:{name:'Strážní věž',en:'Watchtower',draw:0,art:'🗼',ab:[{cost:1,text:'Poškoď – jen pokud se v tomto tahu vyhodnotila nějaká událost.',kind:'dmg',can:(g,p)=>g.tf.eventResolved&&hasDmgF(g,p),run:dmgRun}]},
+ transplant:{name:'Transplantační klinika',en:'Transplant Lab',draw:2,art:'🫀',ab:[{cost:1,text:'Obnov (ne tento tábor) – jen pokud jsi v tomto tahu zahrál 2+ lidi.',can:(g,p,src)=>g.tf.peoplePlayed>=2&&restoreTargets(g,p,src).length>0,ai:()=>5,run:(g,p,src)=>actRestore(g,p,{exclude:src})}]},
+ resonator:{name:'Rezonátor',en:'Resonator',draw:1,art:'📻',ab:[{cost:1,text:'Poškoď. Musí to být jediná schopnost, kterou v tomto tahu použiješ.',kind:'dmg',can:(g,p)=>g.tf.abilitiesUsed===0&&hasDmgF(g,p),ai:(g,p)=>peopleCount(g.pl[p])===0?8:-1,after:g=>{g.tf.resonator=true;},run:dmgRun}]},
+ adrenaline:{name:'Adrenalinová laboratoř',en:'Adrenaline Lab',draw:1,art:'💉',ab:[{cost:0,text:'Použij schopnost svého poškozeného člověka (zaplatíš její cenu), pak ho znič.',can:(g,p,src)=>adrenOpts(g,p).length>0,ai:()=>-1,run:async(g,p)=>{const c=await choose(g,p,{kind:'pick',text:'Adrenalin: vyber schopnost',options:adrenOpts(g,p)});g.water-=abCost(g,p,c.ab);const ref={p,t:'person',uid:c.uid};await c.ab.run(g,p,ref);if(findP(g,c.uid))destroyPerson(g,c.uid);}}]},
+ parachute:{name:'Základna paragánů',en:'Parachute Base',draw:1,art:'🪂',ab:[{cost:0,costLabel:'?',text:'Zahraj člověka a použij jeho schopnost (obojí musíš zaplatit). Poté tohoto člověka poškoď.',can:(g,p)=>g.pl[p].hand.some(h=>DEF(h.id).type==='person'&&canPlay(g,p,h)),ai:()=>-1,run:async(g,p)=>{
+   const hs=g.pl[p].hand.filter(h=>DEF(h.id).type==='person'&&canPlay(g,p,h));const c=await choose(g,p,{kind:'pick',text:'Paragáni: kterého člověka zahrát?',options:hs.map(h=>({ref:{p,t:'hand',uid:h.uid},label:DEF(h.id).name}))});
+   const inst=await playPerson(g,p,hs.find(h=>h.uid===c.ref.uid));if(!inst)return;const ref={p,t:'person',uid:inst.uid};
+   const abs=abilitiesOf(g,p,ref).filter(ab=>abCost(g,p,ab)<=g.water&&(!ab.can||ab.can(g,p,ref)));
+   if(abs.length){const a=await choose(g,p,{kind:'pick',text:'Paragáni: kterou schopnost použít?',options:[...abs.map(ab=>({label:`${ab.text} (${abCost(g,p,ab)}💧)`,ab})),{label:'Žádnou',ab:null}]});if(a&&a.ab){g.water-=abCost(g,p,a.ab);await a.ab.run(g,p,ref);}}
+   if(findP(g,inst.uid))damage(g,ref);}}]},
+};
+const SPECIAL={
+ silo:{name:'Vodní silo',en:'Water Silo',type:'silo',junk:'water',art:'🛢️',traits:['Zaplať 1 💧 a vezmi si tuto kartu do ruky.','Když recykluješ tuto kartu, vrať své herní oblasti.'],text:'Vezmi si ho do ruky za 1 💧 (může tam zůstat přes tahy). Recyklací ho vrátíš na stůl a získáš 1 vodu navíc.'},
+ raiders:{name:'Nájezdníci',en:'Raiders',type:'event',slot:2,badge:'raid',art:'🏴‍☠️',text:'Když se vyhodnotí, soupeř poškodí jeden ze svých táborů (i chráněný). Pak se vrátí k tobě.'},
+ punk:{name:'Pankáč',en:'Punk',type:'person',art:'👤',text:'Člověk bez schopností, lícem dolů. Při poškození je hned zničen a vrací se lícem dolů na balíček.'},
+};
+const ALL={};
+for(const[k,d]of Object.entries(PEOPLE)){d.id=k;d.type='person';ALL[k]=d;}
+for(const[k,d]of Object.entries(EVENTS)){d.id=k;d.type='event';ALL[k]=d;}
+for(const[k,d]of Object.entries(CAMPS)){d.id=k;d.type='camp';ALL[k]=d;}
+for(const[k,d]of Object.entries(SPECIAL)){d.id=k;ALL[k]=d;}
+const DEF=id=>ALL[id];
+const ICON_GUESS=[[/^Znič/,'destroy'],[/Poškoď/,'damage'],[/Zraň/,'injure'],[/Nájezd/,'raid'],[/pankáče/,'punk'],[/^Obnov/,'restore'],[/Dober|dober/,'draw'],[/vodu/,'water']];
+for(const d of Object.values(ALL))(d.ab||[]).forEach(ab=>{if(!ab.icon){const m=ICON_GUESS.find(([r])=>r.test(ab.text));if(m)ab.icon=m[1];}});
+const ARGO_AB={cost:1,text:'Poškoď (díky Argovi).',icon:'damage',kind:'dmg',can:hasDmgF,run:dmgRun};
+
+/* ===================== STAV A PRAVIDLA ===================== */
+const mkP=()=>({camps:[],cols:[[],[],[]],hand:[],events:[null,null,null],raidersHome:true,siloHome:true});
+const allPeople=P=>P.cols.flat();
+const peopleCount=P=>allPeople(P).length;
+const punkCount=P=>allPeople(P).filter(x=>x.punk).length;
+const hasPunk=(g,p)=>punkCount(g.pl[p])>0;
+const freeSlots=P=>P.cols.reduce((s,c)=>s+2-c.length,0);
+const destroyedCamps=P=>P.camps.filter(c=>c.destroyed).length;
+const campOf=(g,r)=>g.pl[r.p].camps[r.i];
+const peopleRefs=(g,q)=>allPeople(g.pl[q]).map(x=>({ref:{p:q,t:'person',uid:x.uid}}));
+function allCardRefs(g,q){const P=g.pl[q],r=[];P.camps.forEach((c,i)=>{if(!c.destroyed)r.push({p:q,t:'camp',i});});allPeople(P).forEach(x=>r.push({p:q,t:'person',uid:x.uid}));return r;}
+function findP(g,uid){for(const q of[0,1])for(let c=0;c<3;c++){const i=g.pl[q].cols[c].findIndex(x=>x.uid===uid);if(i>=0)return{q,col:c,idx:i,card:g.pl[q].cols[c][i]};}return null;}
+const keyOf=r=>r.t==='camp'?`c${r.p}_${r.i}`:r.t==='person'?`u${r.uid}`:`h${r.uid}`;
+const sameRef=(a,b)=>a&&b&&keyOf(a)===keyOf(b);
+const evName=e=>DEF(e.id).name;
+function nameRef(g,r){if(r.t==='camp')return CAMPS[g.pl[r.p].camps[r.i].id].name;if(r.t==='person'){const x=findP(g,r.uid);return x?(x.card.punk?'Pankáč':DEF(x.card.id).name):'?';}const h=g.pl[r.p].hand.find(h=>h.uid===r.uid);return h?DEF(h.id).name:'?';}
+function log(g,s){g.log.push(s);if(g.log.length>200)g.log.shift();}
+
+function slotsOf(P,i){const camp=P.camps[i];const k=(camp.id==='kolos'&&!camp.destroyed)?(camp.kpos||0):0;const arr=[null,null,null];arr[k]={camp:true};let j=0;P.cols[i].forEach(x=>{while(arr[j])j++;arr[j]=x;j++;});return arr;}
+function frontOf(P,i){const arr=slotsOf(P,i);for(let s=2;s>=0;s--){const e=arr[s];if(!e)continue;if(e.camp&&P.camps[i].destroyed)continue;return e;}return null;}
+const campUnprot=(g,q,i)=>{const f=frontOf(g.pl[q],i);return !!(f&&f.camp);};
+function targets(g,q,o={}){const P=g.pl[q],res=[];const all=o.any||(g.tf&&g.tf.hg===1-q);
+ for(let i=0;i<3;i++){const col=P.cols[i],camp=P.camps[i];
+  if(all){if(!o.peopleOnly&&!camp.destroyed)res.push({p:q,t:'camp',i});if(!o.campsOnly)col.forEach(x=>res.push({p:q,t:'person',uid:x.uid}));}
+  else{const f=frontOf(P,i);if(!f)continue;if(f.camp){if(!o.peopleOnly)res.push({p:q,t:'camp',i});}else if(!o.campsOnly)res.push({p:q,t:'person',uid:f.uid});}}
+ return res;}
+
+function endGame(g,winner,msg){if(g===G)lsDel(SKEY);sfx(winner==null?'lose':(g.mode==='ai'&&winner===1?'lose':'win'));g.over={winner,msg:msg||(winner==null?'Remíza!':`Vítěz: ${g.names[winner]}!`)};log(g,g.over.msg);render();throw new GameOver();}
+function checkWin(g){const d=[0,1].map(i=>g.pl[i].camps.every(c=>c.destroyed));if(d[0]||d[1])endGame(g,d[0]&&d[1]?null:(d[0]?1:0));}
+
+function damage(g,r){
+ if(r.t==='camp'){const c=campOf(g,r);if(c.destroyed)return;if(c.damaged){c.destroyed=true;fx('destroy',keyOf(r));sfx('boom');log(g,`💥 ${CAMPS[c.id].name} (${g.names[r.p]}) ZNIČEN!`);checkWin(g);}else{c.damaged=true;fx('hit',keyOf(r));sfx('hit');log(g,`💥 ${CAMPS[c.id].name} (${g.names[r.p]}) poškozen.`);}return;}
+ const x=findP(g,r.uid);if(!x)return;
+ if(x.card.punk||x.card.damaged)destroyPerson(g,r.uid);else{x.card.damaged=true;fx('hit','u'+r.uid);sfx('hit');log(g,`🩸 ${DEF(x.card.id).name} (${g.names[x.q]}) poškozen.`);}
+}
+function destroyCamp(g,r){const c=campOf(g,r);if(c.destroyed)return;c.destroyed=true;c.damaged=true;fx('destroy',keyOf(r));sfx('boom');log(g,`☠ ${CAMPS[c.id].name} (${g.names[r.p]}) ZNIČEN!`);checkWin(g);}
+function destroyPerson(g,uid){const x=findP(g,uid);if(!x)return;fx('destroy','u'+uid);sfx('boom');g.pl[x.q].cols[x.col].splice(x.idx,1);
+ if(x.card.punk){g.deck.push(x.card.hidden);log(g,`☠ Pankáč (${g.names[x.q]}) zničen.`);}else{g.discard.push(x.card.id);log(g,`☠ ${DEF(x.card.id).name} (${g.names[x.q]}) zničen.`);}}
+function returnToHand(g,uid){const x=findP(g,uid);if(!x)return;g.pl[x.q].cols[x.col].splice(x.idx,1);const id=x.card.punk?x.card.hidden:x.card.id;g.pl[x.q].hand.push({uid:nid(),id});log(g,`↩ ${x.card.punk?'Pankáč':DEF(id).name} se vrací do ruky (${g.names[x.q]}).`);}
+function restore(g,r){fx('heal',keyOf(r));sfx('heal');if(r.t==='camp'){const c=campOf(g,r);c.damaged=false;log(g,`🔧 ${CAMPS[c.id].name} obnoven.`);}else{const x=findP(g,r.uid);if(!x)return;x.card.damaged=false;x.card.restored=true;log(g,`🔧 ${DEF(x.card.id).name} obnoven.`);}}
+function restoreTargets(g,p,exclude,peopleOnly){const P=g.pl[p],r=[];if(!peopleOnly)P.camps.forEach((c,i)=>{const rf={p,t:'camp',i};if(c.damaged&&!c.destroyed&&c.id!=='bonfire'&&!sameRef(rf,exclude))r.push(rf);});
+ allPeople(P).forEach(x=>{const rf={p,t:'person',uid:x.uid};if(x.damaged&&!sameRef(rf,exclude))r.push(rf);});return r;}
+
+function drawOne(g){if(!g.deck.length){if(g.reshuffles>=1||!g.discard.length)endGame(g,null,'Balíček došel podruhé – hra končí remízou.');g.reshuffles++;g.deck=shuffle(g.discard);g.discard=[];log(g,'♻ Odhozené karty zamíchány jako nový balíček (příště už remíza).');}return g.deck.pop();}
+function drawTo(g,p,n=1){if(n>0)sfx('card');for(let i=0;i<n;i++){const id=drawOne(g);g.pl[p].hand.push({uid:nid(),id});}if(n>0)log(g,`🃏 ${g.names[p]} si dobírá ${n} ${n===1?'kartu':n<5?'karty':'karet'}.`);}
+
+/* ---------- výběry ---------- */
+function choose(g,p,spec){if(!spec.options||!spec.options.length)return Promise.resolve(null);
+ if(isAI(g,p))return Promise.resolve(aiChoose(g,p,spec));
+ return new Promise(res=>{g.prompt={...spec,p,res};g.detail=null;render();});}
+async function actDamage(g,p,o={}){const t=targets(g,1-p,o);if(!t.length){log(g,'Žádný platný cíl.');return null;}
+ const c=await choose(g,p,{kind:'dmg',text:o.peopleOnly?'Vyber člověka ke zranění':'Vyber cíl k poškození',options:t.map(ref=>({ref}))});damage(g,c.ref);return c.ref;}
+async function actRestore(g,p,o={}){const t=restoreTargets(g,p,o.exclude,o.peopleOnly);if(!t.length)return null;const c=await choose(g,p,{kind:'restore',text:'Vyber svou kartu k obnovení',options:t.map(ref=>({ref}))});restore(g,c.ref);return c.ref;}
+async function sacrifice(g,p,text){const o=peopleRefs(g,p);if(!o.length)return null;const c=await choose(g,p,{kind:'sacrifice',text:text||'Vyber svého člověka ke zničení',options:o});destroyPerson(g,c.ref.uid);return c.ref;}
+async function discardN(g,p,n){for(let i=0;i<n;i++){const hs=g.pl[p].hand.filter(h=>h.id!=='silo');if(!hs.length)return;const c=await choose(g,p,{kind:'discard',text:`Odhoď kartu z ruky (${i+1}/${n})`,options:hs.map(h=>({ref:{p,t:'hand',uid:h.uid}}))});const P=g.pl[p];const k=P.hand.findIndex(h=>h.uid===c.ref.uid);const [h]=P.hand.splice(k,1);g.discard.push(h.id);log(g,`🗑 ${g.names[p]} odhazuje ${DEF(h.id).name}.`);}}
+function colOpts(g,q,incCamp){const P=g.pl[q];return[0,1,2].map(i=>{const n=P.cols[i].length;const ok=n>0||(incCamp&&!P.camps[i].destroyed);if(!ok)return null;const val=P.cols[i].reduce((s,x)=>s+(x.punk?1:DEF(x.id).cost+1),0)+(incCamp&&!P.camps[i].destroyed?(P.camps[i].damaged?9:5):0);return{label:`Sloupec ${i+1}: ${CAMPS[P.camps[i].id].name} (${n} lidí)`,col:i,ai:val};}).filter(Boolean);}
+function omenOpts(g){const r=[];[0,1].forEach(q=>g.pl[q].events.forEach((e,k)=>{if(e&&(k===0||!g.pl[q].events[k-1]))r.push({label:`${g.names[q]}: ${evName(e)} (pozice ${k+1})`,q,k});}));return r;}
+function mimicOpts(g,p,src){const o=[];
+ allPeople(g.pl[p]).forEach(x=>{if(x.uid===src.uid||x.punk||x.id==='mimic'||!personReady(x))return;const rf={p,t:'person',uid:x.uid};abilitiesOf(g,p,rf).forEach(ab=>{if(abCost(g,p,ab)<=g.water&&(!ab.can||ab.can(g,p,src)))o.push({label:`${DEF(x.id).name}: ${ab.text} (${abCost(g,p,ab)}💧)`,ab,ai:ab.kind==='dmg'?5:2});});});
+ allPeople(g.pl[1-p]).forEach(x=>{if(x.punk||x.damaged||x.id==='mimic')return;(DEF(x.id).ab||[]).forEach(ab=>{if(abCost(g,p,ab)<=g.water&&(!ab.can||ab.can(g,p,src)))o.push({label:`${DEF(x.id).name} (soupeř): ${ab.text} (${abCost(g,p,ab)}💧)`,ab,ai:ab.kind==='dmg'?5:2});});});return o;}
+function adrenOpts(g,p){const o=[];allPeople(g.pl[p]).forEach(x=>{if(!x.damaged||x.punk)return;(DEF(x.id).ab||[]).forEach(ab=>{const rf={p,t:'person',uid:x.uid};if(abCost(g,p,ab)<=g.water&&(!ab.can||ab.can(g,p,rf)))o.push({label:`${DEF(x.id).name}: ${ab.text} (${abCost(g,p,ab)}💧)`,ab,uid:x.uid});});});return o;}
+
+/* ---------- lidé ---------- */
+const argoActive=(g,p)=>allPeople(g.pl[p]).some(x=>x.id==='argo'&&!x.damaged&&!x.punk);
+const karliActive=(g,p)=>allPeople(g.pl[p]).some(x=>x.id==='karli'&&!x.damaged&&!x.punk);
+const veraActive=(g,p)=>allPeople(g.pl[p]).some(x=>x.id==='vera'&&!x.damaged&&!x.punk);
+const zetoActive=(g,p)=>allPeople(g.pl[p]).some(x=>x.id==='zeto'&&!x.damaged&&!x.punk);
+const personReady=x=>!x.damaged&&!x.used&&!x.restored&&!x.played;
+function personCost(g,p,d,col){let c=d.cost;const camp=g.pl[p].camps[col];if(d.id==='holdout'&&camp.destroyed)c=0;if(camp.id==='oasis'&&!camp.destroyed)c-=1;return Math.max(0,c);}
+function placeOpts(g,p,d){const P=g.pl[p],o=[];for(let col=0;col<3;col++){const n=P.cols[col].length;if(n>=2)continue;const cost=d?personCost(g,p,d,col):0;const cn=CAMPS[P.camps[col].id].name+(P.camps[col].destroyed?' ☠':'');const cs=d?` · ${cost}💧`:'';
+ if(n===0)o.push({label:`Před ${cn}${cs}`,col,pos:'front',cost});else{o.push({label:`${cn}: dopředu${cs}`,col,pos:'front',cost});o.push({label:`${cn}: dozadu${cs}`,col,pos:'back',cost});}}return o;}
+async function placePerson(g,p,inst,d){const P=g.pl[p];
+ if(freeSlots(P)===0){const c=await choose(g,p,{kind:'sacrifice',optional:true,text:'Nemáš místo. Znič nejdřív jednoho svého člověka (nebo zruš).',options:peopleRefs(g,p)});if(!c)return false;destroyPerson(g,c.ref.uid);}
+ let opts=placeOpts(g,p,d);if(d)opts=opts.filter(o=>o.cost<=g.water);if(!opts.length)return false;
+ const c=opts.length===1?opts[0]:await choose(g,p,{kind:'place',text:`Kam umístíš: ${inst.punk?'Pankáč':DEF(inst.id).name}?`,options:opts});
+ if(c.cost>0)sfx('drop');g.water-=c.cost;if(c.pos==='front')P.cols[c.col].push(inst);else P.cols[c.col].unshift(inst);fx(inst.punk?'punk':'play','u'+inst.uid);sfx(inst.punk?'punk':'play');
+ inst.played=!(karliActive(g,p)||(!inst.punk&&DEF(inst.id).readyTrait));g.tf.peoplePlayed++;return true;}
+async function gainPunk(g,p){const hidden=drawOne(g);const inst={uid:nid(),id:'punk',punk:true,hidden,damaged:false,used:false,restored:false,played:true};
+ const ok=await placePerson(g,p,inst,null);if(!ok){g.deck.push(hidden);log(g,'Pankáč nebyl přiveden (není místo).');return;}log(g,`👤 ${g.names[p]} přivádí pankáče.`);}
+async function playPerson(g,p,h){const d=DEF(h.id),P=g.pl[p];const k=P.hand.findIndex(x=>x.uid===h.uid);if(k<0)return null;P.hand.splice(k,1);
+ const inst={uid:nid(),id:h.id,punk:false,damaged:false,used:false,restored:false,played:true};
+ const ok=await placePerson(g,p,inst,d);if(!ok){P.hand.push(h);return null;}
+ log(g,`▶ ${g.names[p]} hraje ${d.name}.`);if(d.onEnter)await d.onEnter(g,p,inst);return inst;}
+
+/* ---------- události ---------- */
+const freeSlot=(P,s)=>{for(let i=Math.max(0,s);i<3;i++)if(!P.events[i])return i;return -1;};
+function raidPossible(g,p){const P=g.pl[p];if(P.raidersHome)return freeSlot(P,1)>=0;const k=P.events.findIndex(e=>e&&e.id==='raiders');return k===0||(k>0&&!P.events[k-1]);}
+async function doRaid(g,p){const P=g.pl[p];
+ if(P.raidersHome){const i=freeSlot(P,1);if(i<0){log(g,'Nájezdníci nemají volné místo.');return;}P.events[i]={id:'raiders'};P.raidersHome=false;log(g,`🏴‍☠️ ${g.names[p]}: Nájezdníci vyrážejí (pozice ${i+1}).`);return;}
+ const k=P.events.findIndex(e=>e&&e.id==='raiders');if(k===0){P.events[0]=null;await resolveEvent(g,p,{id:'raiders'});}
+ else if(k>0&&!P.events[k-1]){P.events[k-1]=P.events[k];P.events[k]=null;log(g,`🏴‍☠️ Nájezdníci postupují na pozici ${k}.`);}else log(g,'Nájezdníci nemohou postoupit.');}
+async function resolveEvent(g,p,e){g.tf.eventResolved=true;
+ if(e.id==='raiders'){fx('banner',null,'🏴‍☠️ NÁJEZD!');sfx('raid');g.pl[p].raidersHome=true;const q=1-p;log(g,`🏴‍☠️ Nájezdníci (${g.names[p]}) útočí!`);const o=g.pl[q].camps.map((c,i)=>c.destroyed?null:{ref:{p:q,t:'camp',i}}).filter(Boolean);
+  const c=await choose(g,q,{kind:'ownCamp',text:`Nájezdníci: ${g.names[q]}, vyber svůj tábor, který bude poškozen`,options:o});if(c)damage(g,c.ref);return;}
+ fx('banner',null,`💣 ${DEF(e.id).name.toUpperCase()}!`);sfx('boom');log(g,`⚠ Událost: ${DEF(e.id).name} (${g.names[p]})`);await DEF(e.id).run(g,p);g.discard.push(e.id);}
+async function eventsPhase(g,p){const P=g.pl[p];const e=P.events[0];if(e){P.events[0]=null;await resolveEvent(g,p,e);}P.events=[P.events[1],P.events[2],null];}
+async function playEvent(g,p,h){const d=DEF(h.id),P=g.pl[p];P.hand.splice(P.hand.findIndex(x=>x.uid===h.uid),1);g.water-=d.cost;
+ const now=d.slot===0||(zetoActive(g,p)&&!g.tf.firstEvent);g.tf.firstEvent=true;
+ if(d.cost>0)sfx('drop');if(now){fx('banner',null,`💣 ${d.name.toUpperCase()}!`);sfx('boom');log(g,`▶ ${g.names[p]} hraje událost ${d.name} (okamžitě).`);await d.run(g,p);g.discard.push(h.id);g.tf.eventResolved=true;return;}
+ const i=freeSlot(P,d.slot-1);P.events[i]={id:h.id};sfx('fuse');log(g,`▶ ${g.names[p]} hraje událost ${d.name} na pozici ${i+1}.`);}
+
+/* ---------- akce ---------- */
+function canPlay(g,p,h){const d=DEF(h.id),P=g.pl[p];
+ if(d.type==='person'){if(freeSlots(P)===0)return peopleCount(P)>0&&Math.min(...[0,1,2].map(c=>personCost(g,p,d,c)))<=g.water;return placeOpts(g,p,d).some(o=>o.cost<=g.water);}
+ if(d.type==='event'){if(d.cost>g.water)return false;return d.slot===0||(zetoActive(g,p)&&!g.tf.firstEvent)||freeSlot(P,d.slot-1)>=0;}return false;}
+async function playCard(g,p,h){const d=DEF(h.id);if(!canPlay(g,p,h))return;if(d.type==='person')await playPerson(g,p,h);else await playEvent(g,p,h);}
+function junkVal(g,p,j){switch(j){case 'draw':return 2;case 'water':return 1;case 'injure':return targets(g,1-p,{peopleOnly:true}).length?4.5:0;case 'raid':return raidPossible(g,p)?4:0;case 'restore':return restoreTargets(g,p,null).length?4:0;case 'punk':return freeSlots(g.pl[p])?3.5:0;}return 0;}
+async function doJunk(g,p,j){switch(j){case 'draw':drawTo(g,p);break;case 'water':g.water++;break;case 'injure':if(targets(g,1-p,{peopleOnly:true}).length)await actDamage(g,p,{peopleOnly:true});break;case 'raid':await doRaid(g,p);break;case 'restore':await actRestore(g,p);break;case 'punk':await gainPunk(g,p);break;}}
+async function junkCard(g,p,h){const d=DEF(h.id),P=g.pl[p];const k=P.hand.findIndex(x=>x.uid===h.uid);if(k<0)return;P.hand.splice(k,1);
+ if(h.id==='silo')P.siloHome=true;else g.discard.push(h.id);log(g,`♻ ${g.names[p]} recykluje ${d.name}: ${JUNK[d.junk].i} ${JUNK[d.junk].t}`);g.tf.junks=(g.tf.junks||0)+1;await doJunk(g,p,d.junk);}
+function takeSilo(g,p){const P=g.pl[p];if(!P.siloHome||g.water<1)return;sfx('drop');g.water--;P.siloHome=false;P.hand.push({uid:nid(),id:'silo'});log(g,`🛢️ ${g.names[p]} bere Vodní silo do ruky.`);}
+function drawPaid(g,p){if(g.water<2)return;sfx('drop');g.water-=2;drawTo(g,p);}
+function abilitiesOf(g,p,r){if(r.t==='camp'){const c=campOf(g,r);return CAMPS[c.id].ab||[];}const x=findP(g,r.uid);if(!x)return[];const base=x.card.punk?[]:(DEF(x.card.id).ab||[]);return(argoActive(g,p)&&x.card.id!=='argo')?[...base,ARGO_AB]:base;}
+const abCost=(g,p,ab)=>ab.costFn?ab.costFn(g,p):ab.cost;
+function isReadyRef(g,r){if(r.t==='camp'){const c=campOf(g,r);return!c.destroyed&&!c.used;}const x=findP(g,r.uid);return x&&personReady(x.card);}
+function canUseAbility(g,p,r,ab){if(g.tf.resonator)return false;if(!isReadyRef(g,r))return false;if(g.water<abCost(g,p,ab))return false;if(ab.can&&!ab.can(g,p,r))return false;return true;}
+async function useAbility(g,p,r,idx){const ab=abilitiesOf(g,p,r)[idx];if(!ab||!canUseAbility(g,p,r,ab))return;
+ if(abCost(g,p,ab)>0)sfx('drop');g.water-=abCost(g,p,ab);const obj=r.t==='camp'?campOf(g,r):findP(g,r.uid).card;
+ if(veraActive(g,p)&&!g.tf.vera){g.tf.vera=true;}else obj.used=true;g.tf.abilitiesUsed++;
+ log(g,`⚙ ${g.names[p]}: ${nameRef(g,r)} – ${ab.text}`);await ab.run(g,p,r);if(ab.after)ab.after(g);}
+
+/* ===================== PRŮBĚH HRY ===================== */
+let G=null;const UI={screen:'menu',starter:false,rules:false,log:false};
+const isAI=(g,p)=>g.mode==='ai'&&p===1;
+const viewer=g=>g.mode==='ai'?0:g.cur;
+function newGame(mode){UID=1;const g={mode,pl:[mkP(),mkP()],deck:[],discard:[],reshuffles:0,cur:0,water:0,firstTurn:true,tf:{},log:[],prompt:null,detail:null,busy:false,over:null,pass:null,pick:null,phase:'setup',names:mode==='ai'?[UI.n1||'Hráč','Automa']:[UI.n1||'Hráč 1',UI.n2||'Hráč 2']};
+ const deck=[];for(const[k,d]of Object.entries(PEOPLE))for(let i=0;i<d.n;i++)deck.push(k);for(const k of Object.keys(EVENTS))deck.push(k,k);g.deck=shuffle(deck);
+ G=g;UI.screen='game';act(()=>setup(g));}
+async function setup(g){let ch;
+ if(UI.starter)ch=[['garage','railgun','supply'],['reactor','cannon','totem']];
+ else{const cd=shuffle(Object.keys(CAMPS));ch=[];for(const p of[0,1]){const opts=cd.splice(0,6);if(isAI(g,p))ch.push(aiPickCamps(opts));else{if(g.mode==='hot')await passTo(g,p,'vybírá tábory');ch.push(await pickCamps(g,p,opts));}}}
+ for(const p of[0,1]){g.pl[p].camps=ch[p].map(id=>({id,damaged:!!CAMPS[id].startDamaged,destroyed:false,used:false}));}
+ for(const p of[0,1])drawTo(g,p,g.pl[p].camps.reduce((s,c)=>s+CAMPS[c.id].draw,0));
+ g.cur=Math.random()<.5?0:1;log(g,`🎲 Začíná: ${g.names[g.cur]} (v prvním tahu má jen 1 💧).`);await beginTurn(g);}
+function passTo(g,p,what){return new Promise(res=>{g.pass={p,what,res};render();});}
+function pickCamps(g,p,opts){return new Promise(res=>{g.pick={p,opts,sel:[],res};render();});}
+async function beginTurn(g){const p=g.cur;g.tf={peoplePlayed:0,eventResolved:false,abilitiesUsed:0,resonator:false,firstEvent:false,vera:false,hg:-1,junks:0};
+ [0,1].forEach(q=>{g.pl[q].camps.forEach(c=>c.used=false);allPeople(g.pl[q]).forEach(x=>{x.used=false;x.played=false;x.restored=false;});});
+ g.phase='events';g.water=0;if(g.mode==='hot')await passTo(g,p,'je na tahu');
+ log(g,`━━ Na tahu: ${g.names[p]} ━━`);fx('banner',null,g.mode==='ai'?(p===0?'TVŮJ TAH!':'TAH AUTOMY!'):`TAH: ${g.names[p].toUpperCase()}!`);sfx('turn');render();if(isAI(g,p))await sleep(600);
+ await eventsPhase(g,p);drawTo(g,p,1);g.water=g.firstTurn?1:3;g.firstTurn=false;g.phase='actions';render();
+ if(isAI(g,p)){await aiTurn(g,p);await sleep(500);log(g,`${g.names[p]} končí tah.`);g.cur=1-p;return beginTurn(g);}}
+async function endTurn(g){log(g,`${g.names[g.cur]} končí tah.`);g.water=0;g.cur=1-g.cur;await beginTurn(g);}
+async function act(fn){if(G.busy&&!fn.force)return;G.busy=true;G.detail=null;render();try{await fn();}catch(e){if(!(e instanceof GameOver)){console.error(e);log(G,'⚠ Chyba: '+e.message);}}G.busy=false;render();}
+
+
+/* ===== ukládání ===== */
+const SKEY='radlands2_save_v1',NKEY='radlands2_names_v1';
+function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+function lsDel(k){try{localStorage.removeItem(k);}catch(e){}}
+try{const n=JSON.parse(lsGet(NKEY)||'{}');UI.n1=n.n1||'';UI.n2=n.n2||'';}catch(e){UI.n1='';UI.n2='';}
+function saveNames(){lsSet(NKEY,JSON.stringify({n1:UI.n1,n2:UI.n2}));}
+function stableForSave(g){return g&&!g.over&&!g.pick&&!g.pass&&!g.busy&&!g.prompt&&g.phase==='actions'&&!isAI(g,g.cur)&&g.pl[0].camps.length&&g.pl[1].camps.length;}
+function saveGame(g){if(!stableForSave(g))return;const c={...g,prompt:null,pass:null,pick:null,detail:null,busy:false,over:null};lsSet(SKEY,JSON.stringify({uid:UID,g:c,t:Date.now(),v:APP_VERSION}));}
+function loadSaved(){try{const s=JSON.parse(lsGet(SKEY)||'null');return s&&s.g?s:null;}catch(e){return null;}}
+function quitGame(){if(G)saveGame(G);G=null;UI.screen='menu';UI.quit=true;try{if(isFS())(document.exitFullscreen||document.webkitExitFullscreen).call(document);}catch(e){}
+ try{window.close();}catch(e){}setTimeout(()=>render(),250);}
+function resumeGame(){const s=loadSaved();if(!s)return;UID=Math.max(UID,s.uid);G=s.g;G.prompt=null;G.pass=null;G.pick=null;G.detail=null;G.busy=false;G.over=null;UI.screen='game';UI.log=false;render();}
+
+
+/* ===================== EFEKTY A ZVUKY ===================== */
+const SETKEY='radlands2_set_v1';let SET={sfx:true,anim:true,vol:.7,mOn:true,mV:90,eV:70};
+try{Object.assign(SET,JSON.parse(localStorage.getItem(SETKEY)||'{}'));}catch(e){}
+function saveSet(){try{localStorage.setItem(SETKEY,JSON.stringify(SET));}catch(e){}}
+const FX=[];
+function fx(type,key,txt){if(FX.length<40)FX.push({type,key,txt});}
+let AC=null,MG=null;
+function ac(){try{if(!AC){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;AC=new C();MG=AC.createGain();MG.connect(AC.destination);}MG.gain.value=sndGain();if(AC.state==='suspended')AC.resume();}catch(e){return null;}return AC;}
+function tone(f,dur,type,vol,slide,delay){const a=AC,t=a.currentTime+(delay||0);const o=a.createOscillator(),g=a.createGain();o.type=type||'square';o.frequency.setValueAtTime(f,t);if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(30,f+slide),t+dur);
+ g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(vol||.2,t+.01);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);o.connect(g);g.connect(MG);o.start(t);o.stop(t+dur+.05);}
+function noise(dur,vol,freq,delay,type){const a=AC,t=a.currentTime+(delay||0);const n=Math.floor(a.sampleRate*dur),b=a.createBuffer(1,n,a.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*(1-i/n);
+ const src=a.createBufferSource();src.buffer=b;const fl=a.createBiquadFilter();fl.type=type||'lowpass';fl.frequency.value=freq||1000;const g=a.createGain();g.gain.value=vol||.3;src.connect(fl);fl.connect(g);g.connect(MG);src.start(t);}
+const SFX={
+ card:()=>noise(.07,.22,4000,0,'highpass'),
+ play:()=>{noise(.05,.3,2500);tone(220,.09,'sine',.3,-120);},
+ hit:()=>{noise(.16,.55,900);tone(140,.16,'square',.2,-80);},
+ boom:()=>{noise(.7,.75,380);tone(90,.6,'sawtooth',.25,-55);},
+ heal:()=>{tone(660,.12,'sine',.22);tone(990,.18,'sine',.2,0,.09);tone(1320,.22,'sine',.15,0,.18);},
+ drop:()=>tone(1000,.09,'sine',.22,-600),
+ fuse:()=>{noise(.45,.14,5000,0,'highpass');tone(1800,.05,'square',.04,0,.1);},
+ raid:()=>{tone(70,.8,'sawtooth',.22,60);tone(105,.8,'sawtooth',.15,90);noise(.8,.2,600);},
+ turn:()=>{tone(523,.09,'square',.12);tone(784,.14,'square',.12,0,.09);},
+ punk:()=>{tone(300,.08,'square',.12,200);noise(.05,.2,3000,.05);},
+ win:()=>[523,659,784,1046,1318].forEach((f,i)=>tone(f,i==4?.5:.16,'square',.14,0,i*.13)),
+ lose:()=>[392,370,349,311].forEach((f,i)=>tone(f,i==3?.8:.32,'triangle',.25,i==3?-60:-10,i*.3)),
+ click:()=>tone(1100,.025,'square',.05)};
+function sndGain(){return (SET.mOn?SET.mV/100:0)*(SET.sfx?SET.eV/100:0)*1.25;}
+function sfx(n){if(!SET.sfx||!SET.mOn||!SET.mV||!SET.eV)return;const a=ac();if(!a)return;try{SFX[n]();}catch(e){}}
+const WORDS={hit:['BAM!','ŠMÁK!','PRÁSK!','KAPOW!'],destroy:['KABOOM!','BUM!','RÁNA!'],heal:['FIX!','✚'],play:['TADY!'],punk:['PANK!']};
+function grabRects(){const old={};if(typeof document.querySelector!=='function')return old;FX.forEach(f=>{if(f.key){const el=document.querySelector(`[data-k="${f.key}"]`);if(el)old[f.key]=el.getBoundingClientRect();}});return old;}
+function floatWord(r,txt,cls){const d=document.createElement('div');d.className='fxw '+(cls||'');d.textContent=txt;d.style.left=(r.left+r.width/2)+'px';d.style.top=(r.top+r.height/2)+'px';document.body.appendChild(d);setTimeout(()=>d.remove(),950);}
+function runFX(old){const list=FX.splice(0);if(!SET.anim||typeof document.querySelector!=='function')return;
+ list.forEach(f=>{try{
+  if(f.type==='banner'){const b=document.createElement('div');b.className='fxbanner';b.innerHTML=`<span>${f.txt}</span>`;document.body.appendChild(b);setTimeout(()=>b.remove(),1300);return;}
+  const el=f.key?document.querySelector(`[data-k="${f.key}"]`):null;const r=(el&&el.getBoundingClientRect())||old[f.key];if(!r)return;
+  const w=f.txt||(WORDS[f.type]||[''])[Math.floor(Math.random()*(WORDS[f.type]||['']).length)];
+  if(el){el.classList.remove('fx-hit','fx-heal','fx-play','fx-destroy');void el.offsetWidth;el.classList.add('fx-'+f.type);}
+  if(f.type==='destroy'){const bm=document.createElement('div');bm.className='fxboom';bm.style.left=(r.left+r.width/2)+'px';bm.style.top=(r.top+r.height/2)+'px';bm.style.setProperty('--sz',Math.max(r.width,r.height)*1.3+'px');document.body.appendChild(bm);setTimeout(()=>bm.remove(),800);}
+  if(w&&f.type!=='play')floatWord(r,w,'w-'+f.type);
+ }catch(e){}});}
+
+/* ===================== AI ===================== */
+function aiPickCamps(opts){const sc=id=>{const d=CAMPS[id];let s=Math.random()*2;if(d.ab.some(a=>a.kind==='dmg'))s+=3;if(['adrenaline','parachute','reactor','octagon','bonfire'].includes(id))s-=4;return s;};return opts.slice().sort((a,b)=>sc(b)-sc(a)).slice(0,3);}
+function aiChoose(g,p,s){let best=null,bs=-1e9;for(const o of s.options){const v=aiScore(g,p,s.kind,o)+Math.random()*.1;if(v>bs){bs=v;best=o;}}if(s.optional&&bs<0)return null;return best;}
+function aiScore(g,p,kind,o){if(o.ai!=null)return o.ai;const r=o.ref;if(!r)return 0;
+ const pv=()=>{const x=findP(g,r.uid);return x?x.card:null;};
+ switch(kind){
+ case 'dmg':if(r.t==='camp'){const c=campOf(g,r);return 10+(c.damaged?8:0);}{const x=pv();return 4+(x.damaged||x.punk?5:0)+(x.punk?0:DEF(x.id).cost);}
+ case 'destroyEnemy':{const x=pv();return x.punk?1:DEF(x.id).cost+2;}
+ case 'ownDmg':if(r.t==='camp')return campOf(g,r).damaged?0:5;{const x=pv();return x.punk?8:(x.damaged?1:4);}
+ case 'ownCamp':return campOf(g,r).damaged?0:5;
+ case 'sacrifice':{const x=pv();return x.punk?10:(x.damaged?6:3)-DEF(x.id).cost*.5;}
+ case 'keep':{const x=pv();return x.punk?0:DEF(x.id).cost+(x.damaged?0:2);}
+ case 'restore':if(r.t==='camp')return 8;{const x=pv();return 3+DEF(x.id).cost;}
+ case 'discard':{const h=g.pl[p].hand.find(h=>h.uid===r.uid);const d=DEF(h.id);return -(d.cost||0)-(d.type==='event'?.5:0);}
+ }return 0;}
+function aiPlaceScore(g,p,o){const P=g.pl[p],camp=P.camps[o.col],n=P.cols[o.col].length;return(n===0?10:3)+(camp.destroyed?-8:0)+(camp.damaged?2:0)-o.cost*.5+(o.pos==='front'?.2:0);}
+function aiJunkScore(g,p,h){const d=DEF(h.id),P=g.pl[p];let v;
+ if(d.junk==='water')v=P.hand.some(o=>o.uid!==h.uid&&DEF(o.id).cost===g.water+1)?4:0;
+ else if(d.junk==='draw')v=(g.tf.junks<2&&P.hand.length>=4)?2:0;else v=junkVal(g,p,d.junk);
+ if(h.id==='silo')return v;if(g.tf.junks>=3)return 0;
+ if((d.type==='person'||d.type==='event')&&canPlay(g,p,h))v-=3;if(P.hand.length<=2)v-=1.5;return v;}
+function aiActions(g,p){const acts=[],P=g.pl[p];
+ const srcs=[...P.camps.map((c,i)=>({p,t:'camp',i})),...allPeople(P).map(x=>({p,t:'person',uid:x.uid}))];
+ srcs.forEach(r=>abilitiesOf(g,p,r).forEach((ab,i)=>{if(canUseAbility(g,p,r,ab)){const s=ab.ai?ab.ai(g,p,r):(ab.kind==='dmg'?8:3);acts.push({s,run:()=>useAbility(g,p,r,i)});}}));
+ P.hand.forEach(h=>{const d=DEF(h.id);
+  if(d.type==='person'&&canPlay(g,p,h)){let s=5+d.cost-(freeSlots(P)===0?6:0)+(peopleCount(P)<2?2:0);acts.push({s,run:()=>playPerson(g,p,h)});}
+  if(d.type==='event'&&canPlay(g,p,h)){acts.push({s:d.ai?d.ai(g,p):5,run:()=>playEvent(g,p,h)});}
+  const js=aiJunkScore(g,p,h);if(js>0)acts.push({s:js,run:()=>junkCard(g,p,h)});});
+ if(g.water>=2)acts.push({s:1.2,run:()=>drawPaid(g,p)});
+ if(g.water===1&&P.siloHome)acts.push({s:.8,run:()=>takeSilo(g,p)});
+ return acts;}
+async function aiTurn(g,p){for(let step=0;step<25;step++){const a=aiActions(g,p);if(!a.length)break;a.sort((x,y)=>y.s-x.s);if(a[0].s<=0)break;await sleep(700);await a[0].run();render();}}
+// AI place: override choose for 'place'
+const _aiScore=aiScore;aiScore=function(g,p,kind,o){if(kind==='place')return aiPlaceScore(g,p,o);return _aiScore(g,p,kind,o);};
+
+/* ===================== VYKRESLENÍ ===================== */
+const $app=document.getElementById('app');
+function typeLabel(d){return{person:'Člověk',event:'Událost',camp:'Tábor',silo:'Vodní silo'}[d.type]||'';}
+function tkeys(g){return new Set(g.prompt?g.prompt.options.filter(o=>o.ref).map(o=>keyOf(o.ref)):[]);}
+function myActionTime(g){return g&&!g.over&&!g.busy&&!g.prompt&&g.phase==='actions'&&!isAI(g,g.cur);}
+const isUnique=d=>d.type==='person'&&d.n===1;
+function roughPoly(seed,amp){let x=seed*9301+49297;const r=()=>{x=(x*9301+49297)%233280;return x/233280;};const pts=[];const n=16;
+ for(let i=0;i<=n;i++)pts.push(`${(i*100/n).toFixed(1)}% ${(r()*amp).toFixed(1)}%`);
+ for(let i=1;i<=n;i++)pts.push(`${(100-r()*amp*.6).toFixed(1)}% ${(i*100/n).toFixed(1)}%`);
+ for(let i=n-1;i>=0;i--)pts.push(`${(i*100/n).toFixed(1)}% ${(100-r()*amp).toFixed(1)}%`);
+ for(let i=n-1;i>=1;i--)pts.push(`${(r()*amp*.6).toFixed(1)}% ${(i*100/n).toFixed(1)}%`);
+ return `polygon(${pts.join(',')})`;}
+(function(){const st=document.createElement?document.createElement('style'):null;if(!st)return;st.textContent=`.rgh1{clip-path:${roughPoly(3,5)}}.rgh2{clip-path:${roughPoly(7,4)}}.rgh3{clip-path:${roughPoly(11,6)}}`;document.head&&document.head.appendChild(st);})();
+const PURE={'Poškoď.':1,'Zraň.':1,'Nájezd.':1,'Obnov.':1,'Přiveď pankáče.':1};
+function cardFace(g,d,o={}){const k=o.k?` data-k="${o.k}"`:'',act=o.act?` data-act="${o.act}" data-arg="${o.arg}"`:'';const cls=`cb ${o.cls||''}`;
+ if(o.punk)return `<div class="${cls}"${k}${act}><div class="rc back punkback">${SV.punkBack()}</div></div>`;
+ if(o.dead&&d.type==='camp')return `<div class="${cls}"${k}${act}><div class="rc back campback">${SV.campBack()}</div></div>`;
+ const tc=d.type==='person'?(isUnique(d)?'person unq':'person'):d.type;const abs=o.abs||d.ab||[];
+ const fs=21;
+ const tab=`<div class="rtab"><span class="rtn" style="font-size:${fs}px">${d.name}</span>${d.cost!=null?`<span class="rtc">${SV.water(null)}<b class="rtcn">${d.cost}</b></span>`:''}</div>`;
+ const corner=d.junk?`<span class="rjunk">${ic(junkIc(d.junk))}</span>`:d.badge?`<span class="rjunk rbadge">${ic(d.badge)}</span>`:'';
+ const drawBox=d.type==='camp'?`<span class="rdrawn">${d.draw}</span>`:'';
+ const allPure=abs.length>1&&abs.every(ab=>PURE[ab.text]&&ab.icon);
+ const abRow=ab=>{const c=ab.costLabel||(o.p!=null&&o.live?abCost(g,o.p,ab):ab.cost);
+  if(d.type==='camp')return `<div class="q-abl"><span class="q-abc">${ic('water',c)}</span>${ab.icon?ic(ab.icon):''}<span>${ab.text}</span></div>`;
+  const pure=PURE[ab.text]&&ab.icon;return `<div class="p-abl ${pure?'pure':''}"><span class="p-blk">${ic('water',c)}${ab.icon?ic(ab.icon):''}</span>${pure?'':`<span class="p-txt">${ab.text}</span>`}</div>`;};
+ const trows=[...(d.trait?[`<div class="q-tr"><b class="gb">[</b>&nbsp;${d.trait.replace(/\.$/,'')}&nbsp;<b class="gb">]</b></div>`]:[]),...((d.traits||[]).map(t=>`<div class="q-tr"><b class="gb">[</b>&nbsp;${t.replace(/\.$/,'')}&nbsp;<b class="gb">]</b></div>`)),...(d.enter?[`<div>↘ ${d.enter}</div>`]:[])];
+ let body='';
+ if(d.type==='event')body=`<div class="revwrap">${d.slot!=null?`<span class="rbombtab">${ic('bomb',d.slot)}</span>`:''}<div class="rev">${d.text}</div></div>`;
+ else if(d.type==='camp'&&(trows.length||abs.length))body=`<div class="q-body q-dark">${trows.join('')}${abs.map(abRow).join('')}</div>`;
+ else if(trows.length||abs.length)body=`<div class="q-body">${trows.join('')}${abs.map(abRow).join('')}</div>`;
+ const inner=(d.type==='camp'?`<span class="rdraw2">${d.draw}</span>`:'')+body;
+ return `<div class="${cls}"${k}${act}><div class="rc ${tc}"><div class="rart"><span class="em">${d.art}</span></div>${tab}${corner}${(body||d.type==='camp')?`<div class="rbody2">${inner}</div>`:''}</div></div>`;}
+function personHTML(g,q,x,tk,pos){const d=x.punk?SPECIAL.punk:DEF(x.id),k='u'+x.uid;
+ const c=[pos,x.damaged?'dmg':'',(g.cur===q&&g.phase==='actions'&&!personReady(x))?'nr':'',tk.has(k)?'tgt':''].join(' ');
+ return cardFace(g,d,{k,cls:c,punk:x.punk,abs:x.punk?[]:abilitiesOf(g,q,{p:q,t:'person',uid:x.uid}),p:q,live:true});}
+function campHTML(g,q,i,tk){const c=g.pl[q].camps[i],d=CAMPS[c.id],k=`c${q}_${i}`;
+ const cl=[c.destroyed?'dead':(c.damaged?'dmg':''),(g.cur===q&&g.phase==='actions'&&c.used)?'nr':'',tk.has(k)?'tgt':''].join(' ');
+ return cardFace(g,d,{k,cls:cl,dead:c.destroyed,p:q,live:true});}
+function boardHTML(g,q,top,tk){const P=g.pl[q];let h=`<div class="board ${top?'top':'bot'}">`;
+ for(let i=0;i<3;i++){const arr=slotsOf(P,i).map(e=>`<div class="slot">${!e?'<div class="empty"></div>':e.camp?campHTML(g,q,i,tk):personHTML(g,q,e,tk,'pp')}</div>`);if(!top)arr.reverse();h+=`<div class="col">${arr.join('')}</div>`;}return h+'</div>';}
+function evqHTML(g,q){const P=g.pl[q];return `<div class="evq">${[0,1,2].map(k=>{const e=P.events[k];return e?`<div class="evs evfull" data-k="e${q}_${k}"><span>${DEF(e.id).art}</span></div>`:`<div class="evs"><b>${k+1}</b></div>`;}).join('')}</div>
+ <span class="chip ${P.raidersHome?'':'off'}" title="Nájezdníci">${ic('raid')}</span><span class="chip ${P.siloHome?'':'off'}" title="Vodní silo">${ic('silo')}</span>`;}
+function handCardHTML(g,h,tk){const d=DEF(h.id),k='h'+h.uid;return cardFace(g,d,{k,cls:tk.has(k)?'tgt':''});}
+function bigCardHTML(g,d,I){if(I&&I.kind==='person'&&I.obj.punk)return cardFace(g,d,{punk:true,cls:'big'});
+ const st=I&&I.obj&&(I.kind==='camp'||I.kind==='person')?(I.obj.destroyed?'dead':I.obj.damaged?'dmg':''):'';
+ const live=I&&(I.kind==='camp'||I.kind==='person');
+ return cardFace(g,d,{cls:'big '+st,dead:false,abs:live?abilitiesOf(g,I.p,I.ref):null,p:I?I.p:null,live});}
+function gameHTML(g){const me=viewer(g),op=1-me,tk=tkeys(g);const myTurn=g.cur===me;const can=myActionTime(g)&&myTurn;const P=g.pl[me];
+ const status=g.over?'':isAI(g,g.cur)?`🤖 ${g.names[g.cur]} hraje…`:(g.phase==='events'?'Události…':(!myTurn?`Hraje ${g.names[g.cur]}`:''));
+ const water=myTurn&&g.phase==='actions'?(g.water>4?`${ic('water')}<b class="cm">×${g.water}</b>`:(Array.from({length:g.water},()=>ic('water')).join('')||'<b class="cm">0</b>')):'';
+ return `<div class="bar"><span class="who">${g.names[op]}</span><span class="chip">${ic('hand')}${g.pl[op].hand.length}</span><span class="sp"></span>${evqHTML(g,op)}</div>
+ ${boardHTML(g,op,true,tk)}
+ <div class="mid"><span class="chip">${ic('deck')}${g.deck.length}</span><span class="chip">${ic('trash')}${g.discard.length}</span><span class="lg" data-act="log">${status||g.log[g.log.length-1]||''}</span>${FS_OK?`<span class="mbtn" data-act="fs" title="Celá obrazovka">${ic(isFS()?'fsOff':'fsOn')}</span>`:""}<span class="mbtn" data-act="snd">${SET.mOn&&SET.sfx?'🔊':'🔇'}</span><span class="mbtn" data-act="rules">📖</span><span class="mbtn" data-act="menu" title="Hlavní menu (uloží hru)">🏠</span></div>
+ ${boardHTML(g,me,false,tk)}
+ <div class="bar"><span class="who">${g.names[me]}</span><span class="water">${water}</span><span class="sp"></span>${evqHTML(g,me)}</div>
+ <div class="ctrl"><button class="btn sec" data-act="drawPaid" ${can&&g.water>=2?'':'disabled'}>${ic('draw')} Dobrat ${ic('water',2)}</button><button class="btn sec" data-act="silo" ${can&&g.water>=1&&P.siloHome?'':'disabled'}>${ic('silo')} ${ic('water',1)}</button><button class="btn" data-act="end" ${can?'':'disabled'}>Konec tahu</button></div>
+ <div class="hand">${P.hand.map(h=>handCardHTML(g,h,tk)).join('')||'<span style="opacity:.7;font-size:15px;color:#fff;padding:8px">Prázdná ruka</span>'}</div>`;}
+function infoByKey(g,k){const t=k[0];
+ if(t==='c'){const[p,i]=k.slice(1).split('_').map(Number);return{kind:'camp',p,ref:{p,t:'camp',i},obj:g.pl[p].camps[i],def:CAMPS[g.pl[p].camps[i].id]};}
+ if(t==='u'){const x=findP(g,+k.slice(1));if(!x)return null;return{kind:'person',p:x.q,ref:{p:x.q,t:'person',uid:x.card.uid},obj:x.card,def:x.card.punk?SPECIAL.punk:DEF(x.card.id)};}
+ if(t==='h'){for(const p of[0,1]){const h=g.pl[p].hand.find(h=>h.uid===+k.slice(1));if(h)return{kind:'hand',p,obj:h,def:DEF(h.id)};}return null;}
+ if(t==='e'){const[p,i]=k.slice(1).split('_').map(Number);const e=g.pl[p].events[i];return e?{kind:'event',p,obj:e,def:DEF(e.id),slot:i}:null;}return null;}
+function detailHTML(g){const I=infoByKey(g,g.detail);if(!I)return'';const d=I.def;const own=I.p===g.cur&&myActionTime(g)&&(g.mode!=='ai'||I.p===0);let body='',acts='';
+ if(I.kind==='camp'||I.kind==='person'){const st=[];if(I.obj.destroyed)st.push('☠ ZNIČENÝ');else if(I.obj.damaged)st.push('💢 POŠKOZENÝ');if(!I.obj.destroyed&&I.p===g.cur)st.push(isReadyRef(g,I.ref)?'✅ PŘIPRAVENÝ':'⏸ NENÍ PŘIPRAVENÝ');if(st.length)body+=`<div class="bstate">${st.join(' · ')}</div>`;
+  if(own)abilitiesOf(g,I.p,I.ref).forEach((ab,i)=>{const ok=canUseAbility(g,I.p,I.ref,ab);body+=`<div class="ab"><span>${ic('water',abCost(g,I.p,ab))} ${ab.icon?ic(ab.icon):''} ${ab.text}</span><button class="btn teal" data-act="ab" data-arg="${g.detail}|${i}" ${ok?'':'disabled'}>Použít</button></div>`;});}
+ if(I.kind==='person'&&I.obj.punk)body+=`<div class="ln">${SPECIAL.punk.text}</div>`;
+ if(d.junk&&!(I.kind==='person'&&I.obj.punk))body+=`<div class="ln">♻ <b>Recyklace:</b> ${ic(junkIc(d.junk))} ${JUNK[d.junk].t}</div>`;
+ if(d.type==='event'&&d.slot!=null)body+=`<div class="ln">${ic('bomb',d.slot)} ${d.slot===0?'Vyhodnotí se hned po zahrání.':`Jde do fronty na pozici ${d.slot}.`}</div>`;
+ if(d.type==='camp')body+=`<div class="ln">${ic('draw')} Na začátku hry si za tento tábor dobereš ${d.draw} ${d.draw===1?'kartu':d.draw===0?'karet':'karty'}.</div>`;
+ body+=`<div class="ln" style="opacity:.7">Originál: ${d.en}${isUnique(d)?' · unikátní karta':''}${I.kind!=='hand'?' · patří: '+g.names[I.p]:''}</div>`;
+ if(I.kind==='hand'&&own){const h=I.obj;if(d.type==='person'||d.type==='event')acts+=`<button class="btn" data-act="play" data-arg="${h.uid}" ${canPlay(g,I.p,h)?'':'disabled'}>▶ Zahrát</button> `;acts+=`<button class="btn teal" data-act="junk" data-arg="${h.uid}">Recyklovat ${ic(junkIc(d.junk))}</button>`;}
+ let pick='';if(g.prompt&&!isAI(g,g.prompt.p)){const oi=g.prompt.options.findIndex(o=>o.ref&&keyOf(o.ref)===g.detail);if(oi>=0){pick=`<button class="btn" data-act="opt" data-arg="${oi}">✔ ${g.prompt.kind==='discard'?'Odhodit tuto kartu':'Vybrat tuto kartu'}</button> `;acts='';body=body.replace(/<div class="ab">[\s\S]*?<\/div>/g,'');}}
+ return `<div class="sheet-bg"><div class="sheet">${pick?`<div class="bstate">🎯 ${g.prompt.text}</div>`:''}${bigCardHTML(g,d,I)}${body}<div class="ctrl">${pick}${acts}<button class="btn sec" data-act="closeDetail">${pick?'Zpět':'Zavřít'}</button></div></div></div>`;}
+function promptHTML(g){const pr=g.prompt;const hc=pr.options.filter(o=>o.ref&&o.ref.t==='hand');
+ const handRow=hc.length?`<div class="pcards">${hc.map(o=>{const h=g.pl[o.ref.p].hand.find(x=>x.uid===o.ref.uid);return h?cardFace(g,DEF(h.id),{k:'h'+h.uid}):'';}).join('')}</div>`:'';
+ return `<div class="prompt"><div class="in"><div class="t">🎯 ${g.names[pr.p]}: ${pr.text}</div><div style="font-size:12px;opacity:.7;margin-bottom:6px">${hc.length?'Klepni na kartu – zobrazí se velká a pak ji potvrdíš.':'Klepni na zvýrazněnou kartu nebo na tlačítko.'}</div>${handRow}<div class="opts">${pr.options.filter(o=>!(o.ref&&o.ref.t==='hand')).map((o)=>{const i=pr.options.indexOf(o);return `<button class="btn ${o.ref?'sec':''}" data-act="opt" data-arg="${i}">${o.label||(o.ref?nameRef(g,o.ref)+(o.ref.p!==viewer(g)?' (soupeř)':''):'?')}</button>`;}).join('')}${pr.optional?'<button class="btn sec" data-act="skip">Zrušit</button>':''}</div></div></div>`;}
+function rulesHTML(){return `<div class="sheet-bg"><div class="sheet rules"><div class="dname">📖 Pravidla v kostce <span style="font-size:15px;opacity:.6">· verze ${APP_VERSION}</span></div>
+<h3>Symboly</h3><div class="legend"><div>${ic('water')} voda / cena</div><div>${ic('waterPlus')} voda navíc</div><div>${ic('damage')} poškoď</div><div>${ic('injure')} zraň (jen lidi)</div><div>${ic('restore')} obnov</div><div>${ic('draw')} dober kartu</div><div>${ic('raid')} nájezd</div><div>${ic('punk')} přiveď pankáče</div><div>${ic('destroy')} znič</div><div>${ic('bomb',2)} pozice události</div><div><b style="color:#19b34a">[ ]</b> vlastnost</div></div>
+<h3>Cíl</h3>Znič všechny 3 tábory soupeře dřív, než on zničí tvoje.
+<h3>Příprava</h3>Každý dostane 6 táborů a vybere si 3. Do ruky si dobereš tolik karet, kolik je součet čísel 🃏 na tvých táborech. Každý má Nájezdníky a Vodní silo. Začínající hráč má v prvním tahu jen 1 💧.
+<h3>Tah</h3><b>1. Události</b> – událost na pozici 1 se vyhodnotí, ostatní se posunou o 1 dopředu.<br><b>2. Doplnění</b> – dober 1 kartu, dostaneš 3 💧 (nevyužitá voda propadá).<br><b>3. Akce</b> v libovolném pořadí: zahrát kartu · recyklovat kartu z ruky (odhodit pro efekt v pravém rohu) · dobrat kartu za 2 💧 · vzít Vodní silo za 1 💧 · použít schopnost připravené karty.
+<h3>Sloupce a ochrana</h3>Před každým táborem můžou stát max. 2 lidé. Karta je <b>nechráněná</b>, když před ní nic nestojí. Poškoď a zraň míří jen na nechráněné karty soupeře, pokud karta neříká „libovolnou".
+<h3>Poškození</h3>Poškozená karta se natočí; další poškození ji zničí. Pankáč je zničen hned a vrací se lícem dolů na balíček. Poškozený člověk není připravený. Obnova kartu narovná (člověk pak v tom tahu není připravený). Karta nemůže obnovit sama sebe.
+<h3>Připravenost</h3>Každá karta může použít jednu schopnost za tah. Člověk zahraný v tomto tahu ještě připravený není.
+<h3>Události</h3>Událost položíš do fronty na pozici podle čísla 💣. Je-li obsazená, jde na nejbližší volnou dál. Pozice 0 = vyhodnotí se hned.
+<h3>Nájezd 🏴‍☠️</h3>Nájezdníci jdou na pozici 2, nebo postoupí o 1 (z pozice 1 se hned vyhodnotí). Při vyhodnocení soupeř poškodí jeden svůj tábor dle svého výběru.
+<h3>Konec</h3>Když balíček dojde, odhozené karty se zamíchají. Když dojde podruhé, je remíza. Plný stůl? Můžeš nejdřív zničit svého člověka a uvolnit místo (pravidla v1.2).
+<h3>Ovládání</h3>Klepni na kartu – uvidíš celý text a tlačítka (Zahrát, Recyklovat, Použít). Při výběru cíle se karty zvýrazní.
+<h3>Poznámka</h3>Neoficiální fanouškovská verze. Texty karet jsou převyprávěné a zjednodušené, názvy nemusí odpovídat českému vydání a ceny jsou orientační. Chybí tábory Obelisk, Staveniště a Tábor žoldáků; Vyvýšené místo neumí přeskládat lidi. Oficiální pravidla: <a href="https://www.tlamagames.com/user/documents/upload/pravidla/Radlands_CZ_WEB_12.pdf">PDF od TLAMA games</a>.
+<div class="ctrl"><button class="btn" data-act="closeRules">Zavřít</button></div></div></div>`;}
+function logHTML(g){return `<div class="sheet-bg"><div class="sheet logsheet"><div class="dname">📜 Záznam hry</div><div class="loglist">${g.log.slice().reverse().map(s=>`<div>${s}</div>`).join('')}</div><div class="ctrl"><button class="btn" data-act="closeLog">Zavřít</button></div></div></div>`;}
+function menuHTML(){const sv=loadSaved();let cont='';
+ if(sv){const g=sv.g;const alive=q=>3-g.pl[q].camps.filter(c=>c.destroyed).length;cont=`<button class="btn big" data-act="resume">▶ Pokračovat v rozehrané hře</button><div class="svinfo">${g.names[0]} (${alive(0)} tábory) vs. ${g.names[1]} (${alive(1)} tábory) · uloženo ${new Date(sv.t).toLocaleString('cs-CZ',{day:'numeric',month:'numeric',hour:'2-digit',minute:'2-digit'})} · v${sv.v||'?'} <span data-act="delsave" class="dl">smazat</span></div>`;}
+ return `<h1>RADLANDS<span class="h2b">2</span></h1><div class="sub">GANGY PUSTINY</div>
+ ${cont}
+ <div class="names"><label>Tvé jméno<input data-name="n1" maxlength="14" placeholder="Hráč" value="${(UI.n1||'').replace(/"/g,'&quot;')}"></label><label>Hráč 2 (na jednom zařízení)<input data-name="n2" maxlength="14" placeholder="Hráč 2" value="${(UI.n2||'').replace(/"/g,'&quot;')}"></label></div>
+ <button class="btn big ${sv?'sec':''}" data-act="newAI">🤖 Nová hra proti Automě</button>
+ <button class="btn big teal" data-act="newHot">👥 Nová hra ve dvou</button>
+ <div class="row2"><button class="btn big ${UI.starter?'teal':'sec'} fsb" data-act="starterT">${UI.starter?'✔':'🏕️'} Výchozí tábory</button>${FS_OK?`<button class="btn big sec fsb" data-act="fs">${ic(isFS()?'fsOff':'fsOn')} ${isFS()?'Zmenšit':'Celá obrazovka'}</button>`:""}</div>
+ <div class="row2"><button class="btn big ${SET.mOn&&SET.sfx?'teal':'sec'} fsb" data-act="snd">${SET.mOn&&SET.sfx?'🔊':'🔇'} Zvuk</button><button class="btn big ${SET.anim?'teal':'sec'} fsb" data-act="tAnim">${SET.anim?'✨':'⏸'} Animace</button></div>
+ <div class="row2"><button class="btn big sec" data-act="rules">📖 Pravidla</button><button class="btn big" data-act="quit" style="background:#3b2a24;color:#fff">🚪 Konec</button></div>
+ <p class="foot"><b>Verze ${APP_VERSION}</b> · Rozehraná hra se ukládá automaticky. Neoficiální fanouškovská adaptace hry Daniela Piechnicka (Roxley / TLAMA games).</p>`;}
+function passHTML(g){return `<div class="full"><div style="font-size:60px">📱</div><h2>PŘEDEJ ZAŘÍZENÍ!</h2><p><b>${g.names[g.pass.p]}</b> ${g.pass.what}.</p><button class="btn big" data-act="pass">Jsem připraven</button></div>`;}
+function pickHTML(g){const pk=g.pick;return `<div class="dname" style="margin-top:8px;color:#fff;text-shadow:2px 2px 0 #111">${g.names[pk.p]}: vyber 3 tábory</div><div style="font-size:16px;background:#fff;border:2px solid #111;border-radius:8px;padding:3px 6px">Číslo ${ic('draw')} = kolik karet si na začátku dobereš.</div>
+ <div class="picks">${pk.opts.map(id=>`<div class="pkc">${cardFace(g,CAMPS[id],{act:'pickT',arg:id,cls:pk.sel.includes(id)?'sel':''})}${pk.sel.includes(id)?'<span class="pkok">✔</span>':''}</div>`).join('')}</div>
+ <button class="btn big" data-act="pickOK" ${pk.sel.length===3?'':'disabled'}>Potvrdit (${pk.sel.length}/3)</button>`;}
+function overHTML(g){return `<div class="full" style="background:var(--halft),rgba(255,225,77,.95)"><div style="font-size:60px">${g.over.winner==null?'🤝':(g.mode==='ai'&&g.over.winner===1?'💀':'🏆')}</div><h2>${g.over.msg}</h2><button class="btn big" data-act="menu">Hlavní menu</button><button class="btn big sec" data-act="log">📜 Záznam</button></div>`;}
+function render(){let h='';const g=G;
+ if(UI.quit)h=`<div class="full"><div style="font-size:60px">👋</div><h2>KONEC HRY</h2><p class="foot">Rozehraná hra je uložená. Teď můžeš okno nebo kartu zavřít.</p><button class="btn big sec" data-act="unquit">↩ Zpět do menu</button></div>`;
+ else if(UI.screen==='menu'||!g)h=menuHTML();
+ else if(g.pass)h=passHTML(g);
+ else if(g.pick)h=pickHTML(g);
+ else if(!g.pl[0].camps.length||!g.pl[1].camps.length)h='<div class="status">Příprava…</div>';
+ else{h=gameHTML(g);if(g.detail)h+=detailHTML(g);if(g.prompt)h+=promptHTML(g);if(g.over)h+=overHTML(g);if(UI.log)h+=logHTML(g);}
+ if(g&&UI.screen==='game')saveGame(g);if(UI.snd)h+=sndHTML();if(UI.rules)h+=rulesHTML();$app.className=(g&&UI.screen==='game'&&!g.pass)?(g.pick?'pickmode':'game'):((UI.screen==='menu'||!g)&&!UI.quit?'menu':'');const _old=grabRects();$app.innerHTML=h;fitCards();runFX(_old);}
+
+function fitCards(){document.querySelectorAll('.cb').forEach(el=>{el.style.setProperty('--s',(el.offsetWidth/252).toFixed(4));
+ const tab=el.querySelector('.rtab'),body=el.querySelector('.rbody2'),tn=el.querySelector('.rtn');if(!tab||!tn)return;
+ const lim=body?body.offsetTop-tab.offsetTop-10:330-tab.offsetTop;let f=18;tn.style.fontSize=f+'px';
+ while(tab.offsetHeight>lim&&f>12){f-=.5;tn.style.fontSize=f+'px';}});}
+window.addEventListener('resize',()=>fitCards());
+const FS_OK=!!(document.documentElement.requestFullscreen||document.documentElement.webkitRequestFullscreen);
+const FSKEY='radlands2_fs_v1';UI.autoFS=lsGet(FSKEY)!=='0';
+function saveFSPref(){lsSet(FSKEY,UI.autoFS?'1':'0');}
+function enterFS(){try{const el=document.documentElement;const r=(el.requestFullscreen||el.webkitRequestFullscreen).call(el,{navigationUI:'hide'});if(r&&r.catch)r.catch(()=>{});}catch(e){}}
+function autoFS(e){if(FS_OK&&UI.autoFS&&!isFS()&&!UI.quit&&!(e.target.closest&&e.target.closest('[data-act=fs],[data-act=autofs],[data-act=quit],input')))enterFS();}
+
+const isFS=()=>!!(document.fullscreenElement||document.webkitFullscreenElement);
+function lockPortrait(){try{if(isFS()&&screen.orientation&&screen.orientation.lock)screen.orientation.lock('portrait').catch(()=>{});}catch(e){}}
+document.addEventListener('fullscreenchange',()=>setTimeout(lockPortrait,100));
+function toggleFS(){try{if(isFS()){(document.exitFullscreen||document.webkitExitFullscreen).call(document);}else{const el=document.documentElement;const r=(el.requestFullscreen||el.webkitRequestFullscreen).call(el,{navigationUI:'hide'});if(r&&r.catch)r.catch(()=>{});}}catch(e){}}
+document.addEventListener('fullscreenchange',()=>render());document.addEventListener('webkitfullscreenchange',()=>render());
+/* ===================== OVLÁDÁNÍ ===================== */
+function sndHTML(){const row=(k,on,ic,n,vk)=>`<div class="sp-row ${on?'':'off'}"><label class="sw2"><input type="checkbox" data-act="sw" data-arg="${k}" ${on?'checked':''}><span></span></label><span class="sp-n">${ic} ${n}</span>${vk?`<input type="range" min="0" max="100" value="${SET[vk]}" data-snd="${vk}"><span class="sp-val" id="v-${vk}">${SET[vk]} %</span>`:'<span></span><span></span>'}</div>`;
+ return `<div class="sheet-bg"><div class="sheet sndsheet"><div class="dname">🔊 Zvuk a efekty</div>${row('mOn',SET.mOn,'🔊','Všechny zvuky','mV')}${row('sfx',SET.sfx,'💥','Herní efekty','eV')}${row('anim',SET.anim,'✨','Animace',null)}
+ <div class="ln" style="font-size:14px;opacity:.75">Hudba a zvuky pustiny přibudou ve verzi 2.5.</div><div class="ctrl"><button class="btn sec" data-act="sndReset">Výchozí</button><button class="btn" data-act="sndClose">Hotovo</button></div></div></div>`;}
+function resolvePrompt(o){const r=G.prompt.res;G.prompt=null;G.detail=null;render();r(o);}
+document.addEventListener('input',e=>{const sk=e.target.dataset&&e.target.dataset.snd;if(sk){SET[sk]=+e.target.value;if(SET[sk]>0){if(sk==='mV')SET.mOn=true;else SET.sfx=true;}saveSet();if(MG)MG.gain.value=sndGain();const v=document.getElementById('v-'+sk);if(v)v.textContent=SET[sk]+' %';return;}const n=e.target.dataset&&e.target.dataset.name;if(n){UI[n]=e.target.value.trim();saveNames();}});
+document.addEventListener('change',e=>{if(e.target.dataset&&e.target.dataset.snd){ac();sfx('hit');}});
+document.addEventListener('pointerdown',()=>{if(SET.sfx)ac();},true);
+document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('.btn'))sfx('click');if(e.target.closest('input[data-name]'))return;const a=e.target.closest('[data-act]');
+ if(a){const act_=a.dataset.act,arg=a.dataset.arg;handle(act_,arg,a);return;}
+ const k=e.target.closest('[data-k]');if(k&&G){const key=k.dataset.k;if(G.prompt){const o=G.prompt.options.find(o=>o.ref&&keyOf(o.ref)===key);if(o&&o.ref.t!=='hand'){resolvePrompt(o);return;}}G.detail=key;render();return;}
+ if(e.target.classList.contains('sheet-bg')){if(G)G.detail=null;UI.rules=false;UI.log=false;UI.snd=false;render();}});
+function handle(a,arg,el){const g=G;const p=g?g.cur:0;
+ switch(a){
+ case 'newAI':newGame('ai');break;case 'newHot':newGame('hot');break;
+ case 'starter':UI.starter=el.checked;break;
+ case 'rules':UI.rules=true;render();break;case 'closeRules':UI.rules=false;render();break;
+ case 'log':UI.log=true;render();break;case 'closeLog':UI.log=false;render();break;
+ case 'menu':if(G)saveGame(G);UI.screen='menu';UI.log=false;G=null;render();break;
+ case 'resume':resumeGame();break;
+ case 'tSfx':SET.sfx=!SET.sfx;saveSet();render();sfx('turn');break;
+ case 'snd':UI.snd=true;render();break;
+ case 'sndClose':UI.snd=false;render();break;
+ case 'sndReset':Object.assign(SET,{sfx:true,anim:true,mOn:true,mV:90,eV:70});saveSet();if(MG)MG.gain.value=sndGain();render();sfx('turn');break;
+ case 'sw':SET[arg]=el.checked;saveSet();if(MG)MG.gain.value=sndGain();render();if(el.checked&&arg!=='anim'){ac();sfx('turn');}break;
+ case 'tAnim':SET.anim=!SET.anim;saveSet();render();break;
+ case 'starterT':UI.starter=!UI.starter;render();break;
+ case 'fs':toggleFS();break;
+ case 'autofs':UI.autoFS=el.checked;saveFSPref();if(UI.autoFS)enterFS();else if(isFS())(document.exitFullscreen||document.webkitExitFullscreen).call(document);break;
+ case 'quit':quitGame();break;
+ case 'unquit':UI.quit=false;render();break;
+ case 'delsave':lsDel(SKEY);render();break;
+ case 'closeDetail':g.detail=null;render();break;
+ case 'pass':{const r=g.pass.res;g.pass=null;render();r();break;}
+ case 'pickT':{const s=g.pick.sel;const i=s.indexOf(arg);if(i>=0)s.splice(i,1);else if(s.length<3)s.push(arg);render();break;}
+ case 'pickOK':{const pk=g.pick;if(pk.sel.length!==3)return;g.pick=null;render();pk.res(pk.sel.slice());break;}
+ case 'opt':resolvePrompt(g.prompt.options[+arg]);break;
+ case 'skip':resolvePrompt(null);break;
+ case 'end':if(myActionTime(g))act(()=>endTurn(g));break;
+ case 'drawPaid':if(myActionTime(g))act(async()=>drawPaid(g,p));break;
+ case 'silo':if(myActionTime(g))act(async()=>takeSilo(g,p));break;
+ case 'play':{const h=g.pl[p].hand.find(h=>h.uid===+arg);if(h&&myActionTime(g))act(()=>playCard(g,p,h));break;}
+ case 'junk':{const h=g.pl[p].hand.find(h=>h.uid===+arg);if(h&&myActionTime(g))act(()=>junkCard(g,p,h));break;}
+ case 'ab':{const[k,i]=arg.split('|');const I=infoByKey(g,k);if(I&&myActionTime(g))act(()=>useAbility(g,p,I.ref,+i));break;}
+ }}
+render();
+if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{});});}
+</script>
+</body>
+</html>
