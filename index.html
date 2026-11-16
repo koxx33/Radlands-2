@@ -5,7 +5,7 @@
 <meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="theme-color" content="#5a1e5e">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>Radlands 2 – Gangy pustiny</title>
-<meta name="version" content="2.5.1">
+<meta name="version" content="2.7">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -577,6 +577,63 @@ h1 .h2b{font-size:.5em!important;margin-left:2px!important;padding:6px 12px!impo
 .chipb.on{background:#ff3d7f;color:#fff;text-shadow:1px 1px 0 #111;transform:translateY(-1px)}
 .sndsheet{max-height:92dvh!important;overflow:auto}
 .sp-row{padding:7px 0!important}
+
+/* ===== 2.6 animace karet, detail, odhozené, mini-záznam ===== */
+.rart::before{content:"";position:absolute;left:50%;top:60%;width:420px;height:420px;margin:-210px 0 0 -210px;background:repeating-conic-gradient(rgba(255,255,255,.22) 0 9deg,transparent 9deg 18deg);animation:artSpin 16s linear infinite;animation-delay:var(--adl,0s);pointer-events:none}
+.dsheet .cb.big{width:min(52vw,220px,calc((100dvh - 430px)*63/88))}
+.rart .em{position:relative;animation:artBob 4s ease-in-out infinite;animation-delay:var(--adl,0s);will-change:transform}
+.col:nth-child(2) .rart .em,.hand .cb:nth-child(even) .rart .em{animation-delay:calc(var(--adl,0s) - 1.3s)}
+.col:nth-child(3) .rart .em,.hand .cb:nth-child(3n) .rart .em{animation-delay:calc(var(--adl,0s) - 2.6s)}
+.rc.camp .rart .em{animation-name:artBreath}
+.rc.event .rart .em{animation-name:artTick;animation-duration:2s}
+.cb.dmg .rart .em{animation-name:artHurt;animation-duration:2s}
+.cb.dead .rart .em,.cb.dead .rart::before,.cb.nr .rart::before{animation:none}
+.cb.nr .rart .em{animation-duration:8s}
+@keyframes artSpin{to{transform:rotate(360deg)}}
+@keyframes artBob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-7px) rotate(2deg)}}
+@keyframes artBreath{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes artTick{0%,100%{transform:scale(1) rotate(0)}10%{transform:scale(1.08) rotate(-5deg)}20%{transform:scale(1) rotate(4deg)}30%{transform:rotate(0)}}
+@keyframes artHurt{0%,60%,100%{transform:translate(0,0)}65%{transform:translate(-4px,1px) rotate(-4deg)}72%{transform:translate(4px,-1px) rotate(4deg)}80%{transform:translate(-2px,0)}}
+.noanim .rart::before,.noanim .rart .em{animation:none!important}
+@media (prefers-reduced-motion:reduce){.rart::before,.rart .em{animation:none!important}}
+.sheet.sin{animation:shIn .28s cubic-bezier(.2,1.25,.4,1)}
+.sheet-bg.bgin{animation:bgIn .2s ease-out}
+@keyframes shIn{from{transform:translateY(105%)}to{transform:translateY(0)}}
+@keyframes bgIn{from{background:rgba(0,0,0,0)}}
+.dchip{cursor:pointer;position:relative}
+.dchip .dlast{font-size:15px;margin-left:2px;filter:drop-shadow(1px 0 0 #111) drop-shadow(-1px 0 0 #111)}
+.dsheet .pcards .cb{height:96px;cursor:pointer}
+.lgnew{animation:lgIn .35s ease-out}
+@keyframes lgIn{from{transform:translateX(40%);opacity:0}to{transform:none;opacity:1}}
+.noanim .lgnew,.noanim .sheet.sin,.noanim .sheet-bg.bgin{animation:none}
+.mlbg{position:fixed;inset:0;z-index:24;cursor:default}
+.mlog{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:25;background:var(--halft),#fff4d6;border:2.5px solid #111;border-radius:10px;box-shadow:3px 3px 0 #111;padding:4px 6px 6px;max-height:46vh;overflow:auto;cursor:default;animation:mlIn .18s ease-out;white-space:normal}
+.mlog>div{font-size:14px;line-height:1.25;padding:4px 4px 4px 8px;border-bottom:1px dashed rgba(0,0,0,.25);border-left:4px solid #2bb3a3}
+.mlog>div.op{border-left-color:#ff3d7f;background:rgba(255,61,127,.07)}
+.mlog>div.top{font-weight:700}
+.mlog .btn{width:100%;margin-top:6px;padding:6px;font-size:16px}
+@keyframes mlIn{from{opacity:0;transform:translateY(-6px)}}
+
+/* ===== 2.7 průhledný detail, aktualizace ===== */
+.sheet-bg.clearbg{background:rgba(10,4,12,.72);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+.sheet.clear{background:none!important;border:0!important;box-shadow:none!important;padding:8px 10px 14px}
+.sheet.clear>.ln,.sheet.clear>.ab,.sheet.clear>.bstate,.sheet.clear>.dname{background:#fff4d6;border:2.5px solid #111;border-radius:10px;box-shadow:3px 3px 0 #111;padding:4px 10px;margin:6px auto;width:fit-content;max-width:100%;box-sizing:border-box}
+.sheet.clear>.ab{width:100%}
+.sheet.clear>.dname{font-size:22px;transform:rotate(-1.5deg)}
+.sheet.clear .cb.big{margin:2px auto 10px}
+.sheet.clear .pcards{justify-content:flex-start}
+.sheet.clear.sin{animation:shPop .3s cubic-bezier(.2,1.4,.4,1)}
+@keyframes shPop{from{transform:translateY(40px) scale(.75);opacity:0}to{transform:none;opacity:1}}
+.vbtn{font:inherit;font-weight:700;background:#fff;border:2px solid #111;border-radius:8px;padding:1px 6px;box-shadow:2px 2px 0 #111;cursor:pointer;color:#111}
+.vbtn.new{background:#ff3d7f;color:#fff;animation:vPulse 1.2s ease-in-out infinite}
+@keyframes vPulse{50%{transform:scale(1.06)}}
+.updbg{z-index:40}
+.updsheet .dname{text-align:center}
+.unotes{margin:4px 0 8px;padding-left:22px;font-size:16px;line-height:1.3}
+.unotes li{margin:3px 0}
+.ucheck{display:flex;align-items:center;gap:10px;justify-content:center;background:#fff;border:2.5px solid #111;border-radius:10px;box-shadow:2px 2px 0 #111;padding:8px;margin:8px 0;font-weight:700;font-size:16px}
+.ucheck input{width:22px;height:22px;accent-color:#ff3d7f}
+.ctrl.ucol{flex-direction:column}.ctrl.ucol .btn{width:100%}
 </style>
 </head>
 <body>
@@ -584,7 +641,7 @@ h1 .h2b{font-size:.5em!important;margin-left:2px!important;padding:6px 12px!impo
 <div id="rotate"><div class="rotbox"><div class="rotph">📱</div><h2>OTOČ TELEFON!</h2><p>Radlands se hraje na výšku.</p></div></div>
 <script>
 /* ===================== ZÁKLAD ===================== */
-const APP_VERSION='2.5.1';
+const APP_VERSION='2.7';
 let UID=1; const nid=()=>UID++;
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
@@ -648,7 +705,7 @@ const PEOPLE={
  holdout:{n:2,name:'Držák',en:'Holdout',cost:2,junk:'raid',art:'🛡️',trait:'Do sloupce, kde máš zničený tábor, smíš zahrát tuto kartu za 0 💧.',ab:[dmgAb(1)]},
  rabble:{n:2,name:'Buřič',en:'Rabble Rouser',cost:1,junk:'raid',art:'📢',ab:[punkAb(1),{cost:1,text:'Poškoď – jen pokud máš pankáče.',kind:'dmg',can:(g,p)=>hasPunk(g,p)&&hasDmgF(g,p),run:dmgRun}]},
  repairbot:{n:2,name:'Opravobot',en:'Repair Bot',cost:3,junk:'injure',art:'🤖',enter:'Když vstoupí do hry: obnov.',onEnter:(g,p,inst)=>actRestore(g,p,{exclude:{p,t:'person',uid:inst.uid}}),ab:[restoreAb(2)]},
- scientist:{n:2,name:'Vědec',en:'Scientist',cost:1,junk:'raid',art:'🧪',ab:[{cost:1,text:'Odhoď 3 vrchní karty balíčku. Můžeš použít recyklační efekt jedné z nich.',ai:()=>3,run:async(g,p)=>{const cs=[];for(let i=0;i<3;i++){const c=drawOne(g);if(c){cs.push(c);g.discard.push(c);}}
+ scientist:{n:2,name:'Vědec',en:'Scientist',cost:1,junk:'raid',art:'🧪',ab:[{cost:1,text:'Odhoď 3 vrchní karty balíčku. Můžeš použít recyklační efekt jedné z nich.',ai:()=>3,run:async(g,p)=>{const cs=[];for(let i=0;i<3;i++){const c=drawOne(g);if(c){cs.push(c);dpush(g,c,p,'odhozena z balíčku');}}
    const opts=cs.map(id=>({label:`${DEF(id).name}: ${JUNK[DEF(id).junk].i} ${JUNK[DEF(id).junk].t}`,junk:DEF(id).junk,ai:junkVal(g,p,DEF(id).junk)}));opts.push({label:'Nic',junk:null,ai:0});
    const c=await choose(g,p,{kind:'pick',text:'Vědec: vyber recyklační efekt',options:opts});if(c&&c.junk)await doJunk(g,p,c.junk);}}]},
  mutant:{n:2,name:'Mutant',en:'Mutant',cost:1,junk:'injure',art:'🧟',ab:[{cost:0,text:'Poškoď a/nebo obnov, pak poškoď tuto kartu.',can:(g,p,src)=>hasDmgF(g,p)||restoreTargets(g,p,src).length>0,ai:(g,p)=>hasDmgF(g,p)?5:-1,run:async(g,p,src)=>{
@@ -755,7 +812,8 @@ const keyOf=r=>r.t==='camp'?`c${r.p}_${r.i}`:r.t==='person'?`u${r.uid}`:`h${r.ui
 const sameRef=(a,b)=>a&&b&&keyOf(a)===keyOf(b);
 const evName=e=>DEF(e.id).name;
 function nameRef(g,r){if(r.t==='camp')return CAMPS[g.pl[r.p].camps[r.i].id].name;if(r.t==='person'){const x=findP(g,r.uid);return x?(x.card.punk?'Pankáč':DEF(x.card.id).name):'?';}const h=g.pl[r.p].hand.find(h=>h.uid===r.uid);return h?DEF(h.id).name:'?';}
-function log(g,s){g.log.push(s);if(g.log.length>200)g.log.shift();}
+function dpush(g,id,p,how){g.discard.push(id);(g.dw=g.dw||[]).push({p,how});if(g.dw.length>g.discard.length)g.dw.splice(0,g.dw.length-g.discard.length);}
+function log(g,s){g.log.push(s);UI._newLog=true;if(g.log.length>200)g.log.shift();}
 
 function slotsOf(P,i){const camp=P.camps[i];const k=(camp.id==='kolos'&&!camp.destroyed)?(camp.kpos||0):0;const arr=[null,null,null];arr[k]={camp:true};let j=0;P.cols[i].forEach(x=>{while(arr[j])j++;arr[j]=x;j++;});return arr;}
 function frontOf(P,i){const arr=slotsOf(P,i);for(let s=2;s>=0;s--){const e=arr[s];if(!e)continue;if(e.camp&&P.camps[i].destroyed)continue;return e;}return null;}
@@ -776,13 +834,13 @@ function damage(g,r){
 }
 function destroyCamp(g,r){const c=campOf(g,r);if(c.destroyed)return;c.destroyed=true;c.damaged=true;fx('destroy',keyOf(r));sfx('boom');log(g,`☠ ${CAMPS[c.id].name} (${g.names[r.p]}) ZNIČEN!`);checkWin(g);}
 function destroyPerson(g,uid){const x=findP(g,uid);if(!x)return;fx('destroy','u'+uid);sfx('boom');g.pl[x.q].cols[x.col].splice(x.idx,1);
- if(x.card.punk){g.deck.push(x.card.hidden);log(g,`☠ Pankáč (${g.names[x.q]}) zničen.`);}else{g.discard.push(x.card.id);log(g,`☠ ${DEF(x.card.id).name} (${g.names[x.q]}) zničen.`);}}
+ if(x.card.punk){g.deck.push(x.card.hidden);log(g,`☠ Pankáč (${g.names[x.q]}) zničen.`);}else{dpush(g,x.card.id,x.q,'zničena');log(g,`☠ ${DEF(x.card.id).name} (${g.names[x.q]}) zničen.`);}}
 function returnToHand(g,uid){const x=findP(g,uid);if(!x)return;g.pl[x.q].cols[x.col].splice(x.idx,1);const id=x.card.punk?x.card.hidden:x.card.id;g.pl[x.q].hand.push({uid:nid(),id});log(g,`↩ ${x.card.punk?'Pankáč':DEF(id).name} se vrací do ruky (${g.names[x.q]}).`);}
 function restore(g,r){fx('heal',keyOf(r));sfx('heal');if(r.t==='camp'){const c=campOf(g,r);c.damaged=false;log(g,`🔧 ${CAMPS[c.id].name} obnoven.`);}else{const x=findP(g,r.uid);if(!x)return;x.card.damaged=false;x.card.restored=true;log(g,`🔧 ${DEF(x.card.id).name} obnoven.`);}}
 function restoreTargets(g,p,exclude,peopleOnly){const P=g.pl[p],r=[];if(!peopleOnly)P.camps.forEach((c,i)=>{const rf={p,t:'camp',i};if(c.damaged&&!c.destroyed&&c.id!=='bonfire'&&!sameRef(rf,exclude))r.push(rf);});
  allPeople(P).forEach(x=>{const rf={p,t:'person',uid:x.uid};if(x.damaged&&!sameRef(rf,exclude))r.push(rf);});return r;}
 
-function drawOne(g){if(!g.deck.length){if(g.reshuffles>=1||!g.discard.length)endGame(g,null,'Balíček došel podruhé – hra končí remízou.');g.reshuffles++;g.deck=shuffle(g.discard);g.discard=[];log(g,'♻ Odhozené karty zamíchány jako nový balíček (příště už remíza).');}return g.deck.pop();}
+function drawOne(g){if(!g.deck.length){if(g.reshuffles>=1||!g.discard.length)endGame(g,null,'Balíček došel podruhé – hra končí remízou.');g.reshuffles++;g.deck=shuffle(g.discard);g.discard=[];g.dw=[];log(g,'♻ Odhozené karty zamíchány jako nový balíček (příště už remíza).');}return g.deck.pop();}
 function drawTo(g,p,n=1){if(n>0)sfx('card');for(let i=0;i<n;i++){const id=drawOne(g);g.pl[p].hand.push({uid:nid(),id});}if(n>0)log(g,`🃏 ${g.names[p]} si dobírá ${n} ${n===1?'kartu':n<5?'karty':'karet'}.`);}
 
 /* ---------- výběry ---------- */
@@ -793,7 +851,7 @@ async function actDamage(g,p,o={}){const t=targets(g,1-p,o);if(!t.length){log(g,
  const c=await choose(g,p,{kind:'dmg',text:o.peopleOnly?'Vyber člověka ke zranění':'Vyber cíl k poškození',options:t.map(ref=>({ref}))});damage(g,c.ref);return c.ref;}
 async function actRestore(g,p,o={}){const t=restoreTargets(g,p,o.exclude,o.peopleOnly);if(!t.length)return null;const c=await choose(g,p,{kind:'restore',text:'Vyber svou kartu k obnovení',options:t.map(ref=>({ref}))});restore(g,c.ref);return c.ref;}
 async function sacrifice(g,p,text){const o=peopleRefs(g,p);if(!o.length)return null;const c=await choose(g,p,{kind:'sacrifice',text:text||'Vyber svého člověka ke zničení',options:o});destroyPerson(g,c.ref.uid);return c.ref;}
-async function discardN(g,p,n){for(let i=0;i<n;i++){const hs=g.pl[p].hand.filter(h=>h.id!=='silo');if(!hs.length)return;const c=await choose(g,p,{kind:'discard',text:`Odhoď kartu z ruky (${i+1}/${n})`,options:hs.map(h=>({ref:{p,t:'hand',uid:h.uid}}))});const P=g.pl[p];const k=P.hand.findIndex(h=>h.uid===c.ref.uid);const [h]=P.hand.splice(k,1);g.discard.push(h.id);log(g,`🗑 ${g.names[p]} odhazuje ${DEF(h.id).name}.`);}}
+async function discardN(g,p,n){for(let i=0;i<n;i++){const hs=g.pl[p].hand.filter(h=>h.id!=='silo');if(!hs.length)return;const c=await choose(g,p,{kind:'discard',text:`Odhoď kartu z ruky (${i+1}/${n})`,options:hs.map(h=>({ref:{p,t:'hand',uid:h.uid}}))});const P=g.pl[p];const k=P.hand.findIndex(h=>h.uid===c.ref.uid);const [h]=P.hand.splice(k,1);dpush(g,h.id,p,'odhozena z ruky');log(g,`🗑 ${g.names[p]} odhazuje ${DEF(h.id).name}.`);}}
 function colOpts(g,q,incCamp){const P=g.pl[q];return[0,1,2].map(i=>{const n=P.cols[i].length;const ok=n>0||(incCamp&&!P.camps[i].destroyed);if(!ok)return null;const val=P.cols[i].reduce((s,x)=>s+(x.punk?1:DEF(x.id).cost+1),0)+(incCamp&&!P.camps[i].destroyed?(P.camps[i].damaged?9:5):0);return{label:`Sloupec ${i+1}: ${CAMPS[P.camps[i].id].name} (${n} lidí)`,col:i,ai:val};}).filter(Boolean);}
 function omenOpts(g){const r=[];[0,1].forEach(q=>g.pl[q].events.forEach((e,k)=>{if(e&&(k===0||!g.pl[q].events[k-1]))r.push({label:`${g.names[q]}: ${evName(e)} (pozice ${k+1})`,q,k});}));return r;}
 function mimicOpts(g,p,src){const o=[];
@@ -833,11 +891,11 @@ async function doRaid(g,p){const P=g.pl[p];
 async function resolveEvent(g,p,e){g.tf.eventResolved=true;
  if(e.id==='raiders'){fx('banner',null,'🏴‍☠️ NÁJEZD!');sfx('raid');g.pl[p].raidersHome=true;const q=1-p;log(g,`🏴‍☠️ Nájezdníci (${g.names[p]}) útočí!`);const o=g.pl[q].camps.map((c,i)=>c.destroyed?null:{ref:{p:q,t:'camp',i}}).filter(Boolean);
   const c=await choose(g,q,{kind:'ownCamp',text:`Nájezdníci: ${g.names[q]}, vyber svůj tábor, který bude poškozen`,options:o});if(c)damage(g,c.ref);return;}
- fx('banner',null,`💣 ${DEF(e.id).name.toUpperCase()}!`);sfx('boom');log(g,`⚠ Událost: ${DEF(e.id).name} (${g.names[p]})`);await DEF(e.id).run(g,p);g.discard.push(e.id);}
+ fx('banner',null,`💣 ${DEF(e.id).name.toUpperCase()}!`);sfx('boom');log(g,`⚠ Událost: ${DEF(e.id).name} (${g.names[p]})`);await DEF(e.id).run(g,p);dpush(g,e.id,p,'událost');}
 async function eventsPhase(g,p){const P=g.pl[p];const e=P.events[0];if(e){P.events[0]=null;await resolveEvent(g,p,e);}P.events=[P.events[1],P.events[2],null];}
 async function playEvent(g,p,h){const d=DEF(h.id),P=g.pl[p];P.hand.splice(P.hand.findIndex(x=>x.uid===h.uid),1);g.water-=d.cost;
  const now=d.slot===0||(zetoActive(g,p)&&!g.tf.firstEvent);g.tf.firstEvent=true;
- if(d.cost>0)sfx('drop');if(now){fx('banner',null,`💣 ${d.name.toUpperCase()}!`);sfx('boom');log(g,`▶ ${g.names[p]} hraje událost ${d.name} (okamžitě).`);await d.run(g,p);g.discard.push(h.id);g.tf.eventResolved=true;return;}
+ if(d.cost>0)sfx('drop');if(now){fx('banner',null,`💣 ${d.name.toUpperCase()}!`);sfx('boom');log(g,`▶ ${g.names[p]} hraje událost ${d.name} (okamžitě).`);await d.run(g,p);dpush(g,h.id,p,'událost');g.tf.eventResolved=true;return;}
  const i=freeSlot(P,d.slot-1);P.events[i]={id:h.id};sfx('fuse');log(g,`▶ ${g.names[p]} hraje událost ${d.name} na pozici ${i+1}.`);}
 
 /* ---------- akce ---------- */
@@ -848,7 +906,7 @@ async function playCard(g,p,h){const d=DEF(h.id);if(!canPlay(g,p,h))return;if(d.
 function junkVal(g,p,j){switch(j){case 'draw':return 2;case 'water':return 1;case 'injure':return targets(g,1-p,{peopleOnly:true}).length?4.5:0;case 'raid':return raidPossible(g,p)?4:0;case 'restore':return restoreTargets(g,p,null).length?4:0;case 'punk':return freeSlots(g.pl[p])?3.5:0;}return 0;}
 async function doJunk(g,p,j){switch(j){case 'draw':drawTo(g,p);break;case 'water':g.water++;break;case 'injure':if(targets(g,1-p,{peopleOnly:true}).length)await actDamage(g,p,{peopleOnly:true});break;case 'raid':await doRaid(g,p);break;case 'restore':await actRestore(g,p);break;case 'punk':await gainPunk(g,p);break;}}
 async function junkCard(g,p,h){const d=DEF(h.id),P=g.pl[p];const k=P.hand.findIndex(x=>x.uid===h.uid);if(k<0)return;P.hand.splice(k,1);
- if(h.id==='silo')P.siloHome=true;else g.discard.push(h.id);log(g,`♻ ${g.names[p]} recykluje ${d.name}: ${JUNK[d.junk].i} ${JUNK[d.junk].t}`);g.tf.junks=(g.tf.junks||0)+1;await doJunk(g,p,d.junk);}
+ if(h.id==='silo')P.siloHome=true;else dpush(g,h.id,p,'recyklována');log(g,`♻ ${g.names[p]} recykluje ${d.name}: ${JUNK[d.junk].i} ${JUNK[d.junk].t}`);g.tf.junks=(g.tf.junks||0)+1;await doJunk(g,p,d.junk);}
 function takeSilo(g,p){const P=g.pl[p];if(!P.siloHome||g.water<1)return;sfx('drop');g.water--;P.siloHome=false;P.hand.push({uid:nid(),id:'silo'});log(g,`🛢️ ${g.names[p]} bere Vodní silo do ruky.`);}
 function drawPaid(g,p){if(g.water<2)return;sfx('drop');g.water-=2;drawTo(g,p);}
 function abilitiesOf(g,p,r){if(r.t==='camp'){const c=campOf(g,r);return CAMPS[c.id].ab||[];}const x=findP(g,r.uid);if(!x)return[];const base=x.card.punk?[]:(DEF(x.card.id).ab||[]);return(argoActive(g,p)&&x.card.id!=='argo')?[...base,ARGO_AB]:base;}
@@ -1100,7 +1158,7 @@ function gameHTML(g){const me=viewer(g),op=1-me,tk=tkeys(g);const myTurn=g.cur==
  const water=myTurn&&g.phase==='actions'?(g.water>4?`${ic('water')}<b class="cm">×${g.water}</b>`:(Array.from({length:g.water},()=>ic('water')).join('')||'<b class="cm">0</b>')):'';
  return `<div class="bar"><span class="who">${g.names[op]}</span><span class="chip">${ic('hand')}${g.pl[op].hand.length}</span><span class="sp"></span>${evqHTML(g,op)}</div>
  ${boardHTML(g,op,true,tk)}
- <div class="mid"><span class="chip">${ic('deck')}${g.deck.length}</span><span class="chip">${ic('trash')}${g.discard.length}</span><span class="lg" data-act="log">${status||g.log[g.log.length-1]||''}</span>${FS_OK?`<span class="mbtn" data-act="fs" title="Celá obrazovka">${ic(isFS()?'fsOff':'fsOn')}</span>`:""}<span class="mbtn" data-act="snd">${SET.mOn&&SET.sfx?'🔊':'🔇'}</span><span class="mbtn" data-act="rules">📖</span><span class="mbtn" data-act="menu" title="Hlavní menu (uloží hru)">🏠</span></div>
+ <div class="mid"><span class="chip">${ic('deck')}${g.deck.length}</span><span class="chip dchip" data-act="disc">${ic('trash')}${g.discard.length}${g.discard.length?`<span class="dlast">${DEF(g.discard[g.discard.length-1]).art}</span>`:''}</span><span class="lg ${UI._newLog?'lgnew':''}" data-act="mlog">${status||g.log[g.log.length-1]||''}</span>${UI.mlog?mlogHTML(g):''}${FS_OK?`<span class="mbtn" data-act="fs" title="Celá obrazovka">${ic(isFS()?'fsOff':'fsOn')}</span>`:""}<span class="mbtn" data-act="snd">${SET.mOn&&SET.sfx?'🔊':'🔇'}</span><span class="mbtn" data-act="rules">📖</span><span class="mbtn" data-act="menu" title="Hlavní menu (uloží hru)">🏠</span></div>
  ${boardHTML(g,me,false,tk)}
  <div class="bar"><span class="who">${g.names[me]}</span><span class="water">${water}</span><span class="sp"></span>${evqHTML(g,me)}</div>
  <div class="ctrl"><button class="btn sec" data-act="drawPaid" ${can&&g.water>=2?'':'disabled'}>${ic('draw')} Dobrat ${ic('water',2)}</button><button class="btn sec" data-act="silo" ${can&&g.water>=1&&P.siloHome?'':'disabled'}>${ic('silo')} ${ic('water',1)}</button><button class="btn" data-act="end" ${can?'':'disabled'}>Konec tahu</button></div>
@@ -1120,7 +1178,7 @@ function detailHTML(g){const I=infoByKey(g,g.detail);if(!I)return'';const d=I.de
  body+=`<div class="ln" style="opacity:.7">Originál: ${d.en}${isUnique(d)?' · unikátní karta':''}${I.kind!=='hand'?' · patří: '+g.names[I.p]:''}</div>`;
  if(I.kind==='hand'&&own){const h=I.obj;if(d.type==='person'||d.type==='event')acts+=`<button class="btn" data-act="play" data-arg="${h.uid}" ${canPlay(g,I.p,h)?'':'disabled'}>▶ Zahrát</button> `;acts+=`<button class="btn teal" data-act="junk" data-arg="${h.uid}">Recyklovat ${ic(junkIc(d.junk))}</button>`;}
  let pick='';if(g.prompt&&!isAI(g,g.prompt.p)){const oi=g.prompt.options.findIndex(o=>o.ref&&keyOf(o.ref)===g.detail);if(oi>=0){pick=`<button class="btn" data-act="opt" data-arg="${oi}">✔ ${g.prompt.kind==='discard'?'Odhodit tuto kartu':'Vybrat tuto kartu'}</button> `;acts='';body=body.replace(/<div class="ab">[\s\S]*?<\/div>/g,'');}}
- return `<div class="sheet-bg"><div class="sheet">${pick?`<div class="bstate">🎯 ${g.prompt.text}</div>`:''}${bigCardHTML(g,d,I)}${body}<div class="ctrl">${pick}${acts}<button class="btn sec" data-act="closeDetail">${pick?'Zpět':'Zavřít'}</button></div></div></div>`;}
+ return `<div class="sheet-bg clearbg"><div class="sheet clear">${pick?`<div class="bstate">🎯 ${g.prompt.text}</div>`:''}${bigCardHTML(g,d,I)}${body}<div class="ctrl">${pick}${acts}<button class="btn sec" data-act="closeDetail">${pick?'Zpět':'Zavřít'}</button></div></div></div>`;}
 function promptHTML(g){const pr=g.prompt;const hc=pr.options.filter(o=>o.ref&&o.ref.t==='hand');
  const handRow=hc.length?`<div class="pcards">${hc.map(o=>{const h=g.pl[o.ref.p].hand.find(x=>x.uid===o.ref.uid);return h?cardFace(g,DEF(h.id),{k:'h'+h.uid}):'';}).join('')}</div>`:'';
  return `<div class="prompt"><div class="in"><div class="t">🎯 ${g.names[pr.p]}: ${pr.text}</div><div style="font-size:12px;opacity:.7;margin-bottom:6px">${hc.length?'Klepni na kartu – zobrazí se velká a pak ji potvrdíš.':'Klepni na zvýrazněnou kartu nebo na tlačítko.'}</div>${handRow}<div class="opts">${pr.options.filter(o=>!(o.ref&&o.ref.t==='hand')).map((o)=>{const i=pr.options.indexOf(o);return `<button class="btn ${o.ref?'sec':''}" data-act="opt" data-arg="${i}">${o.label||(o.ref?nameRef(g,o.ref)+(o.ref.p!==viewer(g)?' (soupeř)':''):'?')}</button>`;}).join('')}${pr.optional?'<button class="btn sec" data-act="skip">Zrušit</button>':''}</div></div></div>`;}
@@ -1138,6 +1196,43 @@ function rulesHTML(){return `<div class="sheet-bg"><div class="sheet rules"><div
 <h3>Ovládání</h3>Klepni na kartu – uvidíš celý text a tlačítka (Zahrát, Recyklovat, Použít). Při výběru cíle se karty zvýrazní.
 <h3>Poznámka</h3>Neoficiální fanouškovská verze. Texty karet jsou převyprávěné a zjednodušené, názvy nemusí odpovídat českému vydání a ceny jsou orientační. Chybí tábory Obelisk, Staveniště a Tábor žoldáků; Vyvýšené místo neumí přeskládat lidi. Oficiální pravidla: <a href="https://www.tlamagames.com/user/documents/upload/pravidla/Radlands_CZ_WEB_12.pdf">PDF od TLAMA games</a>.
 <div class="ctrl"><button class="btn" data-act="closeRules">Zavřít</button></div></div></div>`;}
+
+function mlogHTML(g){const me=viewer(g),opn=g.names[1-me];const L=g.log.slice(-8).reverse();
+ return `<div class="mlbg" data-act="mlClose"></div><div class="mlog">${L.map((x,i)=>`<div class="${x.includes(opn)?'op':''} ${i===0?'top':''}">${x}</div>`).join('')||'<div>Zatím nic.</div>'}<button class="btn sec" data-act="log">📜 Celý záznam</button></div>`;}
+function dInfo(g,i){const w=g.dw||[];const j=i-(g.discard.length-w.length);return j>=0?w[j]:null;}
+function discHTML(g){const n=g.discard.length;if(!n)return `<div class="sheet-bg"><div class="sheet"><div class="dname">🗑 Odhozené karty</div><div class="ln">Odhazovací balíček je zatím prázdný.</div><div class="ctrl"><button class="btn" data-act="discClose">Zavřít</button></div></div></div>`;
+ const sel=Math.min(UI.disc||0,n-1),i=n-1-sel,d=DEF(g.discard[i]),w=dInfo(g,i);
+ const row=g.discard.slice(-10).reverse().map((id,k)=>cardFace(g,DEF(id),{act:'discSel',arg:k,cls:k===sel?'tgt':''})).join('');
+ return `<div class="sheet-bg clearbg"><div class="sheet clear dsheet"><div class="dname">🗑 ${sel===0?'Poslední odhozená':`Odhozená · ${sel+1}. shora`}</div>${w?`<div class="bstate">${g.names[w.p]} · ${w.how}</div>`:''}${cardFace(g,d,{cls:'big'})}
+ <div class="ln" style="opacity:.75">V odhazovacím balíčku: ${n} ${n===1?'karta':n<5?'karty':'karet'}. Klepnutím na kartu níže ji zobrazíš.</div><div class="pcards">${row}</div><div class="ctrl"><button class="btn" data-act="discClose">Zavřít</button></div></div></div>`;}
+
+/* ---------- aktualizace jen po potvrzení ---------- */
+const CHANGES={'2.7':['Detail karty na průhledném pozadí – karta vyskočí nad stůl.','Aktualizace jen po potvrzení: Aktualizovat / Teď ne / Přeskočit tuto verzi.','U nové verze se ukáže, co se opravilo a co přibylo.','V menu je tlačítko verze s panelem aktualizací.'],
+ '2.6':['Animované obrázky na kartách.','Vysouvací okna.','Prohlížení odhozených karet (🗑).','Mini-záznam po klepnutí na prostřední řádek.'],
+ '2.5':['Hudba ve 4 stylech a zvuky pustiny.']};
+const UPDKEY='radlands2_upd_v1';let UPDS={auto:true,skip:''};try{Object.assign(UPDS,JSON.parse(localStorage.getItem(UPDKEY)||'{}'));}catch(e){}
+function saveUpd(){try{localStorage.setItem(UPDKEY,JSON.stringify(UPDS));}catch(e){}}
+const UPD={reg:null,info:null,state:'',newer:false,busy:false};
+const IS_WEB=typeof location!=='undefined'&&/^https?:$/.test(location.protocol);
+function verCmp(a,b){const x=String(a).split('.').map(Number),y=String(b).split('.').map(Number);for(let i=0;i<Math.max(x.length,y.length);i++){const d=(x[i]||0)-(y[i]||0);if(d)return d>0?1:-1;}return 0;}
+async function checkUpdate(manual){if(!IS_WEB){UPD.state='file';render();return;}UPD.state='checking';if(manual)render();
+ try{const r=await fetch('version.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;const j=await r.json();UPD.info=j;UPD.newer=verCmp(j.version,APP_VERSION)>0;UPD.state=UPD.newer?'newer':'latest';
+  if(UPD.reg){if(UPD.newer)UPD.reg.update().catch(()=>{});else if(UPD.reg.waiting&&verCmp(j.version,APP_VERSION)===0)UPD.reg.waiting.postMessage('SKIP');}
+  if(UPD.newer&&(manual||UPDS.skip!==j.version))UI.updAsk=true;}catch(e){UPD.state='offline';}render();}
+function waitInstalled(reg,ms){return new Promise(res=>{if(reg.waiting)return res(true);const t=setTimeout(()=>res(!!reg.waiting),ms);const hook=w=>{if(!w)return;w.addEventListener('statechange',()=>{if(w.state==='installed'){clearTimeout(t);res(true);}});};hook(reg.installing);reg.addEventListener('updatefound',()=>hook(reg.installing));});}
+async function doUpdate(){if(UPD.busy)return;UPD.busy=true;UPD.state='updating';render();if(G&&UI.screen==='game')saveGame(G);
+ try{const reg=UPD.reg||(await navigator.serviceWorker.getRegistration());if(!reg){location.reload();return;}if(!reg.waiting){await reg.update().catch(()=>{});await waitInstalled(reg,20000);}
+  if(reg.waiting){reg.waiting.postMessage('SKIP');setTimeout(()=>location.reload(),4000);}else{UPD.busy=false;UPD.state='fail';render();}}catch(e){UPD.busy=false;UPD.state='fail';render();}}
+function notesHTML(arr){return `<ul class="unotes">${(arr||[]).map(n=>`<li>${n}</li>`).join('')}</ul>`;}
+function updAskHTML(){const j=UPD.info;return `<div class="sheet-bg updbg"><div class="sheet updsheet"><div class="dname">⬇️ Nová verze ${j.version}</div><div class="ln">Máš verzi <b>${APP_VERSION}</b>. Co je nového:</div>${notesHTML(j.notes)}
+ ${UPD.state==='updating'?'<div class="bstate">⏳ Stahuji a instaluji…</div>':UPD.state==='fail'?'<div class="bstate">⚠ Nepodařilo se stáhnout. Zkus to později.</div>':''}
+ <div class="ctrl ucol"><button class="btn" data-act="updGo" ${UPD.busy?'disabled':''}>⬇️ Aktualizovat</button><button class="btn sec" data-act="updLater">Teď ne</button><button class="btn sec" data-act="updSkip">Přeskočit tuto verzi</button></div><div class="ln" style="font-size:13px;opacity:.75;text-align:center">Rozehraná hra zůstane uložená.</div></div></div>`;}
+function updPanelHTML(){const st={checking:'🔄 Kontroluji…',latest:'✅ Máš nejnovější verzi.',offline:'📴 Nelze se připojit – zkus to později.',file:'ℹ Aktualizace fungují v nainstalované aplikaci (z GitHubu), ne v samostatném HTML souboru.',newer:`🆕 K dispozici je verze ${UPD.info&&UPD.info.version}.`,updating:'⏳ Instaluji…',fail:'⚠ Aktualizace se nepovedla.'}[UPD.state]||'';
+ return `<div class="sheet-bg"><div class="sheet updsheet"><div class="dname">⬇️ Aktualizace</div><div class="ln" style="text-align:center">Nainstalovaná verze: <b>${APP_VERSION}</b></div>
+ <label class="ucheck"><input type="checkbox" data-act="updAuto" ${UPDS.auto?'checked':''}> Kontrolovat nové verze při spuštění</label>${st?`<div class="bstate">${st}</div>`:''}
+ <div class="ln"><b>Co je nového ve verzi ${APP_VERSION}:</b></div>${notesHTML(CHANGES[APP_VERSION])}
+ <div class="ctrl">${UPD.newer?'<button class="btn" data-act="updShow">🆕 Zobrazit novou verzi</button>':`<button class="btn sec" data-act="updCheck">🔄 Zkontrolovat teď</button>`}<button class="btn sec" data-act="updClose">Zavřít</button></div>
+ <div class="ln" style="font-size:13px;opacity:.75;text-align:center">Bez tvého potvrzení se hra sama nezmění.</div></div></div>`;}
 function logHTML(g){return `<div class="sheet-bg"><div class="sheet logsheet"><div class="dname">📜 Záznam hry</div><div class="loglist">${g.log.slice().reverse().map(s=>`<div>${s}</div>`).join('')}</div><div class="ctrl"><button class="btn" data-act="closeLog">Zavřít</button></div></div></div>`;}
 function menuHTML(){const sv=loadSaved();let cont='';
  if(sv){const g=sv.g;const alive=q=>3-g.pl[q].camps.filter(c=>c.destroyed).length;cont=`<button class="btn big" data-act="resume">▶ Pokračovat v rozehrané hře</button><div class="svinfo">${g.names[0]} (${alive(0)} tábory) vs. ${g.names[1]} (${alive(1)} tábory) · uloženo ${new Date(sv.t).toLocaleString('cs-CZ',{day:'numeric',month:'numeric',hour:'2-digit',minute:'2-digit'})} · v${sv.v||'?'} <span data-act="delsave" class="dl">smazat</span></div>`;}
@@ -1149,7 +1244,7 @@ function menuHTML(){const sv=loadSaved();let cont='';
  <div class="row2"><button class="btn big ${UI.starter?'teal':'sec'} fsb" data-act="starterT">${UI.starter?'✔':'🏕️'} Výchozí tábory</button>${FS_OK?`<button class="btn big sec fsb" data-act="fs">${ic(isFS()?'fsOff':'fsOn')} ${isFS()?'Zmenšit':'Celá obrazovka'}</button>`:""}</div>
  <div class="row2"><button class="btn big ${SET.mOn&&SET.sfx?'teal':'sec'} fsb" data-act="snd">${SET.mOn&&SET.sfx?'🔊':'🔇'} Zvuk</button><button class="btn big ${SET.anim?'teal':'sec'} fsb" data-act="tAnim">${SET.anim?'✨':'⏸'} Animace</button></div>
  <div class="row2"><button class="btn big sec" data-act="rules">📖 Pravidla</button><button class="btn big" data-act="quit" style="background:#3b2a24;color:#fff">🚪 Konec</button></div>
- <p class="foot"><b>Verze ${APP_VERSION}</b> · Rozehraná hra se ukládá automaticky. Neoficiální fanouškovská adaptace hry Daniela Piechnicka (Roxley / TLAMA games).</p>`;}
+ <p class="foot"><button class="vbtn ${UPD.newer?'new':''}" data-act="upd">⬇️ Verze ${APP_VERSION}${UPD.newer?' · NOVÁ!':''}</button> · Rozehraná hra se ukládá automaticky. Neoficiální fanouškovská adaptace hry Daniela Piechnicka (Roxley / TLAMA games).</p>`;}
 function passHTML(g){return `<div class="full"><div style="font-size:60px">📱</div><h2>PŘEDEJ ZAŘÍZENÍ!</h2><p><b>${g.names[g.pass.p]}</b> ${g.pass.what}.</p><button class="btn big" data-act="pass">Jsem připraven</button></div>`;}
 function pickHTML(g){const pk=g.pick;return `<div class="dname" style="margin-top:8px;color:#fff;text-shadow:2px 2px 0 #111">${g.names[pk.p]}: vyber 3 tábory</div><div style="font-size:16px;background:#fff;border:2px solid #111;border-radius:8px;padding:3px 6px">Číslo ${ic('draw')} = kolik karet si na začátku dobereš.</div>
  <div class="picks">${pk.opts.map(id=>`<div class="pkc">${cardFace(g,CAMPS[id],{act:'pickT',arg:id,cls:pk.sel.includes(id)?'sel':''})}${pk.sel.includes(id)?'<span class="pkok">✔</span>':''}</div>`).join('')}</div>
@@ -1161,8 +1256,12 @@ function render(){let h='';const g=G;
  else if(g.pass)h=passHTML(g);
  else if(g.pick)h=pickHTML(g);
  else if(!g.pl[0].camps.length||!g.pl[1].camps.length)h='<div class="status">Příprava…</div>';
- else{h=gameHTML(g);if(g.detail)h+=detailHTML(g);if(g.prompt)h+=promptHTML(g);if(g.over&&!UI.log)h+=overHTML(g);if(UI.log)h+=logHTML(g);}
- if(g&&UI.screen==='game')saveGame(g);if(UI.snd)h+=sndHTML();if(UI.rules)h+=rulesHTML();$app.className=(g&&UI.screen==='game'&&!g.pass)?(g.pick?'pickmode':'game'):((UI.screen==='menu'||!g)&&!UI.quit?'menu':'');const _old=grabRects();$app.innerHTML=h;fitCards();runFX(_old);audioUpdate();}
+ else{h=gameHTML(g);if(g.detail)h+=detailHTML(g);if(g.prompt)h+=promptHTML(g);if(UI.disc!=null&&UI.disc!==false)h+=discHTML(g);if(g.over&&!UI.log)h+=overHTML(g);if(UI.log)h+=logHTML(g);}
+ if(g&&UI.screen==='game')saveGame(g);if(UI.snd)h+=sndHTML();if(UI.upd)h+=updPanelHTML();if(UI.updAsk&&UPD.newer&&UPD.info&&(UI.screen==='menu'||!g)&&!UI.quit)h+=updAskHTML();if(UI.rules)h+=rulesHTML();$app.className=((g&&UI.screen==='game'&&!g.pass)?(g.pick?'pickmode':'game'):((UI.screen==='menu'||!g)&&!UI.quit?'menu':''))+(SET.anim?'':' noanim');
+ try{$app.style.setProperty('--adl',(-(performance.now()/1000)%16).toFixed(2)+'s');}catch(e){}
+ const _old=grabRects();$app.innerHTML=h;fitCards();runFX(_old);sheetIn();audioUpdate();UI._newLog=false;}
+function sheetIn(){if(typeof document.querySelector!=='function')return;const sh=document.querySelectorAll('.sheet');const key=[...sh].map(x=>x.firstElementChild?x.firstElementChild.textContent.slice(0,40):'').join('|')+(G&&G.detail||'');
+ if(SET.anim&&sh.length&&key!==UI._sheetKey){const last=sh[sh.length-1];last.classList.add('sin');if(last.parentElement)last.parentElement.classList.add('bgin');}UI._sheetKey=sh.length?key:'';}
 
 function fitCards(){document.querySelectorAll('.cb').forEach(el=>{el.style.setProperty('--s',(el.offsetWidth/252).toFixed(4));
  const tab=el.querySelector('.rtab'),body=el.querySelector('.rbody2'),tn=el.querySelector('.rtn');if(!tab||!tn)return;
@@ -1192,14 +1291,17 @@ document.addEventListener('visibilitychange',()=>audioUpdate());
 document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('.btn'))sfx('click');if(e.target.closest('input[data-name]'))return;const a=e.target.closest('[data-act]');
  if(a){const act_=a.dataset.act,arg=a.dataset.arg;handle(act_,arg,a);return;}
  const k=e.target.closest('[data-k]');if(k&&G){const key=k.dataset.k;if(G.prompt){const o=G.prompt.options.find(o=>o.ref&&keyOf(o.ref)===key);if(o&&o.ref.t!=='hand'){resolvePrompt(o);return;}}G.detail=key;render();return;}
- if(e.target.classList.contains('sheet-bg')){if(G)G.detail=null;UI.rules=false;UI.log=false;UI.snd=false;render();}});
+ if(e.target.classList.contains('sheet-bg')){if(G)G.detail=null;UI.rules=false;UI.log=false;UI.snd=false;UI.disc=false;UI.upd=false;if(!UPD.busy)UI.updAsk=false;render();}});
 function handle(a,arg,el){const g=G;const p=g?g.cur:0;
  switch(a){
  case 'newAI':newGame('ai');break;case 'newHot':newGame('hot');break;
  case 'starter':UI.starter=el.checked;break;
  case 'rules':UI.rules=true;render();break;case 'closeRules':UI.rules=false;render();break;
- case 'log':UI.log=true;render();break;case 'closeLog':UI.log=false;render();break;
- case 'menu':if(G)saveGame(G);UI.screen='menu';UI.log=false;G=null;render();break;
+ case 'upd':UI.upd=true;render();break;case 'updClose':UI.upd=false;render();break;case 'updCheck':checkUpdate(true);break;case 'updShow':UI.upd=false;UI.updAsk=true;render();break;
+ case 'updAuto':UPDS.auto=el.checked;saveUpd();break;case 'updGo':doUpdate();break;case 'updLater':UI.updAsk=false;render();break;case 'updSkip':UPDS.skip=UPD.info?UPD.info.version:'';saveUpd();UI.updAsk=false;render();break;
+ case 'log':UI.log=true;UI.mlog=false;render();break;case 'mlog':UI.mlog=!UI.mlog;render();break;case 'mlClose':UI.mlog=false;render();break;
+ case 'disc':UI.disc=0;UI.mlog=false;render();break;case 'discSel':UI.disc=+arg;render();break;case 'discClose':UI.disc=false;render();break;case 'closeLog':UI.log=false;render();break;
+ case 'menu':if(G)saveGame(G);UI.screen='menu';UI.log=false;UI.mlog=false;UI.disc=false;G=null;render();break;
  case 'resume':resumeGame();break;
  case 'tSfx':SET.sfx=!SET.sfx;saveSet();render();sfx('turn');break;
  case 'snd':UI.snd=true;render();break;
@@ -1228,7 +1330,8 @@ function handle(a,arg,el){const g=G;const p=g?g.cur:0;
  case 'ab':{const[k,i]=arg.split('|');const I=infoByKey(g,k);if(I&&myActionTime(g))act(()=>useAbility(g,p,I.ref,+i));break;}
  }}
 render();
-if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{});});}
+if('serviceWorker' in navigator&&IS_WEB){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').then(r=>{UPD.reg=r;if(UPDS.auto)setTimeout(()=>checkUpdate(false),1500);}).catch(()=>{});});
+ navigator.serviceWorker.addEventListener('controllerchange',()=>{if(UPD.state==='updating')location.reload();});}
 </script>
 </body>
 </html>
