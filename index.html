@@ -5,7 +5,7 @@
 <meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="theme-color" content="#5a1e5e">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>Radlands 2 – Gangy pustiny</title>
-<meta name="version" content="2.4.1">
+<meta name="version" content="2.5.1">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -570,6 +570,13 @@ h1 .h2b{display:inline-block;margin-left:6px;padding:0 10px;font-size:.62em;line
 h1 .h2b{font-size:.5em!important;margin-left:2px!important;padding:6px 12px!important}
 .row2>*{min-width:0}
 #app.menu .fsb{overflow:hidden;text-overflow:ellipsis;padding-left:2px!important;padding-right:2px!important}
+
+/* ===== 2.5 hudba ===== */
+.mstyle{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0 4px;font-size:16px}
+.chipb{font-family:Bangers,Impact,sans-serif;font-size:16px;letter-spacing:.5px;background:#fff;border:2.5px solid #111;border-radius:8px;box-shadow:2px 2px 0 #111;padding:4px 8px;cursor:pointer;color:#111}
+.chipb.on{background:#ff3d7f;color:#fff;text-shadow:1px 1px 0 #111;transform:translateY(-1px)}
+.sndsheet{max-height:92dvh!important;overflow:auto}
+.sp-row{padding:7px 0!important}
 </style>
 </head>
 <body>
@@ -577,7 +584,7 @@ h1 .h2b{font-size:.5em!important;margin-left:2px!important;padding:6px 12px!impo
 <div id="rotate"><div class="rotbox"><div class="rotph">📱</div><h2>OTOČ TELEFON!</h2><p>Radlands se hraje na výšku.</p></div></div>
 <script>
 /* ===================== ZÁKLAD ===================== */
-const APP_VERSION='2.4.1';
+const APP_VERSION='2.5.1';
 let UID=1; const nid=()=>UID++;
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
@@ -894,13 +901,13 @@ function resumeGame(){const s=loadSaved();if(!s)return;UID=Math.max(UID,s.uid);G
 
 
 /* ===================== EFEKTY A ZVUKY ===================== */
-const SETKEY='radlands2_set_v1';let SET={sfx:true,anim:true,vol:.7,mOn:true,mV:90,eV:70};
+const SETKEY='radlands2_set_v1';let SET={sfx:true,anim:true,vol:.7,mOn:true,mV:90,eV:70,muOn:true,muV:50,amOn:true,aV:60,mus:'auto'};
 try{Object.assign(SET,JSON.parse(localStorage.getItem(SETKEY)||'{}'));}catch(e){}
 function saveSet(){try{localStorage.setItem(SETKEY,JSON.stringify(SET));}catch(e){}}
 const FX=[];
 function fx(type,key,txt){if(FX.length<40)FX.push({type,key,txt});}
-let AC=null,MG=null;
-function ac(){try{if(!AC){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;AC=new C();MG=AC.createGain();MG.connect(AC.destination);}MG.gain.value=sndGain();if(AC.state==='suspended')AC.resume();}catch(e){return null;}return AC;}
+let AC=null,MG=null,MASTER=null,MUSB=null,AMBB=null;
+function ac(){try{if(!AC){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;AC=new C();MASTER=AC.createGain();MASTER.connect(AC.destination);MG=AC.createGain();MG.connect(MASTER);MUSB=AC.createGain();MUSB.connect(MASTER);AMBB=AC.createGain();AMBB.connect(MASTER);}busGains();if(AC.state==='suspended')AC.resume();}catch(e){return null;}return AC;}
 function tone(f,dur,type,vol,slide,delay){const a=AC,t=a.currentTime+(delay||0);const o=a.createOscillator(),g=a.createGain();o.type=type||'square';o.frequency.setValueAtTime(f,t);if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(30,f+slide),t+dur);
  g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(vol||.2,t+.01);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);o.connect(g);g.connect(MG);o.start(t);o.stop(t+dur+.05);}
 function noise(dur,vol,freq,delay,type){const a=AC,t=a.currentTime+(delay||0);const n=Math.floor(a.sampleRate*dur),b=a.createBuffer(1,n,a.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*(1-i/n);
@@ -919,6 +926,77 @@ const SFX={
  win:()=>[523,659,784,1046,1318].forEach((f,i)=>tone(f,i==4?.5:.16,'square',.14,0,i*.13)),
  lose:()=>[392,370,349,311].forEach((f,i)=>tone(f,i==3?.8:.32,'triangle',.25,i==3?-60:-10,i*.3)),
  click:()=>tone(1100,.025,'square',.05)};
+
+function busGains(){if(!AC)return;MASTER.gain.value=SET.mOn?SET.mV/100:0;MG.gain.value=SET.sfx?SET.eV/100*1.25:0;MUSB.gain.value=SET.muOn?SET.muV/100*.55:0;AMBB.gain.value=SET.amOn?SET.aV/100:0;}
+/* ---------- hudba (vlastní skladby generované v prohlížeči) ---------- */
+const mf=n=>440*Math.pow(2,(n-69)/12);
+let DIST=null,ECHO=null;
+function distNode(){if(DIST)return DIST;const w=AC.createWaveShaper(),c=new Float32Array(1024);for(let i=0;i<1024;i++){const x=i/512-1;c[i]=Math.tanh(x*6);}w.curve=c;const f=AC.createBiquadFilter();f.type='lowpass';f.frequency.value=2400;w.connect(f);f.connect(MUSB);DIST=w;return w;}
+function echoNode(){if(ECHO)return ECHO;const d=AC.createDelay(1);d.delayTime.value=.36;const fb=AC.createGain();fb.gain.value=.33;const lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=2200;d.connect(lp);lp.connect(fb);fb.connect(d);lp.connect(MUSB);ECHO=d;return d;}
+function mNote(t,n,d,v,type,o={}){const os=AC.createOscillator(),g=AC.createGain();os.type=type||'triangle';os.frequency.setValueAtTime(mf(n),t);if(o.slide)os.frequency.exponentialRampToValueAtTime(mf(n+o.slide),t+d);
+ let out=os;if(o.lp){const f=AC.createBiquadFilter();f.type='lowpass';f.frequency.value=o.lp;os.connect(f);out=f;}out.connect(g);
+ g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(v,t+(o.att||.006));g.gain.exponentialRampToValueAtTime(0.0001,t+d);g.connect(o.dest||MUSB);if(o.echo){const e=AC.createGain();e.gain.value=.5;g.connect(e);e.connect(echoNode());}os.start(t);os.stop(t+d+.05);}
+let NBUF=null;function nbuf(){if(!NBUF){NBUF=AC.createBuffer(1,AC.sampleRate,AC.sampleRate);const d=NBUF.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;}return NBUF;}
+function mNoise(t,d,v,ff,ft,dest){const sr=AC.createBufferSource(),f=AC.createBiquadFilter(),g=AC.createGain();sr.buffer=nbuf();f.type=ft||'highpass';f.frequency.value=ff||6000;
+ g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(0.0001,t+d);sr.connect(f);f.connect(g);g.connect(dest||MUSB);sr.start(t,Math.random()*.5);sr.stop(t+d+.05);}
+function kick(t,v){const o=AC.createOscillator(),g=AC.createGain();o.type='sine';o.frequency.setValueAtTime(140,t);o.frequency.exponentialRampToValueAtTime(42,t+.22);g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(0.0001,t+.3);o.connect(g);g.connect(MUSB);o.start(t);o.stop(t+.35);}
+function snare(t,v){mNoise(t,.17,v,1600,'bandpass');mNote(t,55,.09,v*.5,'triangle');}
+function hat(t,v){mNoise(t,.045,v,7500,'highpass');}
+function guitar(t,root,d,v){[0,7,12].forEach(i=>{const o=AC.createOscillator(),g=AC.createGain();o.type='sawtooth';o.frequency.setValueAtTime(mf(root+i),t);o.detune.value=(Math.random()-.5)*12;
+ g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(0.0001,t+d);o.connect(g);g.connect(distNode());o.start(t);o.stop(t+d+.05);});}
+const MSTY={
+ rock:{n:'🎸 Pustinový rock',bpm:116,bars:4,play(t,s,sp){const b=Math.floor(s/16),i=s%16,R=[40,40,36,38][b];
+  if([1,0,1,0,1,1,0,1,1,0,1,0,1,1,0,1][i])guitar(t,R,sp*1.7,.05);
+  if(i%2===0)mNote(t,R-12,sp*1.8,.22,'triangle',{lp:500});
+  if([0,6,8,11].includes(i))kick(t,.7);if(i===4||i===12)snare(t,.35);if(i%2===0)hat(t,i%4===0?.07:.04);
+  if(b%2===1){const L={0:64,3:67,6:69,8:71,10:69,12:67,14:64};if(L[i])mNote(t,L[i]+(b===3&&i>=8?2:0),sp*2.2,.07,'square',{lp:1800});}}},
+ western:{n:'🤠 Western',bpm:84,bars:4,play(t,s,sp){const b=Math.floor(s/16),i=s%16,C=[[57,60,64],[55,59,62],[53,57,60],[52,56,59]][b];
+  if(i%2===0){const seq=[0,1,2,1,0,2,1,2];mNote(t,C[seq[i/2]]+12,sp*3,.08,'triangle',{echo:true});}
+  if(i===0||i===8)mNote(t,C[0]-12+(i===8?7:0),sp*4,.2,'triangle',{lp:600});
+  if(i===0)kick(t,.35);if(i===8)mNoise(t,.04,.12,3000,'bandpass');
+  const W={1:{4:76,8:74,12:72},3:{0:71,6:69,10:68}}[b];if(W&&W[i])mNote(t,W[i],sp*5,.06,'sine',{att:.08,echo:true,slide:i===10?-1:0});}},
+ tension:{n:'⚠️ Napětí',bpm:96,bars:4,play(t,s,sp){const b=Math.floor(s/16),i=s%16,R=[28,28,29,27][b];
+  mNote(t,R+(i%4===2?12:0),sp*.9,i%4===0?.2:.1,'sawtooth',{lp:280+b*40});
+  if(i===0||i===8)kick(t,.45);if(i%2===1)hat(t,.025);
+  if(b===3&&i===8)[76,77].forEach(n=>mNote(t,n,sp*6,.035,'sine',{att:.2}));
+  if(b===1&&i===12)mNote(t,64,sp*4,.04,'triangle',{slide:-1,att:.05});}},
+ camp:{n:'🔥 Klid u ohně',bpm:66,bars:4,play(t,s,sp){const b=Math.floor(s/16),i=s%16,C=[[50,53,57],[45,48,52],[46,50,53],[41,45,48]][b];
+  if(i===0)C.forEach(n=>mNote(t,n+12,sp*15,.05,'triangle',{att:.35,lp:1400}));
+  if(i===0)mNote(t,C[0]-12,sp*14,.14,'sine',{att:.1});
+  if(i%4===2){const k=[1,2,0,2][i/4|0];mNote(t,C[k]+24,sp*5,.045,'triangle',{echo:true});}
+  if(b===2&&i===8)mNote(t,69,sp*7,.04,'sine',{att:.15,echo:true});}}
+};
+const MUS={timer:null,style:null,want:null,step:0,next:0};
+function musTick(){if(!AC||!MUS.style)return;let guard=0;while(MUS.next<AC.currentTime+.15&&guard++<64){if(MUS.step%16===0&&MUS.want){MUS.style=MUS.want;MUS.want=null;MUS.step=0;}
+ const S=MSTY[MUS.style],sp=60/S.bpm/4;try{S.play(MUS.next,MUS.step,sp);}catch(e){}MUS.next+=sp;MUS.step=(MUS.step+1)%(16*S.bars);}}
+function musStop(){if(MUS.timer)clearInterval(MUS.timer);MUS.timer=null;MUS.style=null;MUS.want=null;}
+function musWanted(){if(typeof document!=='undefined'&&document.hidden)return null;if(!SET.muOn||!SET.mOn||!SET.muV||!SET.mV)return null;if(SET.mus&&SET.mus!=='auto')return SET.mus;
+ if(UI.screen!=='game'||!G||G.over||G.pick||G.pass)return 'camp';return isAI(G,G.cur)?'tension':'rock';}
+/* ---------- zvuky pustiny ---------- */
+const AMBS={on:false,timers:[],wind:null,lfo:null};
+const rr=(a,b)=>a+Math.random()*(b-a);
+function panOut(x){if(!AC.createStereoPanner)return AMBB;const p=AC.createStereoPanner();p.pan.value=x;p.connect(AMBB);return p;}
+function ambLoop(fn,min,max){const id=setTimeout(()=>{AMBS.timers=AMBS.timers.filter(x=>x!==id);if(!AMBS.on)return;try{fn();}catch(e){}ambLoop(fn,min,max);},rr(min,max));AMBS.timers.push(id);}
+function aCrackle(){const d=panOut(rr(-.3,.3));let t=AC.currentTime;const n=rr(2,7)|0;for(let i=0;i<n;i++){mNoise(t,rr(.008,.03),rr(.05,.16),rr(1800,4000),'highpass',d);t+=rr(.03,.18);}}
+function aCrow(){const d=panOut(rr(-.9,.9));let t=AC.currentTime;const n=rr(2,4)|0,p=rr(.85,1.15);for(let i=0;i<n;i++){const o=AC.createOscillator(),f=AC.createBiquadFilter(),g=AC.createGain();o.type='sawtooth';
+ o.frequency.setValueAtTime(620*p,t);o.frequency.exponentialRampToValueAtTime(430*p,t+.24);f.type='bandpass';f.frequency.value=1300;f.Q.value=4;g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(.09,t+.02);g.gain.exponentialRampToValueAtTime(0.0001,t+.26);
+ o.connect(f);f.connect(g);g.connect(d);o.start(t);o.stop(t+.3);t+=rr(.32,.45);}}
+function aEngine(){const t=AC.currentTime,dur=rr(3,5),o=AC.createOscillator(),f=AC.createBiquadFilter(),g=AC.createGain();o.type='sawtooth';const b=rr(48,62);
+ o.frequency.setValueAtTime(b,t);o.frequency.linearRampToValueAtTime(b*1.35,t+dur*.5);o.frequency.linearRampToValueAtTime(b*.9,t+dur);f.type='lowpass';f.frequency.value=380;
+ g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(.07,t+dur*.45);g.gain.linearRampToValueAtTime(0.0001,t+dur);let out=AMBB;
+ if(AC.createStereoPanner){const p=AC.createStereoPanner(),fr=Math.random()<.5?-1:1;p.pan.setValueAtTime(fr,t);p.pan.linearRampToValueAtTime(-fr,t+dur);p.connect(AMBB);out=p;}
+ o.connect(f);f.connect(g);g.connect(out);o.start(t);o.stop(t+dur+.1);}
+function aCreak(){const d=panOut(rr(-.7,.7)),t=AC.currentTime,dur=rr(.5,1.1),o=AC.createOscillator(),f=AC.createBiquadFilter(),g=AC.createGain();o.type='square';const b=rr(220,340);
+ o.frequency.setValueAtTime(b,t);o.frequency.exponentialRampToValueAtTime(b*rr(.55,.75),t+dur);f.type='bandpass';f.frequency.value=900;f.Q.value=8;g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(.03,t+.08);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+ o.connect(f);f.connect(g);g.connect(d);o.start(t);o.stop(t+dur+.05);}
+function ambStart(){if(AMBS.on||!AC)return;AMBS.on=true;const src=AC.createBufferSource();src.buffer=nbuf();src.loop=true;const f=AC.createBiquadFilter();f.type='bandpass';f.frequency.value=420;f.Q.value=.8;const g=AC.createGain();g.gain.value=0;
+ src.connect(f);f.connect(g);g.connect(AMBB);src.start();g.gain.linearRampToValueAtTime(.16,AC.currentTime+2);AMBS.wind={src,f,g};
+ const gust=()=>{if(!AMBS.on)return;const t=AC.currentTime;f.frequency.linearRampToValueAtTime(rr(250,800),t+3);g.gain.linearRampToValueAtTime(rr(.07,.24),t+3);};gust();AMBS.lfo=setInterval(gust,3000);
+ ambLoop(aCrackle,500,2200);ambLoop(aCrow,11000,26000);ambLoop(aEngine,18000,42000);ambLoop(aCreak,9000,24000);}
+function ambStop(){if(!AMBS.on)return;AMBS.on=false;AMBS.timers.forEach(clearTimeout);AMBS.timers=[];clearInterval(AMBS.lfo);const w=AMBS.wind;if(w){try{w.g.gain.linearRampToValueAtTime(0,AC.currentTime+.5);setTimeout(()=>{try{w.src.stop();}catch(e){}},700);}catch(e){}}AMBS.wind=null;}
+function audioUpdate(){if(!AC)return;const w=musWanted();if(w){if(!MUS.style){MUS.style=w;MUS.step=0;MUS.next=AC.currentTime+.12;MUS.timer=setInterval(musTick,25);}else if(w!==MUS.style)MUS.want=w;else MUS.want=null;}else musStop();
+ const hid=typeof document!=='undefined'&&document.hidden;const amb=!hid&&SET.amOn&&SET.mOn&&SET.aV>0&&SET.mV>0&&UI.screen==='game'&&G&&!G.over&&!G.pick&&!G.pass;if(amb)ambStart();else ambStop();}
+
 function sndGain(){return (SET.mOn?SET.mV/100:0)*(SET.sfx?SET.eV/100:0)*1.25;}
 function sfx(n){if(!SET.sfx||!SET.mOn||!SET.mV||!SET.eV)return;const a=ac();if(!a)return;try{SFX[n]();}catch(e){}}
 const WORDS={hit:['BAM!','ŠMÁK!','PRÁSK!','KAPOW!'],destroy:['KABOOM!','BUM!','RÁNA!'],heal:['FIX!','✚'],play:['TADY!'],punk:['PANK!']};
@@ -1083,8 +1161,8 @@ function render(){let h='';const g=G;
  else if(g.pass)h=passHTML(g);
  else if(g.pick)h=pickHTML(g);
  else if(!g.pl[0].camps.length||!g.pl[1].camps.length)h='<div class="status">Příprava…</div>';
- else{h=gameHTML(g);if(g.detail)h+=detailHTML(g);if(g.prompt)h+=promptHTML(g);if(g.over)h+=overHTML(g);if(UI.log)h+=logHTML(g);}
- if(g&&UI.screen==='game')saveGame(g);if(UI.snd)h+=sndHTML();if(UI.rules)h+=rulesHTML();$app.className=(g&&UI.screen==='game'&&!g.pass)?(g.pick?'pickmode':'game'):((UI.screen==='menu'||!g)&&!UI.quit?'menu':'');const _old=grabRects();$app.innerHTML=h;fitCards();runFX(_old);}
+ else{h=gameHTML(g);if(g.detail)h+=detailHTML(g);if(g.prompt)h+=promptHTML(g);if(g.over&&!UI.log)h+=overHTML(g);if(UI.log)h+=logHTML(g);}
+ if(g&&UI.screen==='game')saveGame(g);if(UI.snd)h+=sndHTML();if(UI.rules)h+=rulesHTML();$app.className=(g&&UI.screen==='game'&&!g.pass)?(g.pick?'pickmode':'game'):((UI.screen==='menu'||!g)&&!UI.quit?'menu':'');const _old=grabRects();$app.innerHTML=h;fitCards();runFX(_old);audioUpdate();}
 
 function fitCards(){document.querySelectorAll('.cb').forEach(el=>{el.style.setProperty('--s',(el.offsetWidth/252).toFixed(4));
  const tab=el.querySelector('.rtab'),body=el.querySelector('.rbody2'),tn=el.querySelector('.rtn');if(!tab||!tn)return;
@@ -1104,12 +1182,13 @@ function toggleFS(){try{if(isFS()){(document.exitFullscreen||document.webkitExit
 document.addEventListener('fullscreenchange',()=>render());document.addEventListener('webkitfullscreenchange',()=>render());
 /* ===================== OVLÁDÁNÍ ===================== */
 function sndHTML(){const row=(k,on,ic,n,vk)=>`<div class="sp-row ${on?'':'off'}"><label class="sw2"><input type="checkbox" data-act="sw" data-arg="${k}" ${on?'checked':''}><span></span></label><span class="sp-n">${ic} ${n}</span>${vk?`<input type="range" min="0" max="100" value="${SET[vk]}" data-snd="${vk}"><span class="sp-val" id="v-${vk}">${SET[vk]} %</span>`:'<span></span><span></span>'}</div>`;
- return `<div class="sheet-bg"><div class="sheet sndsheet"><div class="dname">🔊 Zvuk a efekty</div>${row('mOn',SET.mOn,'🔊','Všechny zvuky','mV')}${row('sfx',SET.sfx,'💥','Herní efekty','eV')}${row('anim',SET.anim,'✨','Animace',null)}
- <div class="ln" style="font-size:14px;opacity:.75">Hudba a zvuky pustiny přibudou ve verzi 2.5.</div><div class="ctrl"><button class="btn sec" data-act="sndReset">Výchozí</button><button class="btn" data-act="sndClose">Hotovo</button></div></div></div>`;}
+ return `<div class="sheet-bg"><div class="sheet sndsheet"><div class="dname">🔊 Zvuk a efekty</div>${row('mOn',SET.mOn,'🔊','Všechny zvuky','mV')}${row('sfx',SET.sfx,'💥','Herní efekty','eV')}${row('muOn',SET.muOn,'🎵','Hudba','muV')}${row('amOn',SET.amOn,'🌵','Zvuky pustiny','aV')}${row('anim',SET.anim,'✨','Animace',null)}
+ <div class="mstyle"><b>Hudba:</b>${[['auto','🔄 Automaticky'],...Object.entries(MSTY).map(([k,v])=>[k,v.n])].map(([k,n])=>`<button class="chipb ${SET.mus===k?'on':''}" data-act="musStyle" data-arg="${k}">${n}</button>`).join('')}</div><div class="ln" style="font-size:13px;opacity:.75">Automaticky: v menu klid u ohně, ve tvém tahu rock, v tahu Automy napětí.</div><div class="ctrl"><button class="btn sec" data-act="sndReset">Výchozí</button><button class="btn" data-act="sndClose">Hotovo</button></div></div></div>`;}
 function resolvePrompt(o){const r=G.prompt.res;G.prompt=null;G.detail=null;render();r(o);}
-document.addEventListener('input',e=>{const sk=e.target.dataset&&e.target.dataset.snd;if(sk){SET[sk]=+e.target.value;if(SET[sk]>0){if(sk==='mV')SET.mOn=true;else SET.sfx=true;}saveSet();if(MG)MG.gain.value=sndGain();const v=document.getElementById('v-'+sk);if(v)v.textContent=SET[sk]+' %';return;}const n=e.target.dataset&&e.target.dataset.name;if(n){UI[n]=e.target.value.trim();saveNames();}});
-document.addEventListener('change',e=>{if(e.target.dataset&&e.target.dataset.snd){ac();sfx('hit');}});
-document.addEventListener('pointerdown',()=>{if(SET.sfx)ac();},true);
+document.addEventListener('input',e=>{const sk=e.target.dataset&&e.target.dataset.snd;if(sk){SET[sk]=+e.target.value;if(SET[sk]>0){SET[{mV:'mOn',eV:'sfx',muV:'muOn',aV:'amOn'}[sk]]=true;}saveSet();busGains();audioUpdate();const v=document.getElementById('v-'+sk);if(v)v.textContent=SET[sk]+' %';return;}const n=e.target.dataset&&e.target.dataset.name;if(n){UI[n]=e.target.value.trim();saveNames();}});
+document.addEventListener('change',e=>{const sk=e.target.dataset&&e.target.dataset.snd;if(sk){if(!ac())return;busGains();audioUpdate();if(sk==='aV'){try{aCrow();}catch(x){}}else if(sk!=='muV')sfx('hit');}});
+document.addEventListener('pointerdown',()=>{if(SET.mOn&&(SET.sfx||SET.muOn||SET.amOn)){if(ac())audioUpdate();}},true);
+document.addEventListener('visibilitychange',()=>audioUpdate());
 document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('.btn'))sfx('click');if(e.target.closest('input[data-name]'))return;const a=e.target.closest('[data-act]');
  if(a){const act_=a.dataset.act,arg=a.dataset.arg;handle(act_,arg,a);return;}
  const k=e.target.closest('[data-k]');if(k&&G){const key=k.dataset.k;if(G.prompt){const o=G.prompt.options.find(o=>o.ref&&keyOf(o.ref)===key);if(o&&o.ref.t!=='hand'){resolvePrompt(o);return;}}G.detail=key;render();return;}
@@ -1125,8 +1204,9 @@ function handle(a,arg,el){const g=G;const p=g?g.cur:0;
  case 'tSfx':SET.sfx=!SET.sfx;saveSet();render();sfx('turn');break;
  case 'snd':UI.snd=true;render();break;
  case 'sndClose':UI.snd=false;render();break;
- case 'sndReset':Object.assign(SET,{sfx:true,anim:true,mOn:true,mV:90,eV:70});saveSet();if(MG)MG.gain.value=sndGain();render();sfx('turn');break;
- case 'sw':SET[arg]=el.checked;saveSet();if(MG)MG.gain.value=sndGain();render();if(el.checked&&arg!=='anim'){ac();sfx('turn');}break;
+ case 'musStyle':SET.mus=arg;saveSet();if(ac()){musStop();busGains();audioUpdate();}render();break;
+ case 'sndReset':Object.assign(SET,{sfx:true,anim:true,mOn:true,mV:90,eV:70,muOn:true,muV:50,amOn:true,aV:60,mus:'auto'});saveSet();busGains();audioUpdate();render();sfx('turn');break;
+ case 'sw':SET[arg]=el.checked;saveSet();if(ac()){busGains();audioUpdate();}render();if(el.checked&&(arg==='sfx'||arg==='mOn'))sfx('turn');if(el.checked&&arg==='amOn'){try{aCrow();}catch(x){}}break;
  case 'tAnim':SET.anim=!SET.anim;saveSet();render();break;
  case 'starterT':UI.starter=!UI.starter;render();break;
  case 'fs':toggleFS();break;

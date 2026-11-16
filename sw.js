@@ -1,6 +1,6 @@
 // Radlands 2 – ukládání pro hraní offline
 const PREFIX = 'radlands2-';
-const VERSION = PREFIX + '2.4.1';
+const VERSION = PREFIX + '2.5.1';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
