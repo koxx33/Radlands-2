@@ -1,10 +1,9 @@
 {
-  "version": "2.8",
+  "version": "2.9",
   "date": "2026-11-17",
   "notes": [
-    "Úvodní animace – klepnutím vstoupíš do hry a zapneš zvuk.",
-    "Nové uspořádání menu s ikonami, jména a tábory v okně ✏️.",
-    "Živá scéna pustiny se západem slunce v menu i za herním stolem (v tahu Automy zrudne).",
-    "Pravidla po stránkách – listuj přejetím prstem."
+    "💡 Nápověda tahu: zvýrazní, co teď můžeš udělat, a doporučí nejlepší akci.",
+    "↩ Krok zpět: vrátí poslední akci v tahu (když se nedobírala karta).",
+    "🎓 Rady pro začátečníky: krátké bubliny vysvětlí vodu, události, nájezd a ochranu. Vypnout a znovu zapnout jdou v okně ✏️."
   ]
 }

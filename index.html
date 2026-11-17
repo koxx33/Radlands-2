@@ -5,7 +5,7 @@
 <meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="theme-color" content="#5a1e5e">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>Radlands 2 – Gangy pustiny</title>
-<meta name="version" content="2.8">
+<meta name="version" content="2.9">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -701,6 +701,29 @@ body.noanim #splash *{animation:none!important}
 .rdots span{width:12px;height:12px;border-radius:50%;border:2px solid #111;background:#fff;cursor:pointer}
 .rdots span.on{background:#ff3d7f;transform:scale(1.25)}
 .rhint{text-align:center;font-size:13px!important;opacity:.7}
+
+/* ===== 2.9 nápověda, krok zpět, rady ===== */
+#app.game .ctrl .btn.ib{flex:0 0 auto;padding:5px 7px;font-size:17px}
+#app.game .ctrl .btn.ib.on{background:#ffe14d}
+.cb.hintc{z-index:5}
+.cb.hintc::after{content:"";position:absolute;inset:-2px;border:3px dashed #ffe14d;border-radius:9%;z-index:20;pointer-events:none}
+.cb.hintbest::after{border:4px solid #ffe14d;box-shadow:0 0 12px 3px rgba(255,225,77,.85);animation:hintGlowA .7s ease-in-out infinite alternate}
+@keyframes hintGlowA{to{border-color:#ff3d7f;box-shadow:0 0 16px 5px rgba(255,61,127,.75)}}
+@keyframes hintPulse{from{outline-color:#ffe14d}to{outline-color:#ff3d7f}}
+.btn.hintend{animation:hintPulse .7s ease-in-out infinite alternate;outline:4px solid #ffe14d}
+.hintbar{position:fixed;left:8px;right:8px;top:46px;z-index:20;background:#ffe14d;border:2.5px solid #111;border-radius:10px;box-shadow:3px 3px 0 #111;padding:5px 30px 5px 10px;font-size:15px;line-height:1.25;max-width:520px;margin:0 auto;pointer-events:auto}
+.hintbar .hx{position:absolute;right:8px;top:4px;font-weight:700;cursor:pointer;font-size:16px}
+.tipb{position:fixed;left:10px;right:10px;top:9%;z-index:22;max-width:500px;margin:0 auto;background:var(--halft),#fff4d6;border:3px solid #111;border-radius:14px;box-shadow:5px 5px 0 #111;padding:8px 12px 10px;animation:tipIn .35s cubic-bezier(.2,1.4,.4,1)}
+.tipb::after{content:"";position:absolute;left:38px;bottom:-16px;border:8px solid transparent;border-top:9px solid #111}
+.tiph{font-family:Bangers,sans-serif;font-size:20px;letter-spacing:1px;color:#2bb3a3;-webkit-text-stroke:.5px #111}
+.tiph span{font-size:15px;color:#111;opacity:.6;-webkit-text-stroke:0;margin-left:6px}
+.tipt{font-size:16.5px;line-height:1.3;margin:2px 0 8px}
+.tipc{display:flex;gap:8px}.tipc .btn{flex:1;padding:5px;font-size:17px}
+@keyframes tipIn{from{transform:translateY(-20px) scale(.9);opacity:0}}
+.noanim .tipb{animation:none}
+@media (max-width:430px){#app.game .ctrl .dlbl{display:none}#app.game .ctrl .btn{padding:5px 7px}}
+#app.game .ctrl .btn[data-act=end]{min-width:0}
+.hand .cb.hintc::after{inset:1px}
 </style>
 </head>
 <body>
@@ -708,7 +731,7 @@ body.noanim #splash *{animation:none!important}
 <div id="rotate"><div class="rotbox"><div class="rotph">📱</div><h2>OTOČ TELEFON!</h2><p>Radlands se hraje na výšku.</p></div></div>
 <script>
 /* ===================== ZÁKLAD ===================== */
-const APP_VERSION='2.8';
+const APP_VERSION='2.9';
 let UID=1; const nid=()=>UID++;
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
@@ -1000,7 +1023,7 @@ async function setup(g){let ch;
  g.cur=Math.random()<.5?0:1;log(g,`🎲 Začíná: ${g.names[g.cur]} (v prvním tahu má jen 1 💧).`);await beginTurn(g);}
 function passTo(g,p,what){return new Promise(res=>{g.pass={p,what,res};render();});}
 function pickCamps(g,p,opts){return new Promise(res=>{g.pick={p,opts,sel:[],res};render();});}
-async function beginTurn(g){const p=g.cur;g.tf={peoplePlayed:0,eventResolved:false,abilitiesUsed:0,resonator:false,firstEvent:false,vera:false,hg:-1,junks:0};
+async function beginTurn(g){const p=g.cur;g.turnNo=(g.turnNo||0)+1;UNDO.clear();g.tf={peoplePlayed:0,eventResolved:false,abilitiesUsed:0,resonator:false,firstEvent:false,vera:false,hg:-1,junks:0};
  [0,1].forEach(q=>{g.pl[q].camps.forEach(c=>c.used=false);allPeople(g.pl[q]).forEach(x=>{x.used=false;x.played=false;x.restored=false;});});
  g.phase='events';g.water=0;if(g.mode==='hot')await passTo(g,p,'je na tahu');
  log(g,`━━ Na tahu: ${g.names[p]} ━━`);fx('banner',null,g.mode==='ai'?(p===0?'TVŮJ TAH!':'TAH AUTOMY!'):`TAH: ${g.names[p].toUpperCase()}!`);sfx('turn');render();if(isAI(g,p))await sleep(600);
@@ -1220,7 +1243,7 @@ function bigCardHTML(g,d,I){if(I&&I.kind==='person'&&I.obj.punk)return cardFace(
  const st=I&&I.obj&&(I.kind==='camp'||I.kind==='person')?(I.obj.destroyed?'dead':I.obj.damaged?'dmg':''):'';
  const live=I&&(I.kind==='camp'||I.kind==='person');
  return cardFace(g,d,{cls:'big '+st,dead:false,abs:live?abilitiesOf(g,I.p,I.ref):null,p:I?I.p:null,live});}
-function gameHTML(g){const me=viewer(g),op=1-me,tk=tkeys(g);const myTurn=g.cur===me;const can=myActionTime(g)&&myTurn;const P=g.pl[me];
+function gameHTML(g){const me=viewer(g),op=1-me,tk=tkeys(g);const HK=(UI.hint&&myActionTime(g)&&g.cur===me)?hintKeys(g,me):null;UI._hk=HK;const myTurn=g.cur===me;const can=myActionTime(g)&&myTurn;const P=g.pl[me];
  const status=g.over?'':isAI(g,g.cur)?`🤖 ${g.names[g.cur]} hraje…`:(g.phase==='events'?'Události…':(!myTurn?`Hraje ${g.names[g.cur]}`:''));
  const water=myTurn&&g.phase==='actions'?(g.water>4?`${ic('water')}<b class="cm">×${g.water}</b>`:(Array.from({length:g.water},()=>ic('water')).join('')||'<b class="cm">0</b>')):'';
  return `<div class="bar"><span class="who">${g.names[op]}</span><span class="chip">${ic('hand')}${g.pl[op].hand.length}</span><span class="sp"></span>${evqHTML(g,op)}</div>
@@ -1228,7 +1251,7 @@ function gameHTML(g){const me=viewer(g),op=1-me,tk=tkeys(g);const myTurn=g.cur==
  <div class="mid"><span class="chip">${ic('deck')}${g.deck.length}</span><span class="chip dchip" data-act="disc">${ic('trash')}${g.discard.length}${g.discard.length?`<span class="dlast">${DEF(g.discard[g.discard.length-1]).art}</span>`:''}</span><span class="lg ${UI._newLog?'lgnew':''}" data-act="mlog">${status||g.log[g.log.length-1]||''}</span>${UI.mlog?mlogHTML(g):''}${FS_OK?`<span class="mbtn" data-act="fs" title="Celá obrazovka">${ic(isFS()?'fsOff':'fsOn')}</span>`:""}<span class="mbtn" data-act="snd">${SET.mOn&&SET.sfx?'🔊':'🔇'}</span><span class="mbtn" data-act="rules">📖</span><span class="mbtn" data-act="menu" title="Hlavní menu (uloží hru)">🏠</span></div>
  ${boardHTML(g,me,false,tk)}
  <div class="bar"><span class="who">${g.names[me]}</span><span class="water">${water}</span><span class="sp"></span>${evqHTML(g,me)}</div>
- <div class="ctrl"><button class="btn sec" data-act="drawPaid" ${can&&g.water>=2?'':'disabled'}>${ic('draw')} Dobrat ${ic('water',2)}</button><button class="btn sec" data-act="silo" ${can&&g.water>=1&&P.siloHome?'':'disabled'}>${ic('silo')} ${ic('water',1)}</button><button class="btn" data-act="end" ${can?'':'disabled'}>Konec tahu</button></div>
+ <div class="ctrl"><button class="btn sec ib" data-act="undo" ${can&&UNDO.ok(g)?'':'disabled'} title="Krok zpět">↩</button><button class="btn sec ib ${UI.hint?'on':''}" data-act="hint" ${can?'':'disabled'} title="Nápověda">💡</button><button class="btn sec" data-act="drawPaid" ${can&&g.water>=2?'':'disabled'}>${ic('draw')}<span class="dlbl"> Dobrat</span> ${ic('water',2)}</button><button class="btn sec" data-act="silo" ${can&&g.water>=1&&P.siloHome?'':'disabled'}>${ic('silo')} ${ic('water',1)}</button><button class="btn ${can&&UI.hint&&hintIdle(g)?'hintend':''}" data-act="end" ${can?'':'disabled'}>Konec<span class="dlbl"> tahu</span></button></div>
  <div class="hand">${P.hand.map(h=>handCardHTML(g,h,tk)).join('')||'<span style="opacity:.7;font-size:15px;color:#fff;padding:8px">Prázdná ruka</span>'}</div>`;}
 function infoByKey(g,k){const t=k[0];
  if(t==='c'){const[p,i]=k.slice(1).split('_').map(Number);return{kind:'camp',p,ref:{p,t:'camp',i},obj:g.pl[p].camps[i],def:CAMPS[g.pl[p].camps[i].id]};}
@@ -1259,7 +1282,7 @@ function rulesSrc(){return `<h3>Symboly</h3><div class="legend"><div>${ic('water
 <h3>Události</h3>Událost položíš do fronty na pozici podle čísla 💣. Je-li obsazená, jde na nejbližší volnou dál. Pozice 0 = vyhodnotí se hned.
 <h3>Nájezd 🏴‍☠️</h3>Nájezdníci jdou na pozici 2, nebo postoupí o 1 (z pozice 1 se hned vyhodnotí). Při vyhodnocení soupeř poškodí jeden svůj tábor dle svého výběru.
 <h3>Konec</h3>Když balíček dojde, odhozené karty se zamíchají. Když dojde podruhé, je remíza. Plný stůl? Můžeš nejdřív zničit svého člověka a uvolnit místo (pravidla v1.2).
-<h3>Ovládání</h3>Klepni na kartu – uvidíš celý text a tlačítka (Zahrát, Recyklovat, Použít). Při výběru cíle se karty zvýrazní.
+<h3>Ovládání</h3>Klepni na kartu – uvidíš celý text a tlačítka (Zahrát, Recyklovat, Použít). Při výběru cíle se karty zvýrazní. <b>💡</b> zvýrazní, co teď můžeš udělat, a doporučí tah. <b>↩</b> vrátí poslední akci (ne po dobrání karty). Rady pro začátečníky zapneš v okně ✏️ v menu.
 <h3>Poznámka</h3>Neoficiální fanouškovská verze. Texty karet jsou převyprávěné a zjednodušené, názvy nemusí odpovídat českému vydání a ceny jsou orientační. Chybí tábory Obelisk, Staveniště a Tábor žoldáků; Vyvýšené místo neumí přeskládat lidi. Oficiální pravidla: <a href="https://www.tlamagames.com/user/documents/upload/pravidla/Radlands_CZ_WEB_12.pdf">PDF od TLAMA games</a>.
 `;}
 
@@ -1273,7 +1296,7 @@ function discHTML(g){const n=g.discard.length;if(!n)return `<div class="sheet-bg
  <div class="ln" style="opacity:.75">V odhazovacím balíčku: ${n} ${n===1?'karta':n<5?'karty':'karet'}. Klepnutím na kartu níže ji zobrazíš.</div><div class="pcards">${row}</div><div class="ctrl"><button class="btn" data-act="discClose">Zavřít</button></div></div></div>`;}
 
 /* ---------- aktualizace jen po potvrzení ---------- */
-const CHANGES={'2.8':['Úvodní animace – klepnutím vstoupíš do hry a zapneš zvuk.','Nové uspořádání menu s ikonami, jména a tábory v okně ✏️.','Živá scéna pustiny se západem slunce v menu i za herním stolem (v tahu Automy zrudne).','Pravidla po stránkách – listuj přejetím prstem.'],'2.7':['Detail karty na průhledném pozadí – karta vyskočí nad stůl.','Aktualizace jen po potvrzení: Aktualizovat / Teď ne / Přeskočit tuto verzi.','U nové verze se ukáže, co se opravilo a co přibylo.','V menu je tlačítko verze s panelem aktualizací.'],
+const CHANGES={'2.9':['💡 Nápověda tahu: zvýrazní, co teď můžeš udělat, a doporučí nejlepší akci.','↩ Krok zpět: vrátí poslední akci v tahu (když se nedobírala karta).','🎓 Rady pro začátečníky: krátké bubliny vysvětlí vodu, události, nájezd a ochranu. Vypnout a znovu zapnout jdou v okně ✏️.'],'2.8':['Úvodní animace – klepnutím vstoupíš do hry a zapneš zvuk.','Nové uspořádání menu s ikonami, jména a tábory v okně ✏️.','Živá scéna pustiny se západem slunce v menu i za herním stolem (v tahu Automy zrudne).','Pravidla po stránkách – listuj přejetím prstem.'],'2.7':['Detail karty na průhledném pozadí – karta vyskočí nad stůl.','Aktualizace jen po potvrzení: Aktualizovat / Teď ne / Přeskočit tuto verzi.','U nové verze se ukáže, co se opravilo a co přibylo.','V menu je tlačítko verze s panelem aktualizací.'],
  '2.6':['Animované obrázky na kartách.','Vysouvací okna.','Prohlížení odhozených karet (🗑).','Mini-záznam po klepnutí na prostřední řádek.'],
  '2.5':['Hudba ve 4 stylech a zvuky pustiny.']};
 const UPDKEY='radlands2_upd_v1';let UPDS={auto:true,skip:''};try{Object.assign(UPDS,JSON.parse(localStorage.getItem(UPDKEY)||'{}'));}catch(e){}
@@ -1342,6 +1365,43 @@ function splashShow(){if(typeof document.createElement!=='function')return;scene
  sp.innerHTML=`<div class="sp-logo"><div class="sp-h1"><span>R</span><span>A</span><span>D</span><span>L</span><span>A</span><span>N</span><span>D</span><span>S</span></div><div class="sp-2">2</div><div class="sp-sub">GANGY PUSTINY</div></div><div class="sp-burst"></div><div class="sp-tap">KLEPNI PRO VSTUP</div><div class="sp-skip">fanouškovská verze ${APP_VERSION}</div>`;
  document.body.appendChild(sp);document.body.classList.add('splashing');let done=false;const go=()=>{if(done)return;done=true;try{if(SET.mOn&&(SET.sfx||SET.muOn||SET.amOn)){ac();sfx('boom');audioUpdate();}}catch(e){}sp.classList.add('out');document.body.classList.remove('splashing');setTimeout(()=>sp.remove(),520);};
  sp.addEventListener('click',go);setTimeout(()=>sp.classList.add('ready'),SET.anim?2300:50);}
+
+/* ---------- 2.9: nápověda, krok zpět, rady ---------- */
+function hintActions(g,p){const acts=[],P=g.pl[p];const kOf=r=>r.t==='camp'?`c${r.p}_${r.i}`:`u${r.uid}`;
+ const srcs=[...P.camps.map((c,i)=>({p,t:'camp',i})),...allPeople(P).map(x=>({p,t:'person',uid:x.uid}))];
+ srcs.forEach(r=>abilitiesOf(g,p,r).forEach(ab=>{if(canUseAbility(g,p,r,ab)){let s=3;try{s=ab.ai?ab.ai(g,p,r):(ab.kind==='dmg'?8:3);}catch(e){}const I=infoByKey(g,kOf(r));acts.push({s,k:kOf(r),t:`použij ${I?I.def.name:'schopnost'} (${abCost(g,p,ab)} 💧): ${ab.text}`});}}));
+ P.hand.forEach(h=>{const d=DEF(h.id);
+  if(d.type==='person'&&canPlay(g,p,h))acts.push({s:5+d.cost-(freeSlots(P)===0?6:0)+(peopleCount(P)<2?2:0),k:'h'+h.uid,t:`zahraj ${d.name} (${d.cost} 💧)`});
+  if(d.type==='event'&&canPlay(g,p,h)){let s=5;try{s=d.ai?d.ai(g,p):5;}catch(e){}acts.push({s,k:'h'+h.uid,t:`zahraj událost ${d.name} (${d.cost} 💧)`});}
+  let js=0;try{js=aiJunkScore(g,p,h);}catch(e){}if(js>0)acts.push({s:js,k:'h'+h.uid,t:`recykluj ${h.id==='silo'?'Vodní silo':d.name} → ${JUNK[d.junk]?JUNK[d.junk].t:''}`,junk:1});});
+ if(g.water>=2)acts.push({s:1.2,t:'dober kartu za 2 💧'});
+ if(g.water>=1&&P.siloHome)acts.push({s:.8,t:'vezmi Vodní silo za 1 💧'});
+ return acts.sort((a,b)=>b.s-a.s);}
+function hintKeys(g,p){const a=hintActions(g,p);const ks=new Set(a.filter(x=>x.k&&x.s>0).map(x=>x.k));return{ks,best:a.find(x=>x.s>0)||null,all:a};}
+function hintIdle(g){const H=UI._hk;return !!H&&!H.best;}
+function hintBar(g){const H=UI._hk;if(!H)return'';return `<div class="hintbar">${H.best?`💡 <b>Doporučení:</b> ${H.best.t}`:'💡 Už není nic výhodného – ukonči tah.'}<span class="hx" data-act="hint">✕</span></div>`;}
+const UNDO={snap:null,ok(g){return !!this.snap&&this.snap.turn===g.turnNo&&this.snap.cur===g.cur;},
+ take(g){this.pending={json:JSON.stringify({...g,prompt:null,pass:null,pick:null,detail:null,busy:false}),uid:UID,deck:g.deck.length,resh:g.reshuffles,turn:g.turnNo,cur:g.cur,ldis:g.discard.length};},
+ after(g){const P=this.pending;this.pending=null;if(!P)return;if(g.over||g.deck.length<P.deck||g.reshuffles!==P.resh||g.turnNo!==P.turn||g.cur!==P.cur){this.snap=null;return;}this.snap=P;},
+ restore(){const P=this.snap;if(!P)return;this.snap=null;const ng=JSON.parse(P.json);ng.prompt=null;ng.pass=null;ng.pick=null;ng.detail=null;ng.busy=false;ng.over=null;UID=P.uid;G=ng;FX.length=0;log(G,'↩ Krok zpět.');sfx('click');render();},
+ clear(){this.snap=null;this.pending=null;}};
+async function humanAct(fn){const g=G;if(!myActionTime(g))return;UNDO.take(g);await act(fn);UNDO.after(G);render();}
+/* rady pro začátečníky */
+const TIPKEY='radlands2_tips_v1';let TIPS={on:true,seen:[]};try{Object.assign(TIPS,JSON.parse(lsGet(TIPKEY)||'{}'));}catch(e){}
+function saveTips(){lsSet(TIPKEY,JSON.stringify(TIPS));}
+const TIPLIST=[
+ {id:'water',c:(g,p)=>true,t:g=>`Tohle je tvůj tah. Dole u svého jména vidíš <b>vodu 💧</b> – platíš s ní karty a schopnosti. ${g.turnNo<=2?'V úplně prvním tahu má začínající hráč jen 1 💧, pak vždy 3.':'Každý tah dostaneš 3 💧.'} Nevyužitá voda na konci tahu propadne.`},
+ {id:'tap',c:(g,p)=>g.pl[p].hand.length>0,t:()=>`Klepni na <b>kartu v ruce</b> dole – uvidíš celý text a tlačítka <b>Zahrát</b> a <b>Recyklovat</b>. Recyklace = kartu odhodíš a provedeš efekt z jejího levého horního rohu.`},
+ {id:'goal',c:()=>true,t:()=>`Cíl hry: <b>zničit všechny 3 tábory soupeře</b>. Tábor se nejdřív poškodí (ztmavne), druhým poškozením se zničí.`},
+ {id:'help',c:()=>true,t:()=>`Nevíš si rady? <b>💡</b> zvýrazní, co teď můžeš udělat, a doporučí tah. <b>↩</b> vrátí poslední akci, pokud jsi při ní nedobíral kartu.`},
+ {id:'ability',c:(g,p)=>{const P=g.pl[p];return [...P.camps.map((c,i)=>({p,t:'camp',i})),...allPeople(P).map(x=>({p,t:'person',uid:x.uid}))].some(r=>abilitiesOf(g,p,r).some(ab=>canUseAbility(g,p,r,ab)));},t:()=>`Tábory i lidé mají <b>schopnosti</b> (černý pruh s cenou 💧). Každá karta smí použít jednu za tah – klepni na ni a dej <b>Použít</b>. Člověk zahraný v tomto tahu ještě připravený není.`},
+ {id:'protect',c:(g,p)=>peopleCount(g.pl[1-p])>0,t:()=>`Lidé stojí <b>před tábory a chrání je</b>. Poškodit jde jen <b>nechráněnou</b> kartu – tu, před kterou ve sloupci nic nestojí. Nejdřív tedy odstraň ochránce.`},
+ {id:'event',c:(g,p)=>g.pl[p].hand.some(h=>DEF(h.id).type==='event'),t:()=>`Máš v ruce <b>událost</b>. Po zahrání jde do fronty 💣 (čísla 1–3 u tvého jména) a vyhodnotí se, až dojede na pozici 1 – na začátku tvého tahu. Pozice 0 = hned.`},
+ {id:'raid',c:(g,p)=>g.pl[p].raidersHome&&g.pl[p].hand.some(h=>DEF(h.id).junk==='raid'),t:()=>`Karta s ikonou <b>nájezdu 🏴‍☠️</b>: když ji recykluješ, vyšleš Nájezdníky. Až dojedou, soupeř si musí poškodit jeden svůj tábor.`},
+ {id:'end',c:(g,p)=>g.water===0,t:()=>`Došla ti voda. Až nebudeš chtít nic dalšího (recyklace je zdarma), klepni na <b>Konec tahu</b>.`}];
+function tipNow(g){if(!TIPS.on||UI.hint||!g||g.mode!=='ai'||!myActionTime(g)||g.cur!==0||g.detail||UI.log||UI.rules||UI.snd||UI.disc||UI.mlog)return null;const p=0;return TIPLIST.find(t=>!TIPS.seen.includes(t.id)&&(()=>{try{return t.c(g,p);}catch(e){return false;}})())||null;}
+function tipHTML(g){const t=tipNow(g);if(!t)return'';const left=TIPLIST.filter(x=>!TIPS.seen.includes(x.id)).length;
+ return `<div class="tipb"><div class="tiph">🎓 Rada <span>${TIPLIST.length-left+1}/${TIPLIST.length}</span></div><div class="tipt">${t.t(g)}</div><div class="tipc"><button class="btn" data-act="tipOk" data-arg="${t.id}">Rozumím</button><button class="btn sec" data-act="tipOff">Vypnout rady</button></div></div>`;}
 function logHTML(g){return `<div class="sheet-bg"><div class="sheet logsheet"><div class="dname">📜 Záznam hry</div><div class="loglist">${g.log.slice().reverse().map(s=>`<div>${s}</div>`).join('')}</div><div class="ctrl"><button class="btn" data-act="closeLog">Zavřít</button></div></div></div>`;}
 function menuHTML(){const sv=loadSaved();let cont='';
  if(sv){const g=sv.g;const alive=q=>3-g.pl[q].camps.filter(c=>c.destroyed).length;cont=`<button class="btn big mresume" data-act="resume">▶ Pokračovat ve hře</button><div class="svinfo">${g.names[0]} (${alive(0)}🏕) vs. ${g.names[1]} (${alive(1)}🏕) · ${new Date(sv.t).toLocaleString('cs-CZ',{day:'numeric',month:'numeric',hour:'2-digit',minute:'2-digit'})} · v${sv.v||'?'} <span data-act="delsave" class="dl">smazat</span></div>`;}
@@ -1357,6 +1417,7 @@ function menuHTML(){const sv=loadSaved();let cont='';
 function playersHTML(){return `<div class="sheet-bg"><div class="sheet"><div class="dname">👤 Hráči a nastavení hry</div>
  <div class="names"><label>Tvé jméno<input data-name="n1" maxlength="14" placeholder="Hráč" value="${(UI.n1||'').replace(/"/g,'&quot;')}"></label><label>Hráč 2 (na jednom telefonu)<input data-name="n2" maxlength="14" placeholder="Hráč 2" value="${(UI.n2||'').replace(/"/g,'&quot;')}"></label></div>
  <button class="btn big ${UI.starter?'teal':'sec'}" data-act="starterT" style="width:100%">${UI.starter?'✔ Výchozí tábory (bez výběru)':'🎲 Tábory si vybíráš sám'}</button>
+ <button class="btn big ${TIPS.on?'teal':'sec'}" data-act="tipsT" style="width:100%;margin-top:8px">${TIPS.on?'🎓 Rady pro začátečníky: zapnuté':'🎓 Rady pro začátečníky: vypnuté'}</button>${TIPS.seen.length?`<div class="ln" style="font-size:14px;text-align:center"><span class="dl" data-act="tipsReset">Zobrazit všechny rady znovu od začátku</span></div>`:''}
  <div class="ln" style="font-size:14px;opacity:.75">Výchozí tábory = každý hráč dostane pevnou trojici táborů, výběr se přeskočí. Proti Automě hraješ pod svým jménem.</div>
  <div class="ctrl"><button class="btn" data-act="playersClose">Hotovo</button></div></div></div>`;}
 function passHTML(g){return `<div class="full"><div style="font-size:60px">📱</div><h2>PŘEDEJ ZAŘÍZENÍ!</h2><p><b>${g.names[g.pass.p]}</b> ${g.pass.what}.</p><button class="btn big" data-act="pass">Jsem připraven</button></div>`;}
@@ -1370,10 +1431,11 @@ function render(){let h='';const g=G;
  else if(g.pass)h=passHTML(g);
  else if(g.pick)h=pickHTML(g);
  else if(!g.pl[0].camps.length||!g.pl[1].camps.length)h='<div class="status">Příprava…</div>';
- else{h=gameHTML(g);if(g.detail)h+=detailHTML(g);if(g.prompt)h+=promptHTML(g);if(UI.disc!=null&&UI.disc!==false)h+=discHTML(g);if(g.over&&!UI.log)h+=overHTML(g);if(UI.log)h+=logHTML(g);}
+ else{h=gameHTML(g);h+=hintBar(g);if(!g.prompt&&!g.over)h+=tipHTML(g);if(g.detail)h+=detailHTML(g);if(g.prompt)h+=promptHTML(g);if(UI.disc!=null&&UI.disc!==false)h+=discHTML(g);if(g.over&&!UI.log)h+=overHTML(g);if(UI.log)h+=logHTML(g);}
  if(g&&UI.screen==='game')saveGame(g);if(UI.snd)h+=sndHTML();if(UI.players)h+=playersHTML();if(UI.upd)h+=updPanelHTML();if(UI.updAsk&&UPD.newer&&UPD.info&&(UI.screen==='menu'||!g)&&!UI.quit)h+=updAskHTML();if(UI.rules)h+=rulesHTML();$app.className=((g&&UI.screen==='game'&&!g.pass)?(g.pick?'pickmode':'game'):((UI.screen==='menu'||!g)&&!UI.quit?'menu':''))+(SET.anim?'':' noanim');
  try{$app.style.setProperty('--adl',(-(performance.now()/1000)%16).toFixed(2)+'s');}catch(e){}
- const _old=grabRects();$app.innerHTML=h;fitCards();runFX(_old);sheetIn();audioUpdate();sceneMode();UI._newLog=false;UI.rdir=0;}
+ const _old=grabRects();$app.innerHTML=h;hintGlow();fitCards();runFX(_old);sheetIn();audioUpdate();sceneMode();UI._newLog=false;UI.rdir=0;}
+function hintGlow(){const H=UI._hk;if(!H||typeof document.querySelectorAll!=='function')return;H.ks.forEach(k=>{const el=document.querySelector(`#app [data-k="${k}"]`);if(el){el.classList.add('hintc');if(H.best&&H.best.k===k)el.classList.add('hintbest');}});}
 function sheetIn(){if(typeof document.querySelector!=='function')return;const sh=document.querySelectorAll('.sheet');const key=[...sh].map(x=>x.firstElementChild?x.firstElementChild.textContent.slice(0,40):'').join('|')+(G&&G.detail||'');
  if(SET.anim&&sh.length&&key!==UI._sheetKey){const last=sh[sh.length-1];last.classList.add('sin');if(last.parentElement)last.parentElement.classList.add('bgin');}UI._sheetKey=sh.length?key:'';}
 
@@ -1437,12 +1499,17 @@ function handle(a,arg,el){const g=G;const p=g?g.cur:0;
  case 'pickOK':{const pk=g.pick;if(pk.sel.length!==3)return;g.pick=null;render();pk.res(pk.sel.slice());break;}
  case 'opt':resolvePrompt(g.prompt.options[+arg]);break;
  case 'skip':resolvePrompt(null);break;
- case 'end':if(myActionTime(g))act(()=>endTurn(g));break;
- case 'drawPaid':if(myActionTime(g))act(async()=>drawPaid(g,p));break;
- case 'silo':if(myActionTime(g))act(async()=>takeSilo(g,p));break;
- case 'play':{const h=g.pl[p].hand.find(h=>h.uid===+arg);if(h&&myActionTime(g))act(()=>playCard(g,p,h));break;}
- case 'junk':{const h=g.pl[p].hand.find(h=>h.uid===+arg);if(h&&myActionTime(g))act(()=>junkCard(g,p,h));break;}
- case 'ab':{const[k,i]=arg.split('|');const I=infoByKey(g,k);if(I&&myActionTime(g))act(()=>useAbility(g,p,I.ref,+i));break;}
+ case 'end':if(myActionTime(g)){UI.hint=false;act(()=>endTurn(g));}break;
+ case 'undo':if(myActionTime(g)&&UNDO.ok(g))UNDO.restore();break;
+ case 'hint':UI.hint=!UI.hint;render();break;
+ case 'tipOk':if(!TIPS.seen.includes(arg))TIPS.seen.push(arg);saveTips();render();break;
+ case 'tipOff':TIPS.on=false;saveTips();render();break;
+ case 'tipsT':TIPS.on=!TIPS.on;if(TIPS.on&&TIPS.seen.length>=TIPLIST.length)TIPS.seen=[];saveTips();render();break;case 'tipsReset':TIPS.on=true;TIPS.seen=[];saveTips();render();break;
+ case 'drawPaid':humanAct(async()=>drawPaid(g,p));break;
+ case 'silo':humanAct(async()=>takeSilo(g,p));break;
+ case 'play':{const h=g.pl[p].hand.find(h=>h.uid===+arg);if(h)humanAct(()=>playCard(g,p,h));break;}
+ case 'junk':{const h=g.pl[p].hand.find(h=>h.uid===+arg);if(h)humanAct(()=>junkCard(g,p,h));break;}
+ case 'ab':{const[k,i]=arg.split('|');const I=infoByKey(g,k);if(I)humanAct(()=>useAbility(g,p,I.ref,+i));break;}
  }}
 sceneInit();render();if(typeof location==='undefined'||!/[?&]nosplash/.test(location.search||''))splashShow();
 if('serviceWorker' in navigator&&IS_WEB){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').then(r=>{UPD.reg=r;if(UPDS.auto)setTimeout(()=>checkUpdate(false),1500);}).catch(()=>{});});
