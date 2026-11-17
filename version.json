@@ -1,9 +1,9 @@
 {
-  "version": "2.9",
+  "version": "2.10",
   "date": "2026-11-17",
   "notes": [
-    "💡 Nápověda tahu: zvýrazní, co teď můžeš udělat, a doporučí nejlepší akci.",
-    "↩ Krok zpět: vrátí poslední akci v tahu (když se nedobírala karta).",
-    "🎓 Rady pro začátečníky: krátké bubliny vysvětlí vodu, události, nájezd a ochranu. Vypnout a znovu zapnout jdou v okně ✏️."
+    "🤖 Tři obtížnosti Automy: Nováček, Bandita a Warlord (promýšlí tahy dopředu). Volba v okně ✏️ v menu.",
+    "📊 Statistiky: výhry a prohry podle obtížnosti, série, nejrychlejší výhra a nejúspěšnější tábory.",
+    "✨ Animace se teď zapínají v okně Zvuk – v menu je místo nich dlaždice Statistiky."
   ]
 }

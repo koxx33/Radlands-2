@@ -5,7 +5,7 @@
 <meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="theme-color" content="#5a1e5e">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>Radlands 2 – Gangy pustiny</title>
-<meta name="version" content="2.9">
+<meta name="version" content="2.10">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -724,6 +724,16 @@ body.noanim #splash *{animation:none!important}
 @media (max-width:430px){#app.game .ctrl .dlbl{display:none}#app.game .ctrl .btn{padding:5px 7px}}
 #app.game .ctrl .btn[data-act=end]{min-width:0}
 .hand .cb.hintc::after{inset:1px}
+
+/* ===== 2.10 obtížnosti, statistiky ===== */
+.dchips{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0}
+.dchips .chipb{flex:1;font-size:17px;padding:6px 4px}
+.sttab{width:100%;border-collapse:collapse;font-size:16px;margin:4px 0 8px;background:#fff;border:2.5px solid #111;box-shadow:2px 2px 0 #111}
+.sttab th{font-family:Bangers,sans-serif;font-weight:400;letter-spacing:.5px;background:#5a1e5e;color:#fff;padding:4px;font-size:15px}
+.sttab td{padding:5px 6px;border-top:1.5px dashed rgba(0,0,0,.25);text-align:center}.sttab td:first-child{text-align:left;font-weight:700}
+.stgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:6px 0}
+.stgrid div{background:#fff;border:2px solid #111;border-radius:8px;box-shadow:2px 2px 0 #111;padding:4px;text-align:center;font-size:12.5px;line-height:1.15}
+.stgrid b{display:block;font-family:Bangers,sans-serif;font-weight:400;font-size:26px;color:#ff3d7f;-webkit-text-stroke:.5px #111}
 </style>
 </head>
 <body>
@@ -731,9 +741,10 @@ body.noanim #splash *{animation:none!important}
 <div id="rotate"><div class="rotbox"><div class="rotph">📱</div><h2>OTOČ TELEFON!</h2><p>Radlands se hraje na výšku.</p></div></div>
 <script>
 /* ===================== ZÁKLAD ===================== */
-const APP_VERSION='2.9';
+const APP_VERSION='2.10';
 let UID=1; const nid=()=>UID++;
-const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+let SIM=false;
+const sleep=ms=>SIM?Promise.resolve():new Promise(r=>setTimeout(r,ms));
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 class GameOver extends Error{}
 const JUNK={draw:{i:'🃏',t:'Dober kartu'},water:{i:'💧',t:'Získej 1 vodu navíc'},injure:{i:'🩸',t:'Zraň nechráněného nepřítele'},raid:{i:'🏴‍☠️',t:'Nájezd'},restore:{i:'🔧',t:'Obnov svou poškozenou kartu'},punk:{i:'👤',t:'Přiveď pankáče'}};
@@ -914,7 +925,7 @@ function targets(g,q,o={}){const P=g.pl[q],res=[];const all=o.any||(g.tf&&g.tf.h
   else{const f=frontOf(P,i);if(!f)continue;if(f.camp){if(!o.peopleOnly)res.push({p:q,t:'camp',i});}else if(!o.campsOnly)res.push({p:q,t:'person',uid:f.uid});}}
  return res;}
 
-function endGame(g,winner,msg){if(g===G)lsDel(SKEY);sfx(winner==null?'lose':(g.mode==='ai'&&winner===1?'lose':'win'));g.over={winner,msg:msg||(winner==null?'Remíza!':`Vítěz: ${g.names[winner]}!`)};log(g,g.over.msg);render();throw new GameOver();}
+function endGame(g,winner,msg){if(SIM){g.over={winner};throw new GameOver();}if(g===G)lsDel(SKEY);sfx(winner==null?'lose':(g.mode==='ai'&&winner===1?'lose':'win'));g.over={winner,msg:msg||(winner==null?'Remíza!':`Vítěz: ${g.names[winner]}!`)};try{stRecord(g);}catch(e){}log(g,g.over.msg);render();throw new GameOver();}
 function checkWin(g){const d=[0,1].map(i=>g.pl[i].camps.every(c=>c.destroyed));if(d[0]||d[1])endGame(g,d[0]&&d[1]?null:(d[0]?1:0));}
 
 function damage(g,r){
@@ -935,7 +946,7 @@ function drawTo(g,p,n=1){if(n>0)sfx('card');for(let i=0;i<n;i++){const id=drawOn
 
 /* ---------- výběry ---------- */
 function choose(g,p,spec){if(!spec.options||!spec.options.length)return Promise.resolve(null);
- if(isAI(g,p))return Promise.resolve(aiChoose(g,p,spec));
+ if(SIM||isAI(g,p))return Promise.resolve(aiChoose(g,p,spec));
  return new Promise(res=>{g.prompt={...spec,p,res};g.detail=null;render();});}
 async function actDamage(g,p,o={}){const t=targets(g,1-p,o);if(!t.length){log(g,'Žádný platný cíl.');return null;}
  const c=await choose(g,p,{kind:'dmg',text:o.peopleOnly?'Vyber člověka ke zranění':'Vyber cíl k poškození',options:t.map(ref=>({ref}))});damage(g,c.ref);return c.ref;}
@@ -1012,7 +1023,7 @@ async function useAbility(g,p,r,idx){const ab=abilitiesOf(g,p,r)[idx];if(!ab||!c
 let G=null;const UI={screen:'menu',starter:false,rules:false,log:false};
 const isAI=(g,p)=>g.mode==='ai'&&p===1;
 const viewer=g=>g.mode==='ai'?0:g.cur;
-function newGame(mode){UID=1;const g={mode,pl:[mkP(),mkP()],deck:[],discard:[],reshuffles:0,cur:0,water:0,firstTurn:true,tf:{},log:[],prompt:null,detail:null,busy:false,over:null,pass:null,pick:null,phase:'setup',names:mode==='ai'?[UI.n1||'Hráč','Automa']:[UI.n1||'Hráč 1',UI.n2||'Hráč 2']};
+function newGame(mode){UID=1;const g={mode,pl:[mkP(),mkP()],deck:[],discard:[],reshuffles:0,cur:0,water:0,firstTurn:true,tf:{},log:[],prompt:null,detail:null,busy:false,over:null,pass:null,pick:null,phase:'setup',diff:mode==='ai'?(UI.diff||'bandita'):null,names:mode==='ai'?[UI.n1||'Hráč',(UI.diff&&UI.diff!=='bandita'?'Automa '+DIFFS[UI.diff].n:'Automa')]:[UI.n1||'Hráč 1',UI.n2||'Hráč 2']};
  const deck=[];for(const[k,d]of Object.entries(PEOPLE))for(let i=0;i<d.n;i++)deck.push(k);for(const k of Object.keys(EVENTS))deck.push(k,k);g.deck=shuffle(deck);
  G=g;UI.screen='game';act(()=>setup(g));}
 async function setup(g){let ch;
@@ -1038,8 +1049,8 @@ const SKEY='radlands2_save_v1',NKEY='radlands2_names_v1';
 function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
 function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
 function lsDel(k){try{localStorage.removeItem(k);}catch(e){}}
-try{const n=JSON.parse(lsGet(NKEY)||'{}');UI.n1=n.n1||'';UI.n2=n.n2||'';}catch(e){UI.n1='';UI.n2='';}
-function saveNames(){lsSet(NKEY,JSON.stringify({n1:UI.n1,n2:UI.n2}));}
+try{const n=JSON.parse(lsGet(NKEY)||'{}');UI.n1=n.n1||'';UI.n2=n.n2||'';UI.diff=n.diff||'bandita';}catch(e){UI.n1='';UI.n2='';UI.diff='bandita';}
+function saveNames(){lsSet(NKEY,JSON.stringify({n1:UI.n1,n2:UI.n2,diff:UI.diff}));}
 function stableForSave(g){return g&&!g.over&&!g.pick&&!g.pass&&!g.busy&&!g.prompt&&g.phase==='actions'&&!isAI(g,g.cur)&&g.pl[0].camps.length&&g.pl[1].camps.length;}
 function saveGame(g){if(!stableForSave(g))return;const c={...g,prompt:null,pass:null,pick:null,detail:null,busy:false,over:null};lsSet(SKEY,JSON.stringify({uid:UID,g:c,t:Date.now(),v:APP_VERSION}));}
 function loadSaved(){try{const s=JSON.parse(lsGet(SKEY)||'null');return s&&s.g?s:null;}catch(e){return null;}}
@@ -1053,7 +1064,7 @@ const SETKEY='radlands2_set_v1';let SET={sfx:true,anim:true,vol:.7,mOn:true,mV:9
 try{Object.assign(SET,JSON.parse(localStorage.getItem(SETKEY)||'{}'));}catch(e){}
 function saveSet(){try{localStorage.setItem(SETKEY,JSON.stringify(SET));}catch(e){}}
 const FX=[];
-function fx(type,key,txt){if(FX.length<40)FX.push({type,key,txt});}
+function fx(type,key,txt){if(SIM)return;if(FX.length<40)FX.push({type,key,txt});}
 let AC=null,MG=null,MASTER=null,MUSB=null,AMBB=null;
 function ac(){try{if(!AC){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;AC=new C();MASTER=AC.createGain();MASTER.connect(AC.destination);MG=AC.createGain();MG.connect(MASTER);MUSB=AC.createGain();MUSB.connect(MASTER);AMBB=AC.createGain();AMBB.connect(MASTER);}busGains();if(AC.state==='suspended')AC.resume();}catch(e){return null;}return AC;}
 function tone(f,dur,type,vol,slide,delay){const a=AC,t=a.currentTime+(delay||0);const o=a.createOscillator(),g=a.createGain();o.type=type||'square';o.frequency.setValueAtTime(f,t);if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(30,f+slide),t+dur);
@@ -1146,7 +1157,7 @@ function audioUpdate(){if(!AC)return;const w=musWanted();if(w){if(!MUS.style){MU
  const hid=typeof document!=='undefined'&&document.hidden;const amb=!hid&&SET.amOn&&SET.mOn&&SET.aV>0&&SET.mV>0&&UI.screen==='game'&&G&&!G.over&&!G.pick&&!G.pass;if(amb)ambStart();else ambStop();}
 
 function sndGain(){return (SET.mOn?SET.mV/100:0)*(SET.sfx?SET.eV/100:0)*1.25;}
-function sfx(n){if(!SET.sfx||!SET.mOn||!SET.mV||!SET.eV)return;const a=ac();if(!a)return;try{SFX[n]();}catch(e){}}
+function sfx(n){if(SIM)return;if(!SET.sfx||!SET.mOn||!SET.mV||!SET.eV)return;const a=ac();if(!a)return;try{SFX[n]();}catch(e){}}
 const WORDS={hit:['BAM!','ŠMÁK!','PRÁSK!','KAPOW!'],destroy:['KABOOM!','BUM!','RÁNA!'],heal:['FIX!','✚'],play:['TADY!'],punk:['PANK!']};
 function grabRects(){const old={};if(typeof document.querySelector!=='function')return old;FX.forEach(f=>{if(f.key){const el=document.querySelector(`[data-k="${f.key}"]`);if(el)old[f.key]=el.getBoundingClientRect();}});return old;}
 function floatWord(r,txt,cls){const d=document.createElement('div');d.className='fxw '+(cls||'');d.textContent=txt;d.style.left=(r.left+r.width/2)+'px';d.style.top=(r.top+r.height/2)+'px';document.body.appendChild(d);setTimeout(()=>d.remove(),950);}
@@ -1162,7 +1173,7 @@ function runFX(old){const list=FX.splice(0);if(!SET.anim||typeof document.queryS
 
 /* ===================== AI ===================== */
 function aiPickCamps(opts){const sc=id=>{const d=CAMPS[id];let s=Math.random()*2;if(d.ab.some(a=>a.kind==='dmg'))s+=3;if(['adrenaline','parachute','reactor','octagon','bonfire'].includes(id))s-=4;return s;};return opts.slice().sort((a,b)=>sc(b)-sc(a)).slice(0,3);}
-function aiChoose(g,p,s){let best=null,bs=-1e9;for(const o of s.options){const v=aiScore(g,p,s.kind,o)+Math.random()*.1;if(v>bs){bs=v;best=o;}}if(s.optional&&bs<0)return null;return best;}
+function aiChoose(g,p,s){let best=null,bs=-1e9;const nz=aiDiff(g,p)==='novacek'?3.5:.1;for(const o of s.options){const v=aiScore(g,p,s.kind,o)+Math.random()*nz;if(v>bs){bs=v;best=o;}}if(s.optional&&bs<0)return null;return best;}
 function aiScore(g,p,kind,o){if(o.ai!=null)return o.ai;const r=o.ref;if(!r)return 0;
  const pv=()=>{const x=findP(g,r.uid);return x?x.card:null;};
  switch(kind){
@@ -1191,7 +1202,25 @@ function aiActions(g,p){const acts=[],P=g.pl[p];
  if(g.water>=2)acts.push({s:1.2,run:()=>drawPaid(g,p)});
  if(g.water===1&&P.siloHome)acts.push({s:.8,run:()=>takeSilo(g,p)});
  return acts;}
-async function aiTurn(g,p){for(let step=0;step<25;step++){const a=aiActions(g,p);if(!a.length)break;a.sort((x,y)=>y.s-x.s);if(a[0].s<=0)break;await sleep(700);await a[0].run();render();}}
+const DIFFS={novacek:{n:'Nováček',i:'🐣',d:'Hraje dost náhodně a často skončí tah dřív.'},bandita:{n:'Bandita',i:'🏴‍☠️',d:'Klasická Automa – hraje rozumně, ale nepřemýšlí dopředu.'},warlord:{n:'Warlord',i:'💀',d:'Každý tah si zkusí v hlavě a vybere ten, po kterém je na tom nejlíp.'}};
+function aiDiff(g,p){return (g&&g.diff&&(g.mode==='ai'?p===1:true))?g.diff:'bandita';}
+function evalState(g,p){if(g.over)return g.over.winner===p?1e6:(g.over.winner==null?0:-1e6);let v=0;
+ for(const q of[0,1]){const sg=q===p?1:-1,P=g.pl[q];let w=0;
+  P.camps.forEach((c,i)=>{w+=c.destroyed?-15:(c.damaged?-7:0);if(!c.destroyed&&P.cols[i]&&P.cols[i].length)w+=3;});
+  allPeople(P).forEach(c=>{let d=null;try{d=DEF(c.id);}catch(e){}w+=c.punk?2:3.5+((d&&d.cost)||0)*.6;if(c.damaged)w-=1.6;});
+  w+=P.hand.length*1.3;if(q===p)w+=g.water*.3;w+=P.events.filter(Boolean).length*1.2;if(!P.raidersHome)w+=2.5;if(!P.siloHome)w+=.4;
+  v+=sg*w;}
+ return v;}
+async function simAction(g,p,i,depth){const c=JSON.parse(JSON.stringify({...g,prompt:null,pass:null,pick:null,detail:null}));const u0=UID,s0=SIM;SIM=true;let v;
+ try{const a=aiActions(c,p)[i];if(!a)return -1e9;await a.run();v=evalState(c,p);
+  if(depth>1&&!c.over){const b=aiActions(c,p);let best=v;const idx=b.map((x,k)=>[x.s,k]).sort((x,y)=>y[0]-x[0]).slice(0,5);for(const[,k]of idx){const w=await simAction(c,p,k,depth-1);if(w>best)best=w;}v=v*.4+best*.6;}}
+ catch(e){v=(e instanceof GameOver)?evalState(c,p):-1e9;}finally{SIM=s0;UID=u0;}return v;}
+async function aiTurn(g,p){const D=aiDiff(g,p);
+ for(let step=0;step<25;step++){if(g.over)break;const a=aiActions(g,p);if(!a.length)break;let pick=null;
+  if(D==='warlord'){const base=evalState(g,p);let bv=-1e9;for(let i=0;i<a.length;i++){if(a[i].s<=-50)continue;const v=await simAction(g,p,i,2)+a[i].s*.05;if(v>bv){bv=v;pick=a[i];}}if(!pick||bv<base+.15)break;}
+  else{a.sort((x,y)=>y.s-x.s);if(a[0].s<=0)break;pick=a[0];
+   if(D==='novacek'){const pos=a.filter(x=>x.s>0);pick=pos[Math.floor(Math.random()*Math.min(3,pos.length))];if(step>0&&Math.random()<.28)break;}}
+  await sleep(700);await pick.run();render();}}
 // AI place: override choose for 'place'
 const _aiScore=aiScore;aiScore=function(g,p,kind,o){if(kind==='place')return aiPlaceScore(g,p,o);return _aiScore(g,p,kind,o);};
 
@@ -1296,7 +1325,7 @@ function discHTML(g){const n=g.discard.length;if(!n)return `<div class="sheet-bg
  <div class="ln" style="opacity:.75">V odhazovacím balíčku: ${n} ${n===1?'karta':n<5?'karty':'karet'}. Klepnutím na kartu níže ji zobrazíš.</div><div class="pcards">${row}</div><div class="ctrl"><button class="btn" data-act="discClose">Zavřít</button></div></div></div>`;}
 
 /* ---------- aktualizace jen po potvrzení ---------- */
-const CHANGES={'2.9':['💡 Nápověda tahu: zvýrazní, co teď můžeš udělat, a doporučí nejlepší akci.','↩ Krok zpět: vrátí poslední akci v tahu (když se nedobírala karta).','🎓 Rady pro začátečníky: krátké bubliny vysvětlí vodu, události, nájezd a ochranu. Vypnout a znovu zapnout jdou v okně ✏️.'],'2.8':['Úvodní animace – klepnutím vstoupíš do hry a zapneš zvuk.','Nové uspořádání menu s ikonami, jména a tábory v okně ✏️.','Živá scéna pustiny se západem slunce v menu i za herním stolem (v tahu Automy zrudne).','Pravidla po stránkách – listuj přejetím prstem.'],'2.7':['Detail karty na průhledném pozadí – karta vyskočí nad stůl.','Aktualizace jen po potvrzení: Aktualizovat / Teď ne / Přeskočit tuto verzi.','U nové verze se ukáže, co se opravilo a co přibylo.','V menu je tlačítko verze s panelem aktualizací.'],
+const CHANGES={'2.10':['🤖 Tři obtížnosti Automy: Nováček, Bandita a Warlord (promýšlí tahy dopředu). Volba v okně ✏️ v menu.','📊 Statistiky: výhry a prohry podle obtížnosti, série, nejrychlejší výhra a nejúspěšnější tábory.','✨ Animace se teď zapínají v okně Zvuk – v menu je místo nich dlaždice Statistiky.'],'2.9':['💡 Nápověda tahu: zvýrazní, co teď můžeš udělat, a doporučí nejlepší akci.','↩ Krok zpět: vrátí poslední akci v tahu (když se nedobírala karta).','🎓 Rady pro začátečníky: krátké bubliny vysvětlí vodu, události, nájezd a ochranu. Vypnout a znovu zapnout jdou v okně ✏️.'],'2.8':['Úvodní animace – klepnutím vstoupíš do hry a zapneš zvuk.','Nové uspořádání menu s ikonami, jména a tábory v okně ✏️.','Živá scéna pustiny se západem slunce v menu i za herním stolem (v tahu Automy zrudne).','Pravidla po stránkách – listuj přejetím prstem.'],'2.7':['Detail karty na průhledném pozadí – karta vyskočí nad stůl.','Aktualizace jen po potvrzení: Aktualizovat / Teď ne / Přeskočit tuto verzi.','U nové verze se ukáže, co se opravilo a co přibylo.','V menu je tlačítko verze s panelem aktualizací.'],
  '2.6':['Animované obrázky na kartách.','Vysouvací okna.','Prohlížení odhozených karet (🗑).','Mini-záznam po klepnutí na prostřední řádek.'],
  '2.5':['Hudba ve 4 stylech a zvuky pustiny.']};
 const UPDKEY='radlands2_upd_v1';let UPDS={auto:true,skip:''};try{Object.assign(UPDS,JSON.parse(localStorage.getItem(UPDKEY)||'{}'));}catch(e){}
@@ -1402,6 +1431,26 @@ const TIPLIST=[
 function tipNow(g){if(!TIPS.on||UI.hint||!g||g.mode!=='ai'||!myActionTime(g)||g.cur!==0||g.detail||UI.log||UI.rules||UI.snd||UI.disc||UI.mlog)return null;const p=0;return TIPLIST.find(t=>!TIPS.seen.includes(t.id)&&(()=>{try{return t.c(g,p);}catch(e){return false;}})())||null;}
 function tipHTML(g){const t=tipNow(g);if(!t)return'';const left=TIPLIST.filter(x=>!TIPS.seen.includes(x.id)).length;
  return `<div class="tipb"><div class="tiph">🎓 Rada <span>${TIPLIST.length-left+1}/${TIPLIST.length}</span></div><div class="tipt">${t.t(g)}</div><div class="tipc"><button class="btn" data-act="tipOk" data-arg="${t.id}">Rozumím</button><button class="btn sec" data-act="tipOff">Vypnout rady</button></div></div>`;}
+
+/* ---------- statistiky ---------- */
+const STKEY='radlands2_stats_v1';
+function stLoad(){let S=null;try{S=JSON.parse(lsGet(STKEY)||'null');}catch(e){}return Object.assign({ai:{},hot:0,streak:0,best:0,fast:0,camps:{},dest:0,lost:0,games:0},S||{});}
+function stSave(S){lsSet(STKEY,JSON.stringify(S));}
+function stRecord(g){if(SIM||g!==G||g.statDone)return;g.statDone=true;const S=stLoad();S.games++;
+ const turns=g.turnNo||0;
+ if(g.mode==='hot'){S.hot++;stSave(S);return;}
+ const d=g.diff||'bandita',R=S.ai[d]=S.ai[d]||{w:0,l:0,dr:0};const w=g.over&&g.over.winner;
+ S.dest+=g.pl[1].camps.filter(c=>c.destroyed).length;S.lost+=g.pl[0].camps.filter(c=>c.destroyed).length;
+ if(w===0){R.w++;S.streak++;S.best=Math.max(S.best,S.streak);const t=Math.ceil(turns/2);if(!S.fast||t<S.fast)S.fast=t;g.pl[0].camps.forEach(c=>{S.camps[c.id]=(S.camps[c.id]||0)+1;});}
+ else if(w===1){R.l++;S.streak=0;}else R.dr++;
+ stSave(S);}
+function statsHTML(){const S=stLoad();const rows=Object.entries(DIFFS).map(([k,D])=>{const R=S.ai[k]||{w:0,l:0,dr:0},n=R.w+R.l+R.dr;return `<tr><td>${D.i} ${D.n}</td><td>${R.w}</td><td>${R.l}</td><td>${n?Math.round(R.w/n*100)+' %':'–'}</td></tr>`;}).join('');
+ const top=Object.entries(S.camps).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k,n])=>`${CAMPS[k]?CAMPS[k].name:k} <b>${n}×</b>`).join(' · ')||'–';
+ return `<div class="sheet-bg"><div class="sheet stsheet"><div class="dname">📊 Statistiky</div>
+ <table class="sttab"><tr><th>Proti Automě</th><th>Výhry</th><th>Prohry</th><th>Úspěšnost</th></tr>${rows}</table>
+ <div class="stgrid"><div><b>${S.streak}</b>aktuální série výher</div><div><b>${S.best}</b>nejdelší série</div><div><b>${S.fast?S.fast:'–'}</b>nejrychlejší výhra (tahů)</div><div><b>${S.dest}</b>zničených táborů Automy</div><div><b>${S.lost}</b>ztracených táborů</div><div><b>${S.hot}</b>her ve dvou</div></div>
+ <div class="ln">🏕️ Nejčastější tábory při výhře: ${top}</div>
+ <div class="ctrl"><button class="btn sec" data-act="stReset">${UI.stConfirm?'⚠ Opravdu vynulovat?':'Vynulovat'}</button><button class="btn" data-act="stClose">Zavřít</button></div></div></div>`;}
 function logHTML(g){return `<div class="sheet-bg"><div class="sheet logsheet"><div class="dname">📜 Záznam hry</div><div class="loglist">${g.log.slice().reverse().map(s=>`<div>${s}</div>`).join('')}</div><div class="ctrl"><button class="btn" data-act="closeLog">Zavřít</button></div></div></div>`;}
 function menuHTML(){const sv=loadSaved();let cont='';
  if(sv){const g=sv.g;const alive=q=>3-g.pl[q].camps.filter(c=>c.destroyed).length;cont=`<button class="btn big mresume" data-act="resume">▶ Pokračovat ve hře</button><div class="svinfo">${g.names[0]} (${alive(0)}🏕) vs. ${g.names[1]} (${alive(1)}🏕) · ${new Date(sv.t).toLocaleString('cs-CZ',{day:'numeric',month:'numeric',hour:'2-digit',minute:'2-digit'})} · v${sv.v||'?'} <span data-act="delsave" class="dl">smazat</span></div>`;}
@@ -1411,13 +1460,14 @@ function menuHTML(){const sv=loadSaved();let cont='';
  ${cont}
  <button class="btn big ${sv?'sec':''}" data-act="newAI">🤖 Hrát proti Automě</button>
  <button class="btn big teal" data-act="newHot">👥 Hra ve dvou</button>
- <button class="mplayers" data-act="players"><span>👤 <b>${UI.n1||'Hráč'}</b></span><span>👥 <b>${UI.n2||'Hráč 2'}</b></span><span>${UI.starter?'🏕️ výchozí tábory':'🎲 výběr táborů'}</span><span class="ed">✏️</span></button>
- <div class="mtiles">${tile('rules','📖','Pravidla')}${tile('snd',SET.mOn?'🔊':'🔇','Zvuk',SET.mOn)}${tile('tAnim',SET.anim?'✨':'⏸','Animace',SET.anim)}${FS_OK?tile('fs',ic(isFS()?'fsOff':'fsOn'),isFS()?'Zmenšit':'Na celou'):''}${tile('quit','🚪','Konec')}</div>
+ <button class="mplayers" data-act="players"><span>👤 <b>${UI.n1||'Hráč'}</b></span><span>${DIFFS[UI.diff||'bandita'].i} <b>${DIFFS[UI.diff||'bandita'].n}</b></span><span>${UI.starter?'🏕️ výchozí tábory':'🎲 výběr táborů'}</span><span class="ed">✏️</span></button>
+ <div class="mtiles">${tile('rules','📖','Pravidla')}${tile('snd',SET.mOn?'🔊':'🔇','Zvuk',SET.mOn)}${tile('stats','📊','Statistiky')}${FS_OK?tile('fs',ic(isFS()?'fsOff':'fsOn'),isFS()?'Zmenšit':'Na celou'):''}${tile('quit','🚪','Konec')}</div>
  <p class="foot"><button class="vbtn ${UPD.newer?'new':''}" data-act="upd">⬇️ Verze ${APP_VERSION}${UPD.newer?' · NOVÁ!':''}</button> · Neoficiální fanouškovská adaptace hry Daniela Piechnicka (Roxley / TLAMA games).</p>`;}
 function playersHTML(){return `<div class="sheet-bg"><div class="sheet"><div class="dname">👤 Hráči a nastavení hry</div>
  <div class="names"><label>Tvé jméno<input data-name="n1" maxlength="14" placeholder="Hráč" value="${(UI.n1||'').replace(/"/g,'&quot;')}"></label><label>Hráč 2 (na jednom telefonu)<input data-name="n2" maxlength="14" placeholder="Hráč 2" value="${(UI.n2||'').replace(/"/g,'&quot;')}"></label></div>
- <button class="btn big ${UI.starter?'teal':'sec'}" data-act="starterT" style="width:100%">${UI.starter?'✔ Výchozí tábory (bez výběru)':'🎲 Tábory si vybíráš sám'}</button>
- <button class="btn big ${TIPS.on?'teal':'sec'}" data-act="tipsT" style="width:100%;margin-top:8px">${TIPS.on?'🎓 Rady pro začátečníky: zapnuté':'🎓 Rady pro začátečníky: vypnuté'}</button>${TIPS.seen.length?`<div class="ln" style="font-size:14px;text-align:center"><span class="dl" data-act="tipsReset">Zobrazit všechny rady znovu od začátku</span></div>`:''}
+ <div class="ln" style="margin-top:6px"><b>Obtížnost Automy</b></div><div class="dchips">${Object.entries(DIFFS).map(([k,D])=>`<button class="chipb ${UI.diff===k?'on':''}" data-act="diff" data-arg="${k}">${D.i} ${D.n}</button>`).join('')}</div><div class="ln" style="font-size:14px;opacity:.8">${DIFFS[UI.diff||'bandita'].d}</div>
+ <button class="btn ${UI.starter?'teal':'sec'}" data-act="starterT" style="width:100%">${UI.starter?'✔ Výchozí tábory (bez výběru)':'🎲 Tábory si vybíráš sám'}</button>
+ <button class="btn ${TIPS.on?'teal':'sec'}" data-act="tipsT" style="width:100%;margin-top:8px">${TIPS.on?'🎓 Rady pro začátečníky: zapnuté':'🎓 Rady pro začátečníky: vypnuté'}</button>${TIPS.seen.length?`<div class="ln" style="font-size:14px;text-align:center"><span class="dl" data-act="tipsReset">Zobrazit všechny rady znovu od začátku</span></div>`:''}
  <div class="ln" style="font-size:14px;opacity:.75">Výchozí tábory = každý hráč dostane pevnou trojici táborů, výběr se přeskočí. Proti Automě hraješ pod svým jménem.</div>
  <div class="ctrl"><button class="btn" data-act="playersClose">Hotovo</button></div></div></div>`;}
 function passHTML(g){return `<div class="full"><div style="font-size:60px">📱</div><h2>PŘEDEJ ZAŘÍZENÍ!</h2><p><b>${g.names[g.pass.p]}</b> ${g.pass.what}.</p><button class="btn big" data-act="pass">Jsem připraven</button></div>`;}
@@ -1425,14 +1475,14 @@ function pickHTML(g){const pk=g.pick;return `<div class="dname" style="margin-to
  <div class="picks">${pk.opts.map(id=>`<div class="pkc">${cardFace(g,CAMPS[id],{act:'pickT',arg:id,cls:pk.sel.includes(id)?'sel':''})}${pk.sel.includes(id)?'<span class="pkok">✔</span>':''}</div>`).join('')}</div>
  <button class="btn big" data-act="pickOK" ${pk.sel.length===3?'':'disabled'}>Potvrdit (${pk.sel.length}/3)</button>`;}
 function overHTML(g){return `<div class="full" style="background:var(--halft),rgba(255,225,77,.95)"><div style="font-size:60px">${g.over.winner==null?'🤝':(g.mode==='ai'&&g.over.winner===1?'💀':'🏆')}</div><h2>${g.over.msg}</h2><button class="btn big" data-act="menu">Hlavní menu</button><button class="btn big sec" data-act="log">📜 Záznam</button></div>`;}
-function render(){let h='';const g=G;
+function render(){if(SIM)return;let h='';const g=G;
  if(UI.quit)h=`<div class="full"><div style="font-size:60px">👋</div><h2>KONEC HRY</h2><p class="foot">Rozehraná hra je uložená. Teď můžeš okno nebo kartu zavřít.</p><button class="btn big sec" data-act="unquit">↩ Zpět do menu</button></div>`;
  else if(UI.screen==='menu'||!g)h=menuHTML();
  else if(g.pass)h=passHTML(g);
  else if(g.pick)h=pickHTML(g);
  else if(!g.pl[0].camps.length||!g.pl[1].camps.length)h='<div class="status">Příprava…</div>';
  else{h=gameHTML(g);h+=hintBar(g);if(!g.prompt&&!g.over)h+=tipHTML(g);if(g.detail)h+=detailHTML(g);if(g.prompt)h+=promptHTML(g);if(UI.disc!=null&&UI.disc!==false)h+=discHTML(g);if(g.over&&!UI.log)h+=overHTML(g);if(UI.log)h+=logHTML(g);}
- if(g&&UI.screen==='game')saveGame(g);if(UI.snd)h+=sndHTML();if(UI.players)h+=playersHTML();if(UI.upd)h+=updPanelHTML();if(UI.updAsk&&UPD.newer&&UPD.info&&(UI.screen==='menu'||!g)&&!UI.quit)h+=updAskHTML();if(UI.rules)h+=rulesHTML();$app.className=((g&&UI.screen==='game'&&!g.pass)?(g.pick?'pickmode':'game'):((UI.screen==='menu'||!g)&&!UI.quit?'menu':''))+(SET.anim?'':' noanim');
+ if(g&&UI.screen==='game')saveGame(g);if(UI.snd)h+=sndHTML();if(UI.players)h+=playersHTML();if(UI.stats)h+=statsHTML();if(UI.upd)h+=updPanelHTML();if(UI.updAsk&&UPD.newer&&UPD.info&&(UI.screen==='menu'||!g)&&!UI.quit)h+=updAskHTML();if(UI.rules)h+=rulesHTML();$app.className=((g&&UI.screen==='game'&&!g.pass)?(g.pick?'pickmode':'game'):((UI.screen==='menu'||!g)&&!UI.quit?'menu':''))+(SET.anim?'':' noanim');
  try{$app.style.setProperty('--adl',(-(performance.now()/1000)%16).toFixed(2)+'s');}catch(e){}
  const _old=grabRects();$app.innerHTML=h;hintGlow();fitCards();runFX(_old);sheetIn();audioUpdate();sceneMode();UI._newLog=false;UI.rdir=0;}
 function hintGlow(){const H=UI._hk;if(!H||typeof document.querySelectorAll!=='function')return;H.ks.forEach(k=>{const el=document.querySelector(`#app [data-k="${k}"]`);if(el){el.classList.add('hintc');if(H.best&&H.best.k===k)el.classList.add('hintbest');}});}
@@ -1467,7 +1517,7 @@ document.addEventListener('visibilitychange',()=>audioUpdate());
 document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('.btn'))sfx('click');if(e.target.closest('input[data-name]'))return;const a=e.target.closest('[data-act]');
  if(a){const act_=a.dataset.act,arg=a.dataset.arg;handle(act_,arg,a);return;}
  const k=e.target.closest('[data-k]');if(k&&G){const key=k.dataset.k;if(G.prompt){const o=G.prompt.options.find(o=>o.ref&&keyOf(o.ref)===key);if(o&&o.ref.t!=='hand'){resolvePrompt(o);return;}}G.detail=key;render();return;}
- if(e.target.classList.contains('sheet-bg')){if(G)G.detail=null;UI.rules=false;UI.log=false;UI.snd=false;UI.disc=false;UI.upd=false;UI.players=false;if(!UPD.busy)UI.updAsk=false;render();}});
+ if(e.target.classList.contains('sheet-bg')){if(G)G.detail=null;UI.rules=false;UI.log=false;UI.snd=false;UI.disc=false;UI.upd=false;UI.players=false;UI.stats=false;if(!UPD.busy)UI.updAsk=false;render();}});
 function handle(a,arg,el){const g=G;const p=g?g.cur:0;
  switch(a){
  case 'newAI':newGame('ai');break;case 'newHot':newGame('hot');break;
@@ -1486,7 +1536,8 @@ function handle(a,arg,el){const g=G;const p=g?g.cur:0;
  case 'sndReset':Object.assign(SET,{sfx:true,anim:true,mOn:true,mV:90,eV:70,muOn:true,muV:50,amOn:true,aV:60,mus:'auto'});saveSet();busGains();audioUpdate();render();sfx('turn');break;
  case 'sw':SET[arg]=el.checked;saveSet();if(ac()){busGains();audioUpdate();}render();if(el.checked&&(arg==='sfx'||arg==='mOn'))sfx('turn');if(el.checked&&arg==='amOn'){try{aCrow();}catch(x){}}break;
  case 'tAnim':SET.anim=!SET.anim;saveSet();render();break;
- case 'starterT':UI.starter=!UI.starter;render();break;case 'players':UI.players=true;render();break;case 'playersClose':UI.players=false;render();break;
+ case 'starterT':UI.starter=!UI.starter;render();break;case 'players':UI.players=true;render();break;case 'stats':UI.stats=true;render();break;case 'stClose':UI.stats=false;render();break;case 'stReset':if(UI.stConfirm){lsDel(STKEY);UI.stConfirm=false;}else{UI.stConfirm=true;setTimeout(()=>{UI.stConfirm=false;render();},3000);}render();break;
+ case 'diff':UI.diff=arg;saveNames();render();break;case 'playersClose':UI.players=false;render();break;
  case 'rpg':UI.rpage=Math.max(0,Math.min(RPAGES.length-1,(UI.rpage||0)+(+arg)));UI.rdir=+arg;render();break;case 'rgo':UI.rdir=(+arg>(UI.rpage||0))?1:-1;UI.rpage=+arg;render();break;
  case 'fs':toggleFS();break;
  case 'autofs':UI.autoFS=el.checked;saveFSPref();if(UI.autoFS)enterFS();else if(isFS())(document.exitFullscreen||document.webkitExitFullscreen).call(document);break;
