@@ -5,7 +5,7 @@
 <meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="theme-color" content="#5a1e5e">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>Radlands 2 – Gangy pustiny</title>
-<meta name="version" content="2.10">
+<meta name="version" content="3.1">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -734,6 +734,42 @@ body.noanim #splash *{animation:none!important}
 .stgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:6px 0}
 .stgrid div{background:#fff;border:2px solid #111;border-radius:8px;box-shadow:2px 2px 0 #111;padding:4px;text-align:center;font-size:12.5px;line-height:1.15}
 .stgrid b{display:block;font-family:Bangers,sans-serif;font-weight:400;font-size:26px;color:#ff3d7f;-webkit-text-stroke:.5px #111}
+
+/* ===== 3.0 úspěchy a kampaň ===== */
+.mrow{display:flex;gap:var(--g,8px)}.mrow .btn{flex:1;min-width:0}
+.cpbtn{background:#ffe14d!important;color:#111!important}.cpbtn small{font-size:.65em;opacity:.75}
+.stabs{display:flex;gap:6px;margin-bottom:8px}.stabs .chipb{flex:1;font-size:19px;padding:6px}
+.achgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;max-height:52dvh;overflow:auto;padding:2px}
+.ach{display:grid;grid-template-columns:34px 1fr;column-gap:6px;align-items:center;background:#e4ddd0;border:2px solid #111;border-radius:9px;padding:5px 6px;opacity:.7}
+.ach .ai{grid-row:span 2;font-size:26px;text-align:center;filter:grayscale(1)}
+.ach b{font-family:Bangers,sans-serif;font-weight:400;font-size:16px;letter-spacing:.4px;line-height:1.05}
+.ach small{font-size:11.5px;line-height:1.15}
+.ach.got{background:#fff;opacity:1;box-shadow:2px 2px 0 #111}.ach.got .ai{filter:none}.ach.got b{color:#5a1e5e}
+.atoast{position:fixed;left:50%;top:10px;transform:translateX(-50%);z-index:60;display:flex;align-items:center;gap:10px;background:#ffe14d;border:3px solid #111;border-radius:12px;box-shadow:4px 4px 0 #111;padding:6px 14px;animation:toastIn .45s cubic-bezier(.2,1.5,.4,1);pointer-events:none;white-space:nowrap}
+.atoast .ai{font-size:32px}.atoast small{display:block;font-size:13px;font-weight:700}.atoast b{font-family:Bangers,sans-serif;font-weight:400;font-size:22px;letter-spacing:.5px}
+@keyframes toastIn{from{transform:translate(-50%,-80px)}}
+.overach{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:4px 0 8px}
+.overach span{background:#fff;border:2px solid #111;border-radius:8px;padding:2px 8px;box-shadow:2px 2px 0 #111;font-weight:700}
+.cplist{display:flex;flex-direction:column;gap:6px;margin:6px 0}
+.cpitem{display:flex;align-items:center;gap:10px;text-align:left;background:#fff;border:2.5px solid #111;border-radius:10px;box-shadow:3px 3px 0 #111;padding:6px 10px;cursor:pointer;color:#111;font:inherit}
+.cpitem .cpn{flex:0 0 34px;height:34px;display:flex;align-items:center;justify-content:center;border:2.5px solid #111;border-radius:50%;font-family:Bangers,sans-serif;font-size:20px;background:#ffe14d}
+.cpitem .cpt{flex:1;display:flex;flex-direction:column}.cpitem b{font-family:Bangers,sans-serif;font-weight:400;font-size:20px;letter-spacing:.5px}.cpitem small{font-size:13px;opacity:.8}
+.cpitem.done .cpn{background:#2bb3a3;color:#fff}.cpitem.open{background:#fff4d6;outline:3px solid #ff3d7f}
+.cpitem.lock{opacity:.5;cursor:default;box-shadow:none}
+.cpgo{font-size:22px;color:#ff3d7f}
+.cpboss{display:flex;align-items:center;gap:10px;background:#5a1e5e;color:#fff;border:2.5px solid #111;border-radius:10px;padding:6px 10px;margin:4px 0}
+.cpboss>span{font-size:38px}.cpboss b{display:block;font-family:Bangers,sans-serif;font-weight:400;font-size:24px;letter-spacing:.5px}.cpboss small{font-size:13px;opacity:.9}
+.cpstory{font-size:17px;line-height:1.35;background:#fff;border:2px dashed #111;border-radius:10px;padding:8px 10px;margin:6px 0;font-style:italic}
+
+/* ===== 3.1 létající karty ===== */
+.ghost{position:fixed;left:0;top:0;z-index:58;pointer-events:none;transform-origin:50% 50%;will-change:transform;filter:drop-shadow(4px 6px 0 rgba(0,0,0,.45))}
+.ghost>.cb{position:relative!important}
+.gback{width:100%;height:100%;border-radius:8%;border:3px solid #111;background:repeating-linear-gradient(45deg,#5a1e5e 0 8px,#45154a 8px 16px);display:flex;align-items:center;justify-content:center;box-sizing:border-box}
+.gback span{font-family:Bangers,Impact,sans-serif;color:#ffe14d;-webkit-text-stroke:1.5px #111;font-size:min(9vw,44px);background:#ff3d7f;border:3px solid #111;border-radius:50%;width:1.5em;height:1.5em;display:flex;align-items:center;justify-content:center}
+.cb.fx-flipin{animation:flipIn .38s ease-out}
+@keyframes flipIn{0%{transform:perspective(600px) rotateY(90deg)}100%{transform:perspective(600px) rotateY(0)}}
+.cb.fx-land{animation:landIn .3s ease-out}
+@keyframes landIn{0%{transform:scale(1.12)}100%{transform:scale(1)}}
 </style>
 </head>
 <body>
@@ -741,7 +777,7 @@ body.noanim #splash *{animation:none!important}
 <div id="rotate"><div class="rotbox"><div class="rotph">📱</div><h2>OTOČ TELEFON!</h2><p>Radlands se hraje na výšku.</p></div></div>
 <script>
 /* ===================== ZÁKLAD ===================== */
-const APP_VERSION='2.10';
+const APP_VERSION='3.1';
 let UID=1; const nid=()=>UID++;
 let SIM=false;
 const sleep=ms=>SIM?Promise.resolve():new Promise(r=>setTimeout(r,ms));
@@ -925,16 +961,16 @@ function targets(g,q,o={}){const P=g.pl[q],res=[];const all=o.any||(g.tf&&g.tf.h
   else{const f=frontOf(P,i);if(!f)continue;if(f.camp){if(!o.peopleOnly)res.push({p:q,t:'camp',i});}else if(!o.campsOnly)res.push({p:q,t:'person',uid:f.uid});}}
  return res;}
 
-function endGame(g,winner,msg){if(SIM){g.over={winner};throw new GameOver();}if(g===G)lsDel(SKEY);sfx(winner==null?'lose':(g.mode==='ai'&&winner===1?'lose':'win'));g.over={winner,msg:msg||(winner==null?'Remíza!':`Vítěz: ${g.names[winner]}!`)};try{stRecord(g);}catch(e){}log(g,g.over.msg);render();throw new GameOver();}
+function endGame(g,winner,msg){if(SIM){g.over={winner};throw new GameOver();}if(g===G)lsDel(SKEY);sfx(winner==null?'lose':(g.mode==='ai'&&winner===1?'lose':'win'));g.over={winner,msg:msg||(winner==null?'Remíza!':`Vítěz: ${g.names[winner]}!`)};try{stRecord(g);cpWin(g);achEnd(g);}catch(e){}log(g,g.over.msg);render();throw new GameOver();}
 function checkWin(g){const d=[0,1].map(i=>g.pl[i].camps.every(c=>c.destroyed));if(d[0]||d[1])endGame(g,d[0]&&d[1]?null:(d[0]?1:0));}
 
 function damage(g,r){
- if(r.t==='camp'){const c=campOf(g,r);if(c.destroyed)return;if(c.damaged){c.destroyed=true;fx('destroy',keyOf(r));sfx('boom');log(g,`💥 ${CAMPS[c.id].name} (${g.names[r.p]}) ZNIČEN!`);checkWin(g);}else{c.damaged=true;fx('hit',keyOf(r));sfx('hit');log(g,`💥 ${CAMPS[c.id].name} (${g.names[r.p]}) poškozen.`);}return;}
+ if(r.t==='camp'){const c=campOf(g,r);if(c.destroyed)return;if(c.damaged){c.destroyed=true;campKill(g,r);fx('destroy',keyOf(r));sfx('boom');log(g,`💥 ${CAMPS[c.id].name} (${g.names[r.p]}) ZNIČEN!`);checkWin(g);}else{c.damaged=true;fx('hit',keyOf(r));sfx('hit');log(g,`💥 ${CAMPS[c.id].name} (${g.names[r.p]}) poškozen.`);}return;}
  const x=findP(g,r.uid);if(!x)return;
  if(x.card.punk||x.card.damaged)destroyPerson(g,r.uid);else{x.card.damaged=true;fx('hit','u'+r.uid);sfx('hit');log(g,`🩸 ${DEF(x.card.id).name} (${g.names[x.q]}) poškozen.`);}
 }
-function destroyCamp(g,r){const c=campOf(g,r);if(c.destroyed)return;c.destroyed=true;c.damaged=true;fx('destroy',keyOf(r));sfx('boom');log(g,`☠ ${CAMPS[c.id].name} (${g.names[r.p]}) ZNIČEN!`);checkWin(g);}
-function destroyPerson(g,uid){const x=findP(g,uid);if(!x)return;fx('destroy','u'+uid);sfx('boom');g.pl[x.q].cols[x.col].splice(x.idx,1);
+function destroyCamp(g,r){const c=campOf(g,r);if(c.destroyed)return;c.destroyed=true;campKill(g,r);c.damaged=true;fx('destroy',keyOf(r));sfx('boom');log(g,`☠ ${CAMPS[c.id].name} (${g.names[r.p]}) ZNIČEN!`);checkWin(g);}
+function destroyPerson(g,uid){const x=findP(g,uid);if(!x)return;fx('destroy','u'+uid);fly('u'+uid,'disc',{delay:350});sfx('boom');g.pl[x.q].cols[x.col].splice(x.idx,1);
  if(x.card.punk){g.deck.push(x.card.hidden);log(g,`☠ Pankáč (${g.names[x.q]}) zničen.`);}else{dpush(g,x.card.id,x.q,'zničena');log(g,`☠ ${DEF(x.card.id).name} (${g.names[x.q]}) zničen.`);}}
 function returnToHand(g,uid){const x=findP(g,uid);if(!x)return;g.pl[x.q].cols[x.col].splice(x.idx,1);const id=x.card.punk?x.card.hidden:x.card.id;g.pl[x.q].hand.push({uid:nid(),id});log(g,`↩ ${x.card.punk?'Pankáč':DEF(id).name} se vrací do ruky (${g.names[x.q]}).`);}
 function restore(g,r){fx('heal',keyOf(r));sfx('heal');if(r.t==='camp'){const c=campOf(g,r);c.damaged=false;log(g,`🔧 ${CAMPS[c.id].name} obnoven.`);}else{const x=findP(g,r.uid);if(!x)return;x.card.damaged=false;x.card.restored=true;log(g,`🔧 ${DEF(x.card.id).name} obnoven.`);}}
@@ -942,7 +978,7 @@ function restoreTargets(g,p,exclude,peopleOnly){const P=g.pl[p],r=[];if(!peopleO
  allPeople(P).forEach(x=>{const rf={p,t:'person',uid:x.uid};if(x.damaged&&!sameRef(rf,exclude))r.push(rf);});return r;}
 
 function drawOne(g){if(!g.deck.length){if(g.reshuffles>=1||!g.discard.length)endGame(g,null,'Balíček došel podruhé – hra končí remízou.');g.reshuffles++;g.deck=shuffle(g.discard);g.discard=[];g.dw=[];log(g,'♻ Odhozené karty zamíchány jako nový balíček (příště už remíza).');}return g.deck.pop();}
-function drawTo(g,p,n=1){if(n>0)sfx('card');for(let i=0;i<n;i++){const id=drawOne(g);g.pl[p].hand.push({uid:nid(),id});}if(n>0)log(g,`🃏 ${g.names[p]} si dobírá ${n} ${n===1?'kartu':n<5?'karty':'karet'}.`);}
+function drawTo(g,p,n=1){if(n>0)sfx('card');for(let i=0;i<n;i++){const id=drawOne(g);const u=nid();g.pl[p].hand.push({uid:u,id});fly('deck','h'+u,{alt:'hand'+p,back:1,flip:1});}if(n>0)log(g,`🃏 ${g.names[p]} si dobírá ${n} ${n===1?'kartu':n<5?'karty':'karet'}.`);}
 
 /* ---------- výběry ---------- */
 function choose(g,p,spec){if(!spec.options||!spec.options.length)return Promise.resolve(null);
@@ -952,7 +988,7 @@ async function actDamage(g,p,o={}){const t=targets(g,1-p,o);if(!t.length){log(g,
  const c=await choose(g,p,{kind:'dmg',text:o.peopleOnly?'Vyber člověka ke zranění':'Vyber cíl k poškození',options:t.map(ref=>({ref}))});damage(g,c.ref);return c.ref;}
 async function actRestore(g,p,o={}){const t=restoreTargets(g,p,o.exclude,o.peopleOnly);if(!t.length)return null;const c=await choose(g,p,{kind:'restore',text:'Vyber svou kartu k obnovení',options:t.map(ref=>({ref}))});restore(g,c.ref);return c.ref;}
 async function sacrifice(g,p,text){const o=peopleRefs(g,p);if(!o.length)return null;const c=await choose(g,p,{kind:'sacrifice',text:text||'Vyber svého člověka ke zničení',options:o});destroyPerson(g,c.ref.uid);return c.ref;}
-async function discardN(g,p,n){for(let i=0;i<n;i++){const hs=g.pl[p].hand.filter(h=>h.id!=='silo');if(!hs.length)return;const c=await choose(g,p,{kind:'discard',text:`Odhoď kartu z ruky (${i+1}/${n})`,options:hs.map(h=>({ref:{p,t:'hand',uid:h.uid}}))});const P=g.pl[p];const k=P.hand.findIndex(h=>h.uid===c.ref.uid);const [h]=P.hand.splice(k,1);dpush(g,h.id,p,'odhozena z ruky');log(g,`🗑 ${g.names[p]} odhazuje ${DEF(h.id).name}.`);}}
+async function discardN(g,p,n){for(let i=0;i<n;i++){const hs=g.pl[p].hand.filter(h=>h.id!=='silo');if(!hs.length)return;const c=await choose(g,p,{kind:'discard',text:`Odhoď kartu z ruky (${i+1}/${n})`,options:hs.map(h=>({ref:{p,t:'hand',uid:h.uid}}))});const P=g.pl[p];const k=P.hand.findIndex(h=>h.uid===c.ref.uid);const [h]=P.hand.splice(k,1);fly('h'+h.uid,'disc',{altFrom:'hand'+p});dpush(g,h.id,p,'odhozena z ruky');log(g,`🗑 ${g.names[p]} odhazuje ${DEF(h.id).name}.`);}}
 function colOpts(g,q,incCamp){const P=g.pl[q];return[0,1,2].map(i=>{const n=P.cols[i].length;const ok=n>0||(incCamp&&!P.camps[i].destroyed);if(!ok)return null;const val=P.cols[i].reduce((s,x)=>s+(x.punk?1:DEF(x.id).cost+1),0)+(incCamp&&!P.camps[i].destroyed?(P.camps[i].damaged?9:5):0);return{label:`Sloupec ${i+1}: ${CAMPS[P.camps[i].id].name} (${n} lidí)`,col:i,ai:val};}).filter(Boolean);}
 function omenOpts(g){const r=[];[0,1].forEach(q=>g.pl[q].events.forEach((e,k)=>{if(e&&(k===0||!g.pl[q].events[k-1]))r.push({label:`${g.names[q]}: ${evName(e)} (pozice ${k+1})`,q,k});}));return r;}
 function mimicOpts(g,p,src){const o=[];
@@ -979,14 +1015,14 @@ async function gainPunk(g,p){const hidden=drawOne(g);const inst={uid:nid(),id:'p
  const ok=await placePerson(g,p,inst,null);if(!ok){g.deck.push(hidden);log(g,'Pankáč nebyl přiveden (není místo).');return;}log(g,`👤 ${g.names[p]} přivádí pankáče.`);}
 async function playPerson(g,p,h){const d=DEF(h.id),P=g.pl[p];const k=P.hand.findIndex(x=>x.uid===h.uid);if(k<0)return null;P.hand.splice(k,1);
  const inst={uid:nid(),id:h.id,punk:false,damaged:false,used:false,restored:false,played:true};
- const ok=await placePerson(g,p,inst,d);if(!ok){P.hand.push(h);return null;}
+ const ok=await placePerson(g,p,inst,d);if(!ok){P.hand.push(h);return null;}fly('h'+h.uid,'u'+inst.uid,{altFrom:'hand'+p});
  log(g,`▶ ${g.names[p]} hraje ${d.name}.`);if(d.onEnter)await d.onEnter(g,p,inst);return inst;}
 
 /* ---------- události ---------- */
 const freeSlot=(P,s)=>{for(let i=Math.max(0,s);i<3;i++)if(!P.events[i])return i;return -1;};
 function raidPossible(g,p){const P=g.pl[p];if(P.raidersHome)return freeSlot(P,1)>=0;const k=P.events.findIndex(e=>e&&e.id==='raiders');return k===0||(k>0&&!P.events[k-1]);}
 async function doRaid(g,p){const P=g.pl[p];
- if(P.raidersHome){const i=freeSlot(P,1);if(i<0){log(g,'Nájezdníci nemají volné místo.');return;}P.events[i]={id:'raiders'};P.raidersHome=false;log(g,`🏴‍☠️ ${g.names[p]}: Nájezdníci vyrážejí (pozice ${i+1}).`);return;}
+ if(P.raidersHome){const i=freeSlot(P,1);if(i<0){log(g,'Nájezdníci nemají volné místo.');return;}P.events[i]={id:'raiders'};P.raidersHome=false;stt(g,'raid',p);log(g,`🏴‍☠️ ${g.names[p]}: Nájezdníci vyrážejí (pozice ${i+1}).`);return;}
  const k=P.events.findIndex(e=>e&&e.id==='raiders');if(k===0){P.events[0]=null;await resolveEvent(g,p,{id:'raiders'});}
  else if(k>0&&!P.events[k-1]){P.events[k-1]=P.events[k];P.events[k]=null;log(g,`🏴‍☠️ Nájezdníci postupují na pozici ${k}.`);}else log(g,'Nájezdníci nemohou postoupit.');}
 async function resolveEvent(g,p,e){g.tf.eventResolved=true;
@@ -994,10 +1030,10 @@ async function resolveEvent(g,p,e){g.tf.eventResolved=true;
   const c=await choose(g,q,{kind:'ownCamp',text:`Nájezdníci: ${g.names[q]}, vyber svůj tábor, který bude poškozen`,options:o});if(c)damage(g,c.ref);return;}
  fx('banner',null,`💣 ${DEF(e.id).name.toUpperCase()}!`);sfx('boom');log(g,`⚠ Událost: ${DEF(e.id).name} (${g.names[p]})`);await DEF(e.id).run(g,p);dpush(g,e.id,p,'událost');}
 async function eventsPhase(g,p){const P=g.pl[p];const e=P.events[0];if(e){P.events[0]=null;await resolveEvent(g,p,e);}P.events=[P.events[1],P.events[2],null];}
-async function playEvent(g,p,h){const d=DEF(h.id),P=g.pl[p];P.hand.splice(P.hand.findIndex(x=>x.uid===h.uid),1);g.water-=d.cost;
+async function playEvent(g,p,h){const d=DEF(h.id),P=g.pl[p];stt(g,'ev',p);P.hand.splice(P.hand.findIndex(x=>x.uid===h.uid),1);g.water-=d.cost;
  const now=d.slot===0||(zetoActive(g,p)&&!g.tf.firstEvent);g.tf.firstEvent=true;
- if(d.cost>0)sfx('drop');if(now){fx('banner',null,`💣 ${d.name.toUpperCase()}!`);sfx('boom');log(g,`▶ ${g.names[p]} hraje událost ${d.name} (okamžitě).`);await d.run(g,p);dpush(g,h.id,p,'událost');g.tf.eventResolved=true;return;}
- const i=freeSlot(P,d.slot-1);P.events[i]={id:h.id};sfx('fuse');log(g,`▶ ${g.names[p]} hraje událost ${d.name} na pozici ${i+1}.`);}
+ if(d.cost>0)sfx('drop');if(now){fly('h'+h.uid,'disc',{altFrom:'hand'+p});fx('banner',null,`💣 ${d.name.toUpperCase()}!`);sfx('boom');log(g,`▶ ${g.names[p]} hraje událost ${d.name} (okamžitě).`);await d.run(g,p);dpush(g,h.id,p,'událost');g.tf.eventResolved=true;return;}
+ const i=freeSlot(P,d.slot-1);P.events[i]={id:h.id};fly('h'+h.uid,`e${p}_${i}`,{altFrom:'hand'+p});sfx('fuse');log(g,`▶ ${g.names[p]} hraje událost ${d.name} na pozici ${i+1}.`);}
 
 /* ---------- akce ---------- */
 function canPlay(g,p,h){const d=DEF(h.id),P=g.pl[p];
@@ -1007,8 +1043,8 @@ async function playCard(g,p,h){const d=DEF(h.id);if(!canPlay(g,p,h))return;if(d.
 function junkVal(g,p,j){switch(j){case 'draw':return 2;case 'water':return 1;case 'injure':return targets(g,1-p,{peopleOnly:true}).length?4.5:0;case 'raid':return raidPossible(g,p)?4:0;case 'restore':return restoreTargets(g,p,null).length?4:0;case 'punk':return freeSlots(g.pl[p])?3.5:0;}return 0;}
 async function doJunk(g,p,j){switch(j){case 'draw':drawTo(g,p);break;case 'water':g.water++;break;case 'injure':if(targets(g,1-p,{peopleOnly:true}).length)await actDamage(g,p,{peopleOnly:true});break;case 'raid':await doRaid(g,p);break;case 'restore':await actRestore(g,p);break;case 'punk':await gainPunk(g,p);break;}}
 async function junkCard(g,p,h){const d=DEF(h.id),P=g.pl[p];const k=P.hand.findIndex(x=>x.uid===h.uid);if(k<0)return;P.hand.splice(k,1);
- if(h.id==='silo')P.siloHome=true;else dpush(g,h.id,p,'recyklována');log(g,`♻ ${g.names[p]} recykluje ${d.name}: ${JUNK[d.junk].i} ${JUNK[d.junk].t}`);g.tf.junks=(g.tf.junks||0)+1;await doJunk(g,p,d.junk);}
-function takeSilo(g,p){const P=g.pl[p];if(!P.siloHome||g.water<1)return;sfx('drop');g.water--;P.siloHome=false;P.hand.push({uid:nid(),id:'silo'});log(g,`🛢️ ${g.names[p]} bere Vodní silo do ruky.`);}
+ if(h.id==='silo')P.siloHome=true;else{dpush(g,h.id,p,'recyklována');fly('h'+h.uid,'disc',{altFrom:'hand'+p});}log(g,`♻ ${g.names[p]} recykluje ${d.name}: ${JUNK[d.junk].i} ${JUNK[d.junk].t}`);g.tf.junks=(g.tf.junks||0)+1;await doJunk(g,p,d.junk);}
+function takeSilo(g,p){const P=g.pl[p];if(!P.siloHome||g.water<1)return;stt(g,'silo',p);sfx('drop');g.water--;P.siloHome=false;P.hand.push({uid:nid(),id:'silo'});log(g,`🛢️ ${g.names[p]} bere Vodní silo do ruky.`);}
 function drawPaid(g,p){if(g.water<2)return;sfx('drop');g.water-=2;drawTo(g,p);}
 function abilitiesOf(g,p,r){if(r.t==='camp'){const c=campOf(g,r);return CAMPS[c.id].ab||[];}const x=findP(g,r.uid);if(!x)return[];const base=x.card.punk?[]:(DEF(x.card.id).ab||[]);return(argoActive(g,p)&&x.card.id!=='argo')?[...base,ARGO_AB]:base;}
 const abCost=(g,p,ab)=>ab.costFn?ab.costFn(g,p):ab.cost;
@@ -1023,25 +1059,27 @@ async function useAbility(g,p,r,idx){const ab=abilitiesOf(g,p,r)[idx];if(!ab||!c
 let G=null;const UI={screen:'menu',starter:false,rules:false,log:false};
 const isAI=(g,p)=>g.mode==='ai'&&p===1;
 const viewer=g=>g.mode==='ai'?0:g.cur;
-function newGame(mode){UID=1;const g={mode,pl:[mkP(),mkP()],deck:[],discard:[],reshuffles:0,cur:0,water:0,firstTurn:true,tf:{},log:[],prompt:null,detail:null,busy:false,over:null,pass:null,pick:null,phase:'setup',diff:mode==='ai'?(UI.diff||'bandita'):null,names:mode==='ai'?[UI.n1||'Hráč',(UI.diff&&UI.diff!=='bandita'?'Automa '+DIFFS[UI.diff].n:'Automa')]:[UI.n1||'Hráč 1',UI.n2||'Hráč 2']};
+function newGame(mode,chap){UID=1;const CH=chap!=null?CHAP[chap]:null;const g={mode,camp:CH?chap:null,pl:[mkP(),mkP()],deck:[],discard:[],reshuffles:0,cur:0,water:0,firstTurn:true,tf:{},log:[],prompt:null,detail:null,busy:false,over:null,pass:null,pick:null,phase:'setup',diff:CH?CH.diff:(mode==='ai'?(UI.diff||'bandita'):null),names:CH?[UI.n1||'Hráč',CH.b]:mode==='ai'?[UI.n1||'Hráč',(UI.diff&&UI.diff!=='bandita'?'Automa '+DIFFS[UI.diff].n:'Automa')]:[UI.n1||'Hráč 1',UI.n2||'Hráč 2']};
  const deck=[];for(const[k,d]of Object.entries(PEOPLE))for(let i=0;i<d.n;i++)deck.push(k);for(const k of Object.keys(EVENTS))deck.push(k,k);g.deck=shuffle(deck);
  G=g;UI.screen='game';act(()=>setup(g));}
 async function setup(g){let ch;
  if(UI.starter)ch=[['garage','railgun','supply'],['reactor','cannon','totem']];
- else{const cd=shuffle(Object.keys(CAMPS));ch=[];for(const p of[0,1]){const opts=cd.splice(0,6);if(isAI(g,p))ch.push(aiPickCamps(opts));else{if(g.mode==='hot')await passTo(g,p,'vybírá tábory');ch.push(await pickCamps(g,p,opts));}}}
+ if(UI.starter&&g.camp!=null){const C=CHAP[g.camp];ch[1]=C.camps.slice();ch[0]=['garage','railgun','supply'].map((k,i)=>C.camps.includes(k)?['atomic','catapult','nest'][i]:k);}
+ else{const C=g.camp!=null?CHAP[g.camp]:null;const cd=shuffle(Object.keys(CAMPS).filter(k=>!C||!C.camps.includes(k)));ch=[];for(const p of[0,1]){if(C&&p===1){ch.push(C.camps.slice());continue;}const opts=cd.splice(0,6);if(isAI(g,p))ch.push(aiPickCamps(opts));else{if(g.mode==='hot')await passTo(g,p,'vybírá tábory');ch.push(await pickCamps(g,p,opts));}}}
  for(const p of[0,1]){g.pl[p].camps=ch[p].map(id=>({id,damaged:!!CAMPS[id].startDamaged,destroyed:false,used:false}));}
  for(const p of[0,1])drawTo(g,p,g.pl[p].camps.reduce((s,c)=>s+CAMPS[c.id].draw,0));
- g.cur=Math.random()<.5?0:1;log(g,`🎲 Začíná: ${g.names[g.cur]} (v prvním tahu má jen 1 💧).`);await beginTurn(g);}
+ if(g.camp!=null&&CHAP[g.camp].cards)drawTo(g,1,CHAP[g.camp].cards);
+ g.cur=(g.camp!=null&&CHAP[g.camp].first)?1:(Math.random()<.5?0:1);log(g,`🎲 Začíná: ${g.names[g.cur]} (v prvním tahu má jen 1 💧).`);await beginTurn(g);}
 function passTo(g,p,what){return new Promise(res=>{g.pass={p,what,res};render();});}
 function pickCamps(g,p,opts){return new Promise(res=>{g.pick={p,opts,sel:[],res};render();});}
-async function beginTurn(g){const p=g.cur;g.turnNo=(g.turnNo||0)+1;UNDO.clear();g.tf={peoplePlayed:0,eventResolved:false,abilitiesUsed:0,resonator:false,firstEvent:false,vera:false,hg:-1,junks:0};
+async function beginTurn(g){const p=g.cur;g.turnNo=(g.turnNo||0)+1;stt(g,'turns',p);UNDO.clear();g.tf={peoplePlayed:0,eventResolved:false,abilitiesUsed:0,resonator:false,firstEvent:false,vera:false,hg:-1,junks:0};
  [0,1].forEach(q=>{g.pl[q].camps.forEach(c=>c.used=false);allPeople(g.pl[q]).forEach(x=>{x.used=false;x.played=false;x.restored=false;});});
  g.phase='events';g.water=0;if(g.mode==='hot')await passTo(g,p,'je na tahu');
  log(g,`━━ Na tahu: ${g.names[p]} ━━`);fx('banner',null,g.mode==='ai'?(p===0?'TVŮJ TAH!':'TAH AUTOMY!'):`TAH: ${g.names[p].toUpperCase()}!`);sfx('turn');render();if(isAI(g,p))await sleep(600);
  await eventsPhase(g,p);drawTo(g,p,1);g.water=g.firstTurn?1:3;g.firstTurn=false;g.phase='actions';render();
  if(isAI(g,p)){await aiTurn(g,p);await sleep(500);log(g,`${g.names[p]} končí tah.`);g.cur=1-p;return beginTurn(g);}}
 async function endTurn(g){log(g,`${g.names[g.cur]} končí tah.`);g.water=0;g.cur=1-g.cur;await beginTurn(g);}
-async function act(fn){if(G.busy&&!fn.force)return;G.busy=true;G.detail=null;render();try{await fn();}catch(e){if(!(e instanceof GameOver)){console.error(e);log(G,'⚠ Chyba: '+e.message);}}G.busy=false;render();}
+async function act(fn){if(G.busy&&!fn.force)return;G.busy=true;G.detail=null;render();try{await fn();}catch(e){if(!(e instanceof GameOver)){console.error(e);log(G,'⚠ Chyba: '+e.message);}}G.busy=false;try{achLive(G);}catch(e){}render();}
 
 
 /* ===== ukládání ===== */
@@ -1060,7 +1098,7 @@ function resumeGame(){const s=loadSaved();if(!s)return;UID=Math.max(UID,s.uid);G
 
 
 /* ===================== EFEKTY A ZVUKY ===================== */
-const SETKEY='radlands2_set_v1';let SET={sfx:true,anim:true,vol:.7,mOn:true,mV:90,eV:70,muOn:true,muV:50,amOn:true,aV:60,mus:'auto'};
+const SETKEY='radlands2_set_v1';let SET={vib:true,sfx:true,anim:true,vol:.7,mOn:true,mV:90,eV:70,muOn:true,muV:50,amOn:true,aV:60,mus:'auto'};
 try{Object.assign(SET,JSON.parse(localStorage.getItem(SETKEY)||'{}'));}catch(e){}
 function saveSet(){try{localStorage.setItem(SETKEY,JSON.stringify(SET));}catch(e){}}
 const FX=[];
@@ -1157,12 +1195,38 @@ function audioUpdate(){if(!AC)return;const w=musWanted();if(w){if(!MUS.style){MU
  const hid=typeof document!=='undefined'&&document.hidden;const amb=!hid&&SET.amOn&&SET.mOn&&SET.aV>0&&SET.mV>0&&UI.screen==='game'&&G&&!G.over&&!G.pick&&!G.pass;if(amb)ambStart();else ambStop();}
 
 function sndGain(){return (SET.mOn?SET.mV/100:0)*(SET.sfx?SET.eV/100:0)*1.25;}
-function sfx(n){if(SIM)return;if(!SET.sfx||!SET.mOn||!SET.mV||!SET.eV)return;const a=ac();if(!a)return;try{SFX[n]();}catch(e){}}
+function sfx(n){if(SIM)return;vib(n);if(!SET.sfx||!SET.mOn||!SET.mV||!SET.eV)return;const a=ac();if(!a)return;try{SFX[n]();}catch(e){}}
+
+/* ---------- 3.1: létající karty a vibrace ---------- */
+function fly(from,to,o={}){if(SIM)return;if(FX.length<40)FX.push({type:'fly',from,to,o});}
+const fxEl=k=>k&&document.querySelector(`[data-k="${k}"],[data-fx="${k}"]`);
+let HCACHE={};
+function handCache(){const ks=Object.keys(HCACHE);if(ks.length>40)ks.slice(0,ks.length-20).forEach(k=>delete HCACHE[k]);document.querySelectorAll('.hand .cb[data-k]').forEach(el=>{HCACHE[el.dataset.k]={r:el.getBoundingClientRect(),html:el.outerHTML};});}
+function flyGrab(old){FX.forEach(f=>{if(f.type!=='fly')return;let el=fxEl(f.from);if(el){f.r0=el.getBoundingClientRect();f.html=el.classList.contains('cb')?el.outerHTML:null;return;}
+ const C=HCACHE[f.from];if(C){f.r0=C.r;f.html=C.html;return;}if(f.o.altFrom){el=fxEl(f.o.altFrom);if(el){f.r0=el.getBoundingClientRect();f.html=null;}}});}
+const CARDBACK='<div class="gback"><span>R</span></div>';
+function flyRun(list){let n=0;list.forEach(f=>{if(f.type!=='fly'||!f.r0)return;let to=fxEl(f.to);let toCard=!!to;if(!to&&f.o.alt){to=fxEl(f.o.alt);toCard=false;}if(!to)return;
+ const r1=to.getBoundingClientRect();if(!r1.width)return;const r0=f.r0;const isCard=to.classList.contains('cb');
+ const w=isCard?r1.width:Math.max(26,r1.height*.9*63/88),h=w*88/63;
+ const sx=r0.width&&f.html?r0.width:w*.55,sy=r0.width&&f.html?r0.height:h*.55;
+ const gh=document.createElement('div');gh.className='ghost';gh.style.width=w+'px';gh.style.height=h+'px';gh.innerHTML=f.html||CARDBACK;
+ if(f.html){const c=gh.firstElementChild;c.style.width='100%';c.style.height='100%';c.style.margin='0';c.style.setProperty('--s',(w/252).toFixed(4));c.classList.remove('hintc','hintbest','tgt','sel','fx-play','fx-hit','fx-heal','fx-destroy');}
+ document.body.appendChild(gh);
+ const x0=r0.left+r0.width/2-w/2,y0=r0.top+r0.height/2-h/2,x1=r1.left+r1.width/2-w/2,y1=r1.top+r1.height/2-h/2;
+ const s0=Math.min(sx/w,1.4),s1=isCard?1:Math.min(.45,r1.height/h);
+ const delay=(f.o.delay||0)+Math.min(n++,8)*110;
+ if(toCard&&isCard){to.style.visibility='hidden';}
+ const anim=gh.animate([{transform:`translate(${x0}px,${y0}px) scale(${s0}) rotate(-6deg)`,opacity:f.o.delay?.0:1,offset:0},{transform:`translate(${(x0+x1)/2}px,${Math.min(y0,y1)-30}px) scale(${(s0+s1)/2*1.12}) rotate(4deg)`,opacity:1,offset:.5},{transform:`translate(${x1}px,${y1}px) scale(${s1}) rotate(0deg)`,opacity:isCard?1:.2}],{duration:520,delay,easing:'cubic-bezier(.3,.7,.3,1)',fill:'both'});
+ const done=()=>{gh.remove();if(toCard&&isCard){to.style.visibility='';if(f.o.flip){to.classList.remove('fx-flipin');void to.offsetWidth;to.classList.add('fx-flipin');}else{to.classList.remove('fx-land');void to.offsetWidth;to.classList.add('fx-land');}}};
+ anim.onfinish=done;setTimeout(()=>{if(gh.isConnected)done();},delay+900);});}
+const VIB={hit:30,boom:[70,40,140],win:[60,50,60,50,220],lose:[350]};
+function vib(n){try{if(SET.vib!==false&&VIB[n]&&navigator.vibrate)navigator.vibrate(VIB[n]);}catch(e){}}
 const WORDS={hit:['BAM!','ŠMÁK!','PRÁSK!','KAPOW!'],destroy:['KABOOM!','BUM!','RÁNA!'],heal:['FIX!','✚'],play:['TADY!'],punk:['PANK!']};
-function grabRects(){const old={};if(typeof document.querySelector!=='function')return old;FX.forEach(f=>{if(f.key){const el=document.querySelector(`[data-k="${f.key}"]`);if(el)old[f.key]=el.getBoundingClientRect();}});return old;}
+function grabRects(){const old={};if(typeof document.querySelector!=='function')return old;try{flyGrab(old);}catch(e){}FX.forEach(f=>{if(f.key){const el=document.querySelector(`[data-k="${f.key}"]`);if(el)old[f.key]=el.getBoundingClientRect();}});return old;}
 function floatWord(r,txt,cls){const d=document.createElement('div');d.className='fxw '+(cls||'');d.textContent=txt;d.style.left=(r.left+r.width/2)+'px';d.style.top=(r.top+r.height/2)+'px';document.body.appendChild(d);setTimeout(()=>d.remove(),950);}
-function runFX(old){const list=FX.splice(0);if(!SET.anim||typeof document.querySelector!=='function')return;
+function runFX(old){const list=FX.splice(0);if(!SET.anim||typeof document.querySelector!=='function')return;try{if(document.body.animate)flyRun(list);}catch(e){}
  list.forEach(f=>{try{
+  if(f.type==='fly')return;
   if(f.type==='banner'){const b=document.createElement('div');b.className='fxbanner';b.innerHTML=`<span>${f.txt}</span>`;document.body.appendChild(b);setTimeout(()=>b.remove(),1300);return;}
   const el=f.key?document.querySelector(`[data-k="${f.key}"]`):null;const r=(el&&el.getBoundingClientRect())||old[f.key];if(!r)return;
   const w=f.txt||(WORDS[f.type]||[''])[Math.floor(Math.random()*(WORDS[f.type]||['']).length)];
@@ -1275,13 +1339,13 @@ function bigCardHTML(g,d,I){if(I&&I.kind==='person'&&I.obj.punk)return cardFace(
 function gameHTML(g){const me=viewer(g),op=1-me,tk=tkeys(g);const HK=(UI.hint&&myActionTime(g)&&g.cur===me)?hintKeys(g,me):null;UI._hk=HK;const myTurn=g.cur===me;const can=myActionTime(g)&&myTurn;const P=g.pl[me];
  const status=g.over?'':isAI(g,g.cur)?`🤖 ${g.names[g.cur]} hraje…`:(g.phase==='events'?'Události…':(!myTurn?`Hraje ${g.names[g.cur]}`:''));
  const water=myTurn&&g.phase==='actions'?(g.water>4?`${ic('water')}<b class="cm">×${g.water}</b>`:(Array.from({length:g.water},()=>ic('water')).join('')||'<b class="cm">0</b>')):'';
- return `<div class="bar"><span class="who">${g.names[op]}</span><span class="chip">${ic('hand')}${g.pl[op].hand.length}</span><span class="sp"></span>${evqHTML(g,op)}</div>
+ return `<div class="bar"><span class="who">${g.names[op]}</span><span class="chip" data-fx="hand${op}">${ic('hand')}${g.pl[op].hand.length}</span><span class="sp"></span>${evqHTML(g,op)}</div>
  ${boardHTML(g,op,true,tk)}
- <div class="mid"><span class="chip">${ic('deck')}${g.deck.length}</span><span class="chip dchip" data-act="disc">${ic('trash')}${g.discard.length}${g.discard.length?`<span class="dlast">${DEF(g.discard[g.discard.length-1]).art}</span>`:''}</span><span class="lg ${UI._newLog?'lgnew':''}" data-act="mlog">${status||g.log[g.log.length-1]||''}</span>${UI.mlog?mlogHTML(g):''}${FS_OK?`<span class="mbtn" data-act="fs" title="Celá obrazovka">${ic(isFS()?'fsOff':'fsOn')}</span>`:""}<span class="mbtn" data-act="snd">${SET.mOn&&SET.sfx?'🔊':'🔇'}</span><span class="mbtn" data-act="rules">📖</span><span class="mbtn" data-act="menu" title="Hlavní menu (uloží hru)">🏠</span></div>
+ <div class="mid"><span class="chip" data-fx="deck">${ic('deck')}${g.deck.length}</span><span class="chip dchip" data-fx="disc" data-act="disc">${ic('trash')}${g.discard.length}${g.discard.length?`<span class="dlast">${DEF(g.discard[g.discard.length-1]).art}</span>`:''}</span><span class="lg ${UI._newLog?'lgnew':''}" data-act="mlog">${status||g.log[g.log.length-1]||''}</span>${UI.mlog?mlogHTML(g):''}${FS_OK?`<span class="mbtn" data-act="fs" title="Celá obrazovka">${ic(isFS()?'fsOff':'fsOn')}</span>`:""}<span class="mbtn" data-act="snd">${SET.mOn&&SET.sfx?'🔊':'🔇'}</span><span class="mbtn" data-act="rules">📖</span><span class="mbtn" data-act="menu" title="Hlavní menu (uloží hru)">🏠</span></div>
  ${boardHTML(g,me,false,tk)}
  <div class="bar"><span class="who">${g.names[me]}</span><span class="water">${water}</span><span class="sp"></span>${evqHTML(g,me)}</div>
  <div class="ctrl"><button class="btn sec ib" data-act="undo" ${can&&UNDO.ok(g)?'':'disabled'} title="Krok zpět">↩</button><button class="btn sec ib ${UI.hint?'on':''}" data-act="hint" ${can?'':'disabled'} title="Nápověda">💡</button><button class="btn sec" data-act="drawPaid" ${can&&g.water>=2?'':'disabled'}>${ic('draw')}<span class="dlbl"> Dobrat</span> ${ic('water',2)}</button><button class="btn sec" data-act="silo" ${can&&g.water>=1&&P.siloHome?'':'disabled'}>${ic('silo')} ${ic('water',1)}</button><button class="btn ${can&&UI.hint&&hintIdle(g)?'hintend':''}" data-act="end" ${can?'':'disabled'}>Konec<span class="dlbl"> tahu</span></button></div>
- <div class="hand">${P.hand.map(h=>handCardHTML(g,h,tk)).join('')||'<span style="opacity:.7;font-size:15px;color:#fff;padding:8px">Prázdná ruka</span>'}</div>`;}
+ <div class="hand" data-fx="hand${me}">${P.hand.map(h=>handCardHTML(g,h,tk)).join('')||'<span style="opacity:.7;font-size:15px;color:#fff;padding:8px">Prázdná ruka</span>'}</div>`;}
 function infoByKey(g,k){const t=k[0];
  if(t==='c'){const[p,i]=k.slice(1).split('_').map(Number);return{kind:'camp',p,ref:{p,t:'camp',i},obj:g.pl[p].camps[i],def:CAMPS[g.pl[p].camps[i].id]};}
  if(t==='u'){const x=findP(g,+k.slice(1));if(!x)return null;return{kind:'person',p:x.q,ref:{p:x.q,t:'person',uid:x.card.uid},obj:x.card,def:x.card.punk?SPECIAL.punk:DEF(x.card.id)};}
@@ -1325,7 +1389,7 @@ function discHTML(g){const n=g.discard.length;if(!n)return `<div class="sheet-bg
  <div class="ln" style="opacity:.75">V odhazovacím balíčku: ${n} ${n===1?'karta':n<5?'karty':'karet'}. Klepnutím na kartu níže ji zobrazíš.</div><div class="pcards">${row}</div><div class="ctrl"><button class="btn" data-act="discClose">Zavřít</button></div></div></div>`;}
 
 /* ---------- aktualizace jen po potvrzení ---------- */
-const CHANGES={'2.10':['🤖 Tři obtížnosti Automy: Nováček, Bandita a Warlord (promýšlí tahy dopředu). Volba v okně ✏️ v menu.','📊 Statistiky: výhry a prohry podle obtížnosti, série, nejrychlejší výhra a nejúspěšnější tábory.','✨ Animace se teď zapínají v okně Zvuk – v menu je místo nich dlaždice Statistiky.'],'2.9':['💡 Nápověda tahu: zvýrazní, co teď můžeš udělat, a doporučí nejlepší akci.','↩ Krok zpět: vrátí poslední akci v tahu (když se nedobírala karta).','🎓 Rady pro začátečníky: krátké bubliny vysvětlí vodu, události, nájezd a ochranu. Vypnout a znovu zapnout jdou v okně ✏️.'],'2.8':['Úvodní animace – klepnutím vstoupíš do hry a zapneš zvuk.','Nové uspořádání menu s ikonami, jména a tábory v okně ✏️.','Živá scéna pustiny se západem slunce v menu i za herním stolem (v tahu Automy zrudne).','Pravidla po stránkách – listuj přejetím prstem.'],'2.7':['Detail karty na průhledném pozadí – karta vyskočí nad stůl.','Aktualizace jen po potvrzení: Aktualizovat / Teď ne / Přeskočit tuto verzi.','U nové verze se ukáže, co se opravilo a co přibylo.','V menu je tlačítko verze s panelem aktualizací.'],
+const CHANGES={'3.1':['🃏 Karty se pohybují: zahraná karta odletí z ruky na stůl, dobraná přiletí z balíčku a otočí se, odhozená letí do 🗑.','📳 Vibrace telefonu při zásahu, zničení tábora a konci hry. Vypnout jdou v okně 🔊 Zvuk.'],'3.0':['🗺 Kampaň Pustina: 6 kapitol s příběhem, bossy a jejich pevnými tábory. Každá další je těžší.','🏅 Úspěchy: 20 výzev – od první výhry po porážku Warlorda bez ztráty tábora. Nový úspěch se ohlásí přímo ve hře.','Úspěchy a statistiky najdeš v menu pod dlaždicí 🏅 Úspěchy.'],'2.10':['🤖 Tři obtížnosti Automy: Nováček, Bandita a Warlord (promýšlí tahy dopředu). Volba v okně ✏️ v menu.','📊 Statistiky: výhry a prohry podle obtížnosti, série, nejrychlejší výhra a nejúspěšnější tábory.','✨ Animace se teď zapínají v okně Zvuk – v menu je místo nich dlaždice Statistiky.'],'2.9':['💡 Nápověda tahu: zvýrazní, co teď můžeš udělat, a doporučí nejlepší akci.','↩ Krok zpět: vrátí poslední akci v tahu (když se nedobírala karta).','🎓 Rady pro začátečníky: krátké bubliny vysvětlí vodu, události, nájezd a ochranu. Vypnout a znovu zapnout jdou v okně ✏️.'],'2.8':['Úvodní animace – klepnutím vstoupíš do hry a zapneš zvuk.','Nové uspořádání menu s ikonami, jména a tábory v okně ✏️.','Živá scéna pustiny se západem slunce v menu i za herním stolem (v tahu Automy zrudne).','Pravidla po stránkách – listuj přejetím prstem.'],'2.7':['Detail karty na průhledném pozadí – karta vyskočí nad stůl.','Aktualizace jen po potvrzení: Aktualizovat / Teď ne / Přeskočit tuto verzi.','U nové verze se ukáže, co se opravilo a co přibylo.','V menu je tlačítko verze s panelem aktualizací.'],
  '2.6':['Animované obrázky na kartách.','Vysouvací okna.','Prohlížení odhozených karet (🗑).','Mini-záznam po klepnutí na prostřední řádek.'],
  '2.5':['Hudba ve 4 stylech a zvuky pustiny.']};
 const UPDKEY='radlands2_upd_v1';let UPDS={auto:true,skip:''};try{Object.assign(UPDS,JSON.parse(localStorage.getItem(UPDKEY)||'{}'));}catch(e){}
@@ -1444,13 +1508,68 @@ function stRecord(g){if(SIM||g!==G||g.statDone)return;g.statDone=true;const S=st
  if(w===0){R.w++;S.streak++;S.best=Math.max(S.best,S.streak);const t=Math.ceil(turns/2);if(!S.fast||t<S.fast)S.fast=t;g.pl[0].camps.forEach(c=>{S.camps[c.id]=(S.camps[c.id]||0)+1;});}
  else if(w===1){R.l++;S.streak=0;}else R.dr++;
  stSave(S);}
-function statsHTML(){const S=stLoad();const rows=Object.entries(DIFFS).map(([k,D])=>{const R=S.ai[k]||{w:0,l:0,dr:0},n=R.w+R.l+R.dr;return `<tr><td>${D.i} ${D.n}</td><td>${R.w}</td><td>${R.l}</td><td>${n?Math.round(R.w/n*100)+' %':'–'}</td></tr>`;}).join('');
+function statsHTML(){const S=stLoad();const tabs=`<div class="stabs"><button class="chipb ${UI.stTab!=='st'?'on':''}" data-act="stTab" data-arg="ach">🏅 Úspěchy</button><button class="chipb ${UI.stTab==='st'?'on':''}" data-act="stTab" data-arg="st">📊 Statistiky</button></div>`;
+ if(UI.stTab!=='st')return `<div class="sheet-bg"><div class="sheet stsheet">${tabs}${achHTML()}<div class="ctrl"><button class="btn" data-act="stClose">Zavřít</button></div></div></div>`;const rows=Object.entries(DIFFS).map(([k,D])=>{const R=S.ai[k]||{w:0,l:0,dr:0},n=R.w+R.l+R.dr;return `<tr><td>${D.i} ${D.n}</td><td>${R.w}</td><td>${R.l}</td><td>${n?Math.round(R.w/n*100)+' %':'–'}</td></tr>`;}).join('');
  const top=Object.entries(S.camps).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k,n])=>`${CAMPS[k]?CAMPS[k].name:k} <b>${n}×</b>`).join(' · ')||'–';
- return `<div class="sheet-bg"><div class="sheet stsheet"><div class="dname">📊 Statistiky</div>
+ return `<div class="sheet-bg"><div class="sheet stsheet">${tabs}
  <table class="sttab"><tr><th>Proti Automě</th><th>Výhry</th><th>Prohry</th><th>Úspěšnost</th></tr>${rows}</table>
  <div class="stgrid"><div><b>${S.streak}</b>aktuální série výher</div><div><b>${S.best}</b>nejdelší série</div><div><b>${S.fast?S.fast:'–'}</b>nejrychlejší výhra (tahů)</div><div><b>${S.dest}</b>zničených táborů Automy</div><div><b>${S.lost}</b>ztracených táborů</div><div><b>${S.hot}</b>her ve dvou</div></div>
  <div class="ln">🏕️ Nejčastější tábory při výhře: ${top}</div>
  <div class="ctrl"><button class="btn sec" data-act="stReset">${UI.stConfirm?'⚠ Opravdu vynulovat?':'Vynulovat'}</button><button class="btn" data-act="stClose">Zavřít</button></div></div></div>`;}
+
+/* ---------- 3.0: úspěchy a kampaň ---------- */
+function stt(g,k,p){if(SIM||!g)return;const S=g.stt=g.stt||{};const key=k+p;S[key]=(S[key]||0)+1;}
+function campKill(g,r){if(SIM)return;const S=g.stt=g.stt||{};const killer=1-r.p;if(S.ckT===g.turnNo&&S.ckP===killer)S.ckN++;else{S.ckT=g.turnNo;S.ckP=killer;S.ckN=1;}if(S.ckN>=2)S['dbl'+killer]=1;}
+const ACHKEY='radlands2_ach_v1';
+function achLoad(){try{return JSON.parse(lsGet(ACHKEY)||'{}')||{};}catch(e){return {};}}
+const W0=g=>g.over&&g.over.winner===0&&g.mode==='ai';
+const ACH=[
+ {id:'first',i:'🏆',n:'První krev',d:'Vyhraj první hru proti Automě.',end:g=>W0(g)},
+ {id:'nov',i:'🐣',n:'Zahřívací kolo',d:'Poraz Automu Nováčka.',end:g=>W0(g)&&g.diff==='novacek'},
+ {id:'ban',i:'🏴‍☠️',n:'Postrach banditů',d:'Poraz Automu Banditu.',end:g=>W0(g)&&(g.diff||'bandita')==='bandita'},
+ {id:'war',i:'💀',n:'Pán pustiny',d:'Poraz Automu Warlorda.',end:g=>W0(g)&&g.diff==='warlord'},
+ {id:'flaw',i:'🛡',n:'Bez škrábnutí',d:'Vyhraj bez ztráty jediného tábora.',end:g=>W0(g)&&g.pl[0].camps.every(c=>!c.destroyed)},
+ {id:'flawW',i:'👑',n:'Nedotknutelný',d:'Poraz Warlorda bez ztráty tábora.',end:g=>W0(g)&&g.diff==='warlord'&&g.pl[0].camps.every(c=>!c.destroyed)},
+ {id:'last',i:'🔥',n:'Na posledním táboře',d:'Vyhraj s jediným přeživším táborem.',end:g=>W0(g)&&g.pl[0].camps.filter(c=>!c.destroyed).length===1},
+ {id:'fast',i:'💨',n:'Blesková válka',d:'Vyhraj nejvýš za 8 svých tahů.',end:g=>W0(g)&&((g.stt||{}).turns0||99)<=8},
+ {id:'dbl',i:'💥',n:'Dvojitý zásah',d:'Znič 2 tábory soupeře v jednom tahu.',live:g=>g.stt&&g.stt.dbl0},
+ {id:'army',i:'⚔️',n:'Plná posádka',d:'Měj na stole najednou 6 lidí.',live:g=>peopleCount(g.pl[0])>=6},
+ {id:'punk',i:'🧷',n:'Pankáčská banda',d:'Měj na stole najednou 3 pankáče.',live:g=>allPeople(g.pl[0]).filter(c=>c.punk).length>=3},
+ {id:'raid',i:'🏍',n:'Nájezdník',d:'Vyšli Nájezdníky 3× v jedné hře.',live:g=>((g.stt||{}).raid0||0)>=3},
+ {id:'ev',i:'💣',n:'Pyrotechnik',d:'Zahraj 4 události v jedné hře.',live:g=>((g.stt||{}).ev0||0)>=4},
+ {id:'nosilo',i:'🚱',n:'Bez sila',d:'Vyhraj, aniž bys vzal Vodní silo.',end:g=>W0(g)&&!(g.stt||{}).silo0},
+ {id:'s3',i:'🔗',n:'Série tří',d:'Vyhraj 3 hry proti Automě v řadě.',end:g=>W0(g)&&stLoad().streak>=3},
+ {id:'w10',i:'🎖',n:'Veterán',d:'Vyhraj celkem 10 her proti Automě.',end:g=>W0(g)&&Object.values(stLoad().ai).reduce((a,r)=>a+r.w,0)>=10},
+ {id:'hot',i:'👥',n:'Kámoš u stolu',d:'Dohraj hru ve dvou na jednom telefonu.',end:g=>g.mode==='hot'},
+ {id:'c1',i:'🗺',n:'Na cestě',d:'Dokonči 1. kapitolu kampaně.',end:g=>W0(g)&&g.camp===0},
+ {id:'c3',i:'🧭',n:'V půli cesty',d:'Dokonči 3. kapitolu kampaně.',end:g=>W0(g)&&g.camp===2},
+ {id:'c6',i:'☠️',n:'Vládce pustiny',d:'Dokonči celou kampaň.',end:g=>W0(g)&&g.camp===5}];
+function achGive(g,a){const A=achLoad();if(A[a.id])return;A[a.id]=Date.now();lsSet(ACHKEY,JSON.stringify(A));(g.newAch=g.newAch||[]).push(a.id);UI.toast={a,t:Date.now()};sfx('win');setTimeout(()=>{if(UI.toast&&Date.now()-UI.toast.t>=3400){UI.toast=null;render();}},3500);}
+function achLive(g){if(SIM||!g||g!==G||g.mode!=='ai'||g.over)return;ACH.forEach(a=>{if(a.live){let ok=false;try{ok=a.live(g);}catch(e){}if(ok)achGive(g,a);}});}
+function achEnd(g){if(SIM||g!==G)return;ACH.forEach(a=>{let ok=false;try{ok=a.end?a.end(g):(g.mode==='ai'&&a.live(g));}catch(e){}if(ok)achGive(g,a);});}
+function toastHTML(){const T=UI.toast;if(!T)return'';return `<div class="atoast"><span class="ai">${T.a.i}</span><div><small>🏅 Nový úspěch!</small><b>${T.a.n}</b></div></div>`;}
+function achHTML(){const A=achLoad();const n=ACH.filter(a=>A[a.id]).length;
+ return `<div class="achgrid">${ACH.map(a=>`<div class="ach ${A[a.id]?'got':''}"><span class="ai">${A[a.id]?a.i:'🔒'}</span><b>${a.n}</b><small>${a.d}</small></div>`).join('')}</div><div class="ln" style="text-align:center"><b>${n} / ${ACH.length}</b> získáno</div>`;}
+/* kampaň */
+const CHAP=[
+ {n:'Vyprahlé pláně',b:'Prašný Pete',diff:'novacek',camps:['garage','scav','watchtower'],t:'Tvůj gang dorazil k první studni za městem. Hlídá ji Prašný Pete se svou bandou – víc řečí než střelby. Ukaž mu, kdo tu teď velí.'},
+ {n:'Rezavé město',b:'Rezavá Rita',diff:'bandita',camps:['railgun','warehouse','pillbox'],t:'Ruiny starého města ovládá Rezavá Rita. Má sklady plné šrotu a pulzní dělo, které nikdy nespí.'},
+ {n:'Kult ohně',b:'Velekněz Plamen',diff:'bandita',camps:['bonfire','reactor','cannon'],cards:2,t:'Za pouští hoří vatry kultu. Velekněz Plamen čeká a jeho fanatici mají v rukávu víc karet než ty.',mod:'Soupeř začíná se 2 kartami navíc.'},
+ {n:'Krvavá oáza',b:'Doktorka Jehla',diff:'bandita',camps:['blood','transplant','oasis'],first:1,t:'Jediná zelená oáza v pustině patří Doktorce Jehle. Léčí své lidi rychleji, než je stihneš zranit – a útočí první.',mod:'Soupeř vždy začíná.'},
+ {n:'Železná pevnost',b:'Generál Kolos',diff:'warlord',camps:['kolos','command','pillbox'],t:'Generál Kolos je stratég. Každý tah si promyslí dopředu. Jeho pevnost ještě nikdo nedobyl.',mod:'Soupeř hraje na obtížnost Warlord.'},
+ {n:'Trůn pustiny',b:'Warlord Lebka',diff:'warlord',camps:['totem','scud','resonator'],cards:2,first:1,t:'Poslední krok k trůnu. Warlord Lebka ovládá celou pustinu – a nehodlá se jí vzdát.',mod:'Warlord, začíná a má 2 karty navíc.'}];
+const CPKEY='radlands2_camp_v1';
+function cpDone(){return Math.min(CHAP.length,+(lsGet(CPKEY)||0)||0);}
+function cpWin(g){if(SIM||g!==G||g.camp==null||!W0(g))return;if(g.camp+1>cpDone())lsSet(CPKEY,String(g.camp+1));}
+function campaignHTML(){const done=cpDone();const sel=UI.chap;
+ if(sel!=null){const C=CHAP[sel],D=DIFFS[C.diff];return `<div class="sheet-bg"><div class="sheet cpsheet"><div class="dname">🗺 Kapitola ${sel+1}: ${C.n}</div>
+  <div class="cpboss"><span>${D.i}</span><div><b>${C.b}</b><small>${D.n}${C.mod?' · '+C.mod:''}</small></div></div><div class="cpstory">${C.t}</div>
+  <div class="ln"><b>Tábory soupeře:</b> ${C.camps.map(k=>CAMPS[k].name).join(' · ')}</div>
+  <div class="ctrl"><button class="btn sec" data-act="chapBack">Zpět</button><button class="btn" data-act="chapGo">⚔ Do boje!</button></div></div></div>`;}
+ return `<div class="sheet-bg"><div class="sheet cpsheet"><div class="dname">🗺 Kampaň Pustina</div><div class="ln" style="font-size:14px;opacity:.8">Poraz šest bossů pustiny, jednoho po druhém. Tvé tábory se vybírají jako obvykle.</div>
+ <div class="cplist">${CHAP.map((C,i)=>{const st=i<done?'done':i===done?'open':'lock';return `<button class="cpitem ${st}" ${st==='lock'?'disabled':''} data-act="chap" data-arg="${i}"><span class="cpn">${st==='done'?'✔':st==='lock'?'🔒':i+1}</span><span class="cpt"><b>${C.n}</b><small>${C.b} · ${DIFFS[C.diff].i} ${DIFFS[C.diff].n}</small></span>${st==='open'?'<span class="cpgo">▶</span>':''}</button>`;}).join('')}</div>
+ ${done>=CHAP.length?'<div class="bstate">👑 Kampaň dokončena! Kapitoly můžeš hrát znovu.</div>':''}
+ <div class="ctrl"><button class="btn" data-act="cpClose">Zavřít</button></div></div></div>`;}
 function logHTML(g){return `<div class="sheet-bg"><div class="sheet logsheet"><div class="dname">📜 Záznam hry</div><div class="loglist">${g.log.slice().reverse().map(s=>`<div>${s}</div>`).join('')}</div><div class="ctrl"><button class="btn" data-act="closeLog">Zavřít</button></div></div></div>`;}
 function menuHTML(){const sv=loadSaved();let cont='';
  if(sv){const g=sv.g;const alive=q=>3-g.pl[q].camps.filter(c=>c.destroyed).length;cont=`<button class="btn big mresume" data-act="resume">▶ Pokračovat ve hře</button><div class="svinfo">${g.names[0]} (${alive(0)}🏕) vs. ${g.names[1]} (${alive(1)}🏕) · ${new Date(sv.t).toLocaleString('cs-CZ',{day:'numeric',month:'numeric',hour:'2-digit',minute:'2-digit'})} · v${sv.v||'?'} <span data-act="delsave" class="dl">smazat</span></div>`;}
@@ -1459,9 +1578,9 @@ function menuHTML(){const sv=loadSaved();let cont='';
  <div class="mgap"></div>
  ${cont}
  <button class="btn big ${sv?'sec':''}" data-act="newAI">🤖 Hrát proti Automě</button>
- <button class="btn big teal" data-act="newHot">👥 Hra ve dvou</button>
+ <div class="mrow"><button class="btn big cpbtn" data-act="cp">🗺 Kampaň <small>${cpDone()}/${CHAP.length}</small></button><button class="btn big teal" data-act="newHot">👥 Ve dvou</button></div>
  <button class="mplayers" data-act="players"><span>👤 <b>${UI.n1||'Hráč'}</b></span><span>${DIFFS[UI.diff||'bandita'].i} <b>${DIFFS[UI.diff||'bandita'].n}</b></span><span>${UI.starter?'🏕️ výchozí tábory':'🎲 výběr táborů'}</span><span class="ed">✏️</span></button>
- <div class="mtiles">${tile('rules','📖','Pravidla')}${tile('snd',SET.mOn?'🔊':'🔇','Zvuk',SET.mOn)}${tile('stats','📊','Statistiky')}${FS_OK?tile('fs',ic(isFS()?'fsOff':'fsOn'),isFS()?'Zmenšit':'Na celou'):''}${tile('quit','🚪','Konec')}</div>
+ <div class="mtiles">${tile('rules','📖','Pravidla')}${tile('snd',SET.mOn?'🔊':'🔇','Zvuk',SET.mOn)}${tile('stats','🏅','Úspěchy')}${FS_OK?tile('fs',ic(isFS()?'fsOff':'fsOn'),isFS()?'Zmenšit':'Na celou'):''}${tile('quit','🚪','Konec')}</div>
  <p class="foot"><button class="vbtn ${UPD.newer?'new':''}" data-act="upd">⬇️ Verze ${APP_VERSION}${UPD.newer?' · NOVÁ!':''}</button> · Neoficiální fanouškovská adaptace hry Daniela Piechnicka (Roxley / TLAMA games).</p>`;}
 function playersHTML(){return `<div class="sheet-bg"><div class="sheet"><div class="dname">👤 Hráči a nastavení hry</div>
  <div class="names"><label>Tvé jméno<input data-name="n1" maxlength="14" placeholder="Hráč" value="${(UI.n1||'').replace(/"/g,'&quot;')}"></label><label>Hráč 2 (na jednom telefonu)<input data-name="n2" maxlength="14" placeholder="Hráč 2" value="${(UI.n2||'').replace(/"/g,'&quot;')}"></label></div>
@@ -1474,7 +1593,10 @@ function passHTML(g){return `<div class="full"><div style="font-size:60px">📱<
 function pickHTML(g){const pk=g.pick;return `<div class="dname" style="margin-top:8px;color:#fff;text-shadow:2px 2px 0 #111">${g.names[pk.p]}: vyber 3 tábory</div><div style="font-size:16px;background:#fff;border:2px solid #111;border-radius:8px;padding:3px 6px">Číslo ${ic('draw')} = kolik karet si na začátku dobereš.</div>
  <div class="picks">${pk.opts.map(id=>`<div class="pkc">${cardFace(g,CAMPS[id],{act:'pickT',arg:id,cls:pk.sel.includes(id)?'sel':''})}${pk.sel.includes(id)?'<span class="pkok">✔</span>':''}</div>`).join('')}</div>
  <button class="btn big" data-act="pickOK" ${pk.sel.length===3?'':'disabled'}>Potvrdit (${pk.sel.length}/3)</button>`;}
-function overHTML(g){return `<div class="full" style="background:var(--halft),rgba(255,225,77,.95)"><div style="font-size:60px">${g.over.winner==null?'🤝':(g.mode==='ai'&&g.over.winner===1?'💀':'🏆')}</div><h2>${g.over.msg}</h2><button class="btn big" data-act="menu">Hlavní menu</button><button class="btn big sec" data-act="log">📜 Záznam</button></div>`;}
+function overHTML(g){return `<div class="full" style="background:var(--halft),rgba(255,225,77,.95)"><div style="font-size:60px">${g.over.winner==null?'🤝':(g.mode==='ai'&&g.over.winner===1?'💀':'🏆')}</div><h2>${g.over.msg}</h2>${g.camp!=null?(W0(g)?`<div class="bstate">🗺 Kapitola ${g.camp+1} „${CHAP[g.camp].n}“ dokončena!</div>`:`<div class="bstate">🗺 ${CHAP[g.camp].b} tě tentokrát porazil. Zkus to znovu!</div>`):''}
+ ${(g.newAch||[]).length?`<div class="overach">${g.newAch.map(id=>{const a=ACH.find(x=>x.id===id);return `<span>${a.i} ${a.n}</span>`;}).join('')}</div>`:''}
+ ${g.camp!=null?`<button class="btn big teal" data-act="cpNext" data-arg="${W0(g)?Math.min(g.camp+1,CHAP.length-1):g.camp}">${W0(g)?(g.camp+1<CHAP.length?'▶ Další kapitola':'🗺 Kampaň'):'↻ Zkusit znovu'}</button>`:''}
+ <button class="btn big" data-act="menu">Hlavní menu</button><button class="btn big sec" data-act="log">📜 Záznam</button></div>`;}
 function render(){if(SIM)return;let h='';const g=G;
  if(UI.quit)h=`<div class="full"><div style="font-size:60px">👋</div><h2>KONEC HRY</h2><p class="foot">Rozehraná hra je uložená. Teď můžeš okno nebo kartu zavřít.</p><button class="btn big sec" data-act="unquit">↩ Zpět do menu</button></div>`;
  else if(UI.screen==='menu'||!g)h=menuHTML();
@@ -1482,9 +1604,9 @@ function render(){if(SIM)return;let h='';const g=G;
  else if(g.pick)h=pickHTML(g);
  else if(!g.pl[0].camps.length||!g.pl[1].camps.length)h='<div class="status">Příprava…</div>';
  else{h=gameHTML(g);h+=hintBar(g);if(!g.prompt&&!g.over)h+=tipHTML(g);if(g.detail)h+=detailHTML(g);if(g.prompt)h+=promptHTML(g);if(UI.disc!=null&&UI.disc!==false)h+=discHTML(g);if(g.over&&!UI.log)h+=overHTML(g);if(UI.log)h+=logHTML(g);}
- if(g&&UI.screen==='game')saveGame(g);if(UI.snd)h+=sndHTML();if(UI.players)h+=playersHTML();if(UI.stats)h+=statsHTML();if(UI.upd)h+=updPanelHTML();if(UI.updAsk&&UPD.newer&&UPD.info&&(UI.screen==='menu'||!g)&&!UI.quit)h+=updAskHTML();if(UI.rules)h+=rulesHTML();$app.className=((g&&UI.screen==='game'&&!g.pass)?(g.pick?'pickmode':'game'):((UI.screen==='menu'||!g)&&!UI.quit?'menu':''))+(SET.anim?'':' noanim');
+ if(g&&UI.screen==='game')saveGame(g);if(UI.snd)h+=sndHTML();if(UI.players)h+=playersHTML();if(UI.stats)h+=statsHTML();if(UI.cp)h+=campaignHTML();if(UI.upd)h+=updPanelHTML();if(UI.updAsk&&UPD.newer&&UPD.info&&(UI.screen==='menu'||!g)&&!UI.quit)h+=updAskHTML();if(UI.rules)h+=rulesHTML();$app.className=((g&&UI.screen==='game'&&!g.pass)?(g.pick?'pickmode':'game'):((UI.screen==='menu'||!g)&&!UI.quit?'menu':''))+(SET.anim?'':' noanim');
  try{$app.style.setProperty('--adl',(-(performance.now()/1000)%16).toFixed(2)+'s');}catch(e){}
- const _old=grabRects();$app.innerHTML=h;hintGlow();fitCards();runFX(_old);sheetIn();audioUpdate();sceneMode();UI._newLog=false;UI.rdir=0;}
+ h+=toastHTML();const _old=grabRects();$app.innerHTML=h;hintGlow();fitCards();runFX(_old);try{handCache();}catch(e){}sheetIn();audioUpdate();sceneMode();UI._newLog=false;UI.rdir=0;}
 function hintGlow(){const H=UI._hk;if(!H||typeof document.querySelectorAll!=='function')return;H.ks.forEach(k=>{const el=document.querySelector(`#app [data-k="${k}"]`);if(el){el.classList.add('hintc');if(H.best&&H.best.k===k)el.classList.add('hintbest');}});}
 function sheetIn(){if(typeof document.querySelector!=='function')return;const sh=document.querySelectorAll('.sheet');const key=[...sh].map(x=>x.firstElementChild?x.firstElementChild.textContent.slice(0,40):'').join('|')+(G&&G.detail||'');
  if(SET.anim&&sh.length&&key!==UI._sheetKey){const last=sh[sh.length-1];last.classList.add('sin');if(last.parentElement)last.parentElement.classList.add('bgin');}UI._sheetKey=sh.length?key:'';}
@@ -1507,7 +1629,7 @@ function toggleFS(){try{if(isFS()){(document.exitFullscreen||document.webkitExit
 document.addEventListener('fullscreenchange',()=>render());document.addEventListener('webkitfullscreenchange',()=>render());
 /* ===================== OVLÁDÁNÍ ===================== */
 function sndHTML(){const row=(k,on,ic,n,vk)=>`<div class="sp-row ${on?'':'off'}"><label class="sw2"><input type="checkbox" data-act="sw" data-arg="${k}" ${on?'checked':''}><span></span></label><span class="sp-n">${ic} ${n}</span>${vk?`<input type="range" min="0" max="100" value="${SET[vk]}" data-snd="${vk}"><span class="sp-val" id="v-${vk}">${SET[vk]} %</span>`:'<span></span><span></span>'}</div>`;
- return `<div class="sheet-bg"><div class="sheet sndsheet"><div class="dname">🔊 Zvuk a efekty</div>${row('mOn',SET.mOn,'🔊','Všechny zvuky','mV')}${row('sfx',SET.sfx,'💥','Herní efekty','eV')}${row('muOn',SET.muOn,'🎵','Hudba','muV')}${row('amOn',SET.amOn,'🌵','Zvuky pustiny','aV')}${row('anim',SET.anim,'✨','Animace',null)}
+ return `<div class="sheet-bg"><div class="sheet sndsheet"><div class="dname">🔊 Zvuk a efekty</div>${row('mOn',SET.mOn,'🔊','Všechny zvuky','mV')}${row('sfx',SET.sfx,'💥','Herní efekty','eV')}${row('muOn',SET.muOn,'🎵','Hudba','muV')}${row('amOn',SET.amOn,'🌵','Zvuky pustiny','aV')}${row('anim',SET.anim,'✨','Animace',null)}${row('vib',SET.vib!==false,'📳','Vibrace',null)}
  <div class="mstyle"><b>Hudba:</b>${[['auto','🔄 Automaticky'],...Object.entries(MSTY).map(([k,v])=>[k,v.n])].map(([k,n])=>`<button class="chipb ${SET.mus===k?'on':''}" data-act="musStyle" data-arg="${k}">${n}</button>`).join('')}</div><div class="ln" style="font-size:13px;opacity:.75">Automaticky: v menu klid u ohně, ve tvém tahu rock, v tahu Automy napětí.</div><div class="ctrl"><button class="btn sec" data-act="sndReset">Výchozí</button><button class="btn" data-act="sndClose">Hotovo</button></div></div></div>`;}
 function resolvePrompt(o){const r=G.prompt.res;G.prompt=null;G.detail=null;render();r(o);}
 document.addEventListener('input',e=>{const sk=e.target.dataset&&e.target.dataset.snd;if(sk){SET[sk]=+e.target.value;if(SET[sk]>0){SET[{mV:'mOn',eV:'sfx',muV:'muOn',aV:'amOn'}[sk]]=true;}saveSet();busGains();audioUpdate();const v=document.getElementById('v-'+sk);if(v)v.textContent=SET[sk]+' %';return;}const n=e.target.dataset&&e.target.dataset.name;if(n){UI[n]=e.target.value.trim();saveNames();}});
@@ -1517,7 +1639,7 @@ document.addEventListener('visibilitychange',()=>audioUpdate());
 document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('.btn'))sfx('click');if(e.target.closest('input[data-name]'))return;const a=e.target.closest('[data-act]');
  if(a){const act_=a.dataset.act,arg=a.dataset.arg;handle(act_,arg,a);return;}
  const k=e.target.closest('[data-k]');if(k&&G){const key=k.dataset.k;if(G.prompt){const o=G.prompt.options.find(o=>o.ref&&keyOf(o.ref)===key);if(o&&o.ref.t!=='hand'){resolvePrompt(o);return;}}G.detail=key;render();return;}
- if(e.target.classList.contains('sheet-bg')){if(G)G.detail=null;UI.rules=false;UI.log=false;UI.snd=false;UI.disc=false;UI.upd=false;UI.players=false;UI.stats=false;if(!UPD.busy)UI.updAsk=false;render();}});
+ if(e.target.classList.contains('sheet-bg')){if(G)G.detail=null;UI.rules=false;UI.log=false;UI.snd=false;UI.disc=false;UI.upd=false;UI.players=false;UI.stats=false;UI.cp=false;UI.chap=null;if(!UPD.busy)UI.updAsk=false;render();}});
 function handle(a,arg,el){const g=G;const p=g?g.cur:0;
  switch(a){
  case 'newAI':newGame('ai');break;case 'newHot':newGame('hot');break;
@@ -1533,10 +1655,13 @@ function handle(a,arg,el){const g=G;const p=g?g.cur:0;
  case 'snd':UI.snd=true;render();break;
  case 'sndClose':UI.snd=false;render();break;
  case 'musStyle':SET.mus=arg;saveSet();if(ac()){musStop();busGains();audioUpdate();}render();break;
- case 'sndReset':Object.assign(SET,{sfx:true,anim:true,mOn:true,mV:90,eV:70,muOn:true,muV:50,amOn:true,aV:60,mus:'auto'});saveSet();busGains();audioUpdate();render();sfx('turn');break;
+ case 'sndReset':Object.assign(SET,{vib:true,sfx:true,anim:true,mOn:true,mV:90,eV:70,muOn:true,muV:50,amOn:true,aV:60,mus:'auto'});saveSet();busGains();audioUpdate();render();sfx('turn');break;
  case 'sw':SET[arg]=el.checked;saveSet();if(ac()){busGains();audioUpdate();}render();if(el.checked&&(arg==='sfx'||arg==='mOn'))sfx('turn');if(el.checked&&arg==='amOn'){try{aCrow();}catch(x){}}break;
  case 'tAnim':SET.anim=!SET.anim;saveSet();render();break;
- case 'starterT':UI.starter=!UI.starter;render();break;case 'players':UI.players=true;render();break;case 'stats':UI.stats=true;render();break;case 'stClose':UI.stats=false;render();break;case 'stReset':if(UI.stConfirm){lsDel(STKEY);UI.stConfirm=false;}else{UI.stConfirm=true;setTimeout(()=>{UI.stConfirm=false;render();},3000);}render();break;
+ case 'starterT':UI.starter=!UI.starter;render();break;case 'players':UI.players=true;render();break;case 'stats':UI.stats=true;render();break;case 'stTab':UI.stTab=arg;render();break;
+ case 'cp':UI.cp=true;UI.chap=null;render();break;case 'cpClose':UI.cp=false;UI.chap=null;render();break;case 'chap':UI.chap=+arg;render();break;case 'chapBack':UI.chap=null;render();break;
+ case 'chapGo':{const i=UI.chap;UI.cp=false;UI.chap=null;newGame('ai',i);break;}
+ case 'cpNext':{if(G)lsDel(SKEY);UI.screen='menu';UI.cp=true;UI.chap=+arg;G=null;render();break;}case 'stClose':UI.stats=false;render();break;case 'stReset':if(UI.stConfirm){lsDel(STKEY);UI.stConfirm=false;}else{UI.stConfirm=true;setTimeout(()=>{UI.stConfirm=false;render();},3000);}render();break;
  case 'diff':UI.diff=arg;saveNames();render();break;case 'playersClose':UI.players=false;render();break;
  case 'rpg':UI.rpage=Math.max(0,Math.min(RPAGES.length-1,(UI.rpage||0)+(+arg)));UI.rdir=+arg;render();break;case 'rgo':UI.rdir=(+arg>(UI.rpage||0))?1:-1;UI.rpage=+arg;render();break;
  case 'fs':toggleFS();break;

@@ -1,9 +1,8 @@
 {
-  "version": "2.10",
-  "date": "2026-11-17",
+  "version": "3.1",
+  "date": "2026-11-18",
   "notes": [
-    "🤖 Tři obtížnosti Automy: Nováček, Bandita a Warlord (promýšlí tahy dopředu). Volba v okně ✏️ v menu.",
-    "📊 Statistiky: výhry a prohry podle obtížnosti, série, nejrychlejší výhra a nejúspěšnější tábory.",
-    "✨ Animace se teď zapínají v okně Zvuk – v menu je místo nich dlaždice Statistiky."
+    "🃏 Karty se pohybují: zahraná karta odletí z ruky na stůl, dobraná přiletí z balíčku a otočí se, odhozená letí do 🗑.",
+    "📳 Vibrace telefonu při zásahu, zničení tábora a konci hry. Vypnout jdou v okně 🔊 Zvuk."
   ]
 }
