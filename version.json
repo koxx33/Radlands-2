@@ -1,8 +1,9 @@
 {
-  "version": "3.1",
-  "date": "2026-11-18",
+  "version": "3.4",
+  "date": "2026-11-19",
   "notes": [
-    "🃏 Karty se pohybují: zahraná karta odletí z ruky na stůl, dobraná přiletí z balíčku a otočí se, odhozená letí do 🗑.",
-    "📳 Vibrace telefonu při zásahu, zničení tábora a konci hry. Vypnout jdou v okně 🔊 Zvuk."
+    "📅 Denní výzva: každý den nová, pro všechny stejná – dané tábory, soupeř a zamíchaný balíček. Sbírej sérii dní.",
+    "💾 Záloha postupu: úspěchy, kampaň, statistiky, nastavení i rozehranou hru uložíš do souboru nebo jako text a nahraješ zpět (třeba na nový telefon).",
+    "🏅 Dva nové úspěchy za denní výzvy."
   ]
 }

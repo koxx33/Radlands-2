@@ -5,7 +5,7 @@
 <meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="theme-color" content="#5a1e5e">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>Radlands 2 – Gangy pustiny</title>
-<meta name="version" content="3.1">
+<meta name="version" content="3.4">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -770,6 +770,72 @@ body.noanim #splash *{animation:none!important}
 @keyframes flipIn{0%{transform:perspective(600px) rotateY(90deg)}100%{transform:perspective(600px) rotateY(0)}}
 .cb.fx-land{animation:landIn .3s ease-out}
 @keyframes landIn{0%{transform:scale(1.12)}100%{transform:scale(1)}}
+
+/* ===== 3.2 seznam změn ===== */
+.clogsheet{display:flex;flex-direction:column;max-height:86dvh}
+.clog{overflow:auto;flex:1 1 auto;padding:2px}
+.clog details{background:#fff;border:2.5px solid #111;border-radius:10px;box-shadow:2px 2px 0 #111;margin:0 0 7px;padding:4px 10px}
+.clog summary{cursor:pointer;font-family:Bangers,sans-serif;font-size:21px;letter-spacing:.5px;list-style:none;display:flex;align-items:center;gap:8px}
+.clog summary::-webkit-details-marker{display:none}
+.clog summary::before{content:"▸";font-size:16px;transition:transform .2s}.clog details[open] summary::before{transform:rotate(90deg)}
+.clog .cur{font-family:"Patrick Hand",sans-serif;font-size:13px;background:#2bb3a3;color:#fff;border:2px solid #111;border-radius:6px;padding:0 6px}
+.clog .unotes{font-size:15px;margin:2px 0 6px}
+
+/* ===== 3.3 praskliny, kouř, střely, konvoj, konfety ===== */
+.cb.dmg .rc::after{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;border-radius:inherit;
+ background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 252 352'%3E%3Cg fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M30 0 L58 52 L44 88 L82 130 L70 170 M58 52 L96 60 M82 130 L120 120' stroke='%23111' stroke-width='9'/%3E%3Cpath d='M252 150 L206 176 L214 214 L170 242 L180 290 M206 176 L176 160 M170 242 L136 236' stroke='%23111' stroke-width='9'/%3E%3Cpath d='M32 4 L60 54 L46 88 L84 130' stroke='%23fff' stroke-width='3' opacity='.8' transform='translate(3 2)'/%3E%3Cpath d='M250 152 L208 178 L216 214 L172 242' stroke='%23fff' stroke-width='3' opacity='.8' transform='translate(3 2)'/%3E%3C/g%3E%3C/svg%3E") 0 0/100% 100% no-repeat,
+ radial-gradient(ellipse 40% 30% at 22% 18%,rgba(30,10,10,.35),transparent 70%),radial-gradient(ellipse 45% 32% at 82% 70%,rgba(30,10,10,.32),transparent 70%)}
+.cb.dead .rc.campback{overflow:visible!important}
+.cb.dead{overflow:visible!important}
+.cb.dead::before{content:"";position:absolute;left:-25%;top:-45%;width:150%;height:130%;z-index:6;pointer-events:none;
+ background:radial-gradient(circle at 42% 72%,rgba(210,200,210,.8) 0 11%,transparent 20%),radial-gradient(circle at 58% 52%,rgba(190,180,192,.65) 0 13%,transparent 23%),radial-gradient(circle at 46% 30%,rgba(170,160,175,.45) 0 15%,transparent 27%);
+ animation:smoke 3.4s ease-in-out infinite;animation-delay:var(--adl,0s);transform-origin:50% 100%}
+@keyframes smoke{0%{transform:translateY(25%) scale(.7);opacity:0}30%{opacity:1}100%{transform:translate(-8%,-25%) scale(1.25);opacity:0}}
+.noanim .cb.dead::before{animation:none;opacity:.7}
+.shot{position:fixed;left:-12px;top:-4px;width:24px;height:8px;z-index:59;pointer-events:none;border-radius:4px;background:linear-gradient(90deg,rgba(255,225,77,0),#ffe14d 55%,#fff);box-shadow:0 0 8px 3px rgba(255,180,60,.8)}
+.muzzle{position:fixed;width:46px;height:46px;margin:-23px 0 0 -23px;z-index:59;pointer-events:none;background:radial-gradient(circle,#fff 0 18%,#ffe14d 30%,rgba(255,61,127,.6) 55%,transparent 70%);clip-path:polygon(50% 0,60% 35%,100% 50%,60% 65%,50% 100%,40% 65%,0 50%,40% 35%);animation:muz .3s ease-out forwards}
+.muzzle.sm{width:28px;height:28px;margin:-14px 0 0 -14px}
+@keyframes muz{0%{transform:scale(.3) rotate(0)}60%{transform:scale(1.2) rotate(20deg)}100%{transform:scale(1.4) rotate(30deg);opacity:0}}
+.convoy{position:fixed;left:0;right:0;top:calc(50% - 60px);height:120px;z-index:57;pointer-events:none;overflow:hidden}
+.cv-row{position:absolute;bottom:14px;left:0;display:flex;align-items:flex-end;gap:10px;animation:cvDrive 2.1s cubic-bezier(.4,.1,.6,.9) forwards;flex-direction:row}
+.convoy.rtl .cv-row{animation-name:cvDriveR;flex-direction:row-reverse}
+.convoy.rtl .cv-v svg{transform:scaleX(-1)}
+.cv-v svg{display:block;filter:drop-shadow(3px 3px 0 rgba(0,0,0,.4))}
+.cv-v.moto svg{width:78px;animation:cvBounce .18s ease-in-out infinite alternate}
+.cv-v.car svg{width:128px;animation:cvBounce .22s ease-in-out infinite alternate}
+.cv-v.m2 svg{animation-delay:-.1s}
+@keyframes cvBounce{to{transform:translateY(-3px) rotate(-1deg)}}
+.convoy.rtl .cv-v svg{animation:none}
+.cv-dust{width:160px;height:60px;align-self:flex-end;background:radial-gradient(circle at 30% 60%,rgba(214,170,120,.9) 0 20%,transparent 40%),radial-gradient(circle at 60% 50%,rgba(200,150,100,.8) 0 22%,transparent 45%),radial-gradient(circle at 85% 70%,rgba(230,190,140,.7) 0 18%,transparent 40%);filter:blur(1px);animation:dust .3s linear infinite alternate}
+@keyframes dust{to{transform:scale(1.15) translateY(-4px)}}
+@keyframes cvDrive{from{transform:translateX(-110%)}to{transform:translateX(110vw)}}
+@keyframes cvDriveR{from{transform:translateX(110vw)}to{transform:translateX(-110%)}}
+.cv-txt{position:absolute;left:50%;top:0;transform:translateX(-50%) rotate(-6deg);font-family:Bangers,Impact,sans-serif;font-size:44px;color:#ffe14d;-webkit-text-stroke:2px #111;text-shadow:4px 4px 0 #c2384a;animation:cvTxt 2.1s ease-out forwards}
+@keyframes cvTxt{0%,10%{opacity:0;transform:translateX(-50%) rotate(-6deg) scale(.3)}25%{opacity:1;transform:translateX(-50%) rotate(-6deg) scale(1.15)}75%{opacity:1}100%{opacity:0;transform:translateX(-50%) rotate(-6deg) scale(1)}}
+.confetti{position:fixed;inset:0;z-index:70;pointer-events:none;overflow:hidden}
+.confetti i{position:absolute;top:-24px;border:1.5px solid #111;border-radius:2px;animation:conf 3s cubic-bezier(.3,.6,.6,1) forwards}
+@keyframes conf{0%{transform:translate(0,0) rotate(0)}100%{transform:translate(var(--x),110vh) rotate(var(--r))}}
+body.gloom #app{filter:grayscale(.85) brightness(.75);transition:filter .8s}
+#app{transition:filter .8s}
+#app.shake{animation:shake .5s ease-in-out}
+@keyframes shake{0%,100%{transform:none}20%{transform:translate(-8px,2px) rotate(-1deg)}40%{transform:translate(7px,-2px) rotate(1deg)}60%{transform:translate(-5px,1px)}80%{transform:translate(3px,0)}}
+
+/* ===== 3.4 denní výzva, záloha ===== */
+.mrow.m3 .btn{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05;padding-left:2px;padding-right:2px;font-size:clamp(17px,2.7vh,26px)}
+.mrow.m3 .btn small{font-size:.55em;opacity:.8;font-family:"Patrick Hand",sans-serif;letter-spacing:0;margin-top:2px}
+.mrow.m3 .mi{font-size:.8em;line-height:1;margin-bottom:1px}
+.mrow.m3 .btn{white-space:nowrap}
+.dlbtn{background:#ff8a3d!important;color:#111!important}.dlbtn.done{background:#c9e8b0!important}
+.dlbtn:not(.done)small{font-weight:700}
+.dlcamps{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:6px 0}
+.dlcamps>div{background:#fff;border:2px solid #111;border-radius:8px;box-shadow:2px 2px 0 #111;padding:5px 8px;font-size:15px;line-height:1.25}
+.dlcamps small{display:block;font-weight:700;opacity:.7;font-size:12px}
+.ddays{display:flex;gap:4px;justify-content:center;margin:8px 0 2px}
+.dday{display:flex;flex-direction:column;align-items:center;width:38px;background:#fff;border:2px solid #111;border-radius:7px;font-size:15px;padding:2px 0}
+.dday b{font-size:11px;font-weight:700;opacity:.7}.dday.w{background:#2bb3a3;color:#fff}.dday.l{background:#f3c1c1}.dday.today{outline:3px solid #ff3d7f}
+.bkgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0}
+.bkgrid .btn{font-size:15px;padding:8px 4px;text-align:center;cursor:pointer}
+.bktxt{width:100%;box-sizing:border-box;height:90px;font-size:11px;border:2px solid #111;border-radius:8px;margin:4px 0;font-family:monospace}
 </style>
 </head>
 <body>
@@ -777,7 +843,7 @@ body.noanim #splash *{animation:none!important}
 <div id="rotate"><div class="rotbox"><div class="rotph">📱</div><h2>OTOČ TELEFON!</h2><p>Radlands se hraje na výšku.</p></div></div>
 <script>
 /* ===================== ZÁKLAD ===================== */
-const APP_VERSION='3.1';
+const APP_VERSION='3.4';
 let UID=1; const nid=()=>UID++;
 let SIM=false;
 const sleep=ms=>SIM?Promise.resolve():new Promise(r=>setTimeout(r,ms));
@@ -961,15 +1027,15 @@ function targets(g,q,o={}){const P=g.pl[q],res=[];const all=o.any||(g.tf&&g.tf.h
   else{const f=frontOf(P,i);if(!f)continue;if(f.camp){if(!o.peopleOnly)res.push({p:q,t:'camp',i});}else if(!o.campsOnly)res.push({p:q,t:'person',uid:f.uid});}}
  return res;}
 
-function endGame(g,winner,msg){if(SIM){g.over={winner};throw new GameOver();}if(g===G)lsDel(SKEY);sfx(winner==null?'lose':(g.mode==='ai'&&winner===1?'lose':'win'));g.over={winner,msg:msg||(winner==null?'Remíza!':`Vítěz: ${g.names[winner]}!`)};try{stRecord(g);cpWin(g);achEnd(g);}catch(e){}log(g,g.over.msg);render();throw new GameOver();}
+function endGame(g,winner,msg){if(SIM){g.over={winner};throw new GameOver();}if(g===G)lsDel(SKEY);{const lost=winner==null||(g.mode==='ai'&&winner===1);sfx(lost?'lose':'win');fx(lost?'gloom':'confetti');duckMusic(4.5);}g.over={winner,msg:msg||(winner==null?'Remíza!':`Vítěz: ${g.names[winner]}!`)};try{stRecord(g);cpWin(g);dlRecord(g);achEnd(g);}catch(e){}log(g,g.over.msg);render();throw new GameOver();}
 function checkWin(g){const d=[0,1].map(i=>g.pl[i].camps.every(c=>c.destroyed));if(d[0]||d[1])endGame(g,d[0]&&d[1]?null:(d[0]?1:0));}
 
-function damage(g,r){
+function damage(g,r){shot(r.t==='camp'?keyOf(r):'u'+r.uid);
  if(r.t==='camp'){const c=campOf(g,r);if(c.destroyed)return;if(c.damaged){c.destroyed=true;campKill(g,r);fx('destroy',keyOf(r));sfx('boom');log(g,`💥 ${CAMPS[c.id].name} (${g.names[r.p]}) ZNIČEN!`);checkWin(g);}else{c.damaged=true;fx('hit',keyOf(r));sfx('hit');log(g,`💥 ${CAMPS[c.id].name} (${g.names[r.p]}) poškozen.`);}return;}
  const x=findP(g,r.uid);if(!x)return;
  if(x.card.punk||x.card.damaged)destroyPerson(g,r.uid);else{x.card.damaged=true;fx('hit','u'+r.uid);sfx('hit');log(g,`🩸 ${DEF(x.card.id).name} (${g.names[x.q]}) poškozen.`);}
 }
-function destroyCamp(g,r){const c=campOf(g,r);if(c.destroyed)return;c.destroyed=true;campKill(g,r);c.damaged=true;fx('destroy',keyOf(r));sfx('boom');log(g,`☠ ${CAMPS[c.id].name} (${g.names[r.p]}) ZNIČEN!`);checkWin(g);}
+function destroyCamp(g,r){const c=campOf(g,r);if(c.destroyed)return;shot(keyOf(r));c.destroyed=true;campKill(g,r);c.damaged=true;fx('destroy',keyOf(r));sfx('boom');log(g,`☠ ${CAMPS[c.id].name} (${g.names[r.p]}) ZNIČEN!`);checkWin(g);}
 function destroyPerson(g,uid){const x=findP(g,uid);if(!x)return;fx('destroy','u'+uid);fly('u'+uid,'disc',{delay:350});sfx('boom');g.pl[x.q].cols[x.col].splice(x.idx,1);
  if(x.card.punk){g.deck.push(x.card.hidden);log(g,`☠ Pankáč (${g.names[x.q]}) zničen.`);}else{dpush(g,x.card.id,x.q,'zničena');log(g,`☠ ${DEF(x.card.id).name} (${g.names[x.q]}) zničen.`);}}
 function returnToHand(g,uid){const x=findP(g,uid);if(!x)return;g.pl[x.q].cols[x.col].splice(x.idx,1);const id=x.card.punk?x.card.hidden:x.card.id;g.pl[x.q].hand.push({uid:nid(),id});log(g,`↩ ${x.card.punk?'Pankáč':DEF(id).name} se vrací do ruky (${g.names[x.q]}).`);}
@@ -1022,7 +1088,7 @@ async function playPerson(g,p,h){const d=DEF(h.id),P=g.pl[p];const k=P.hand.find
 const freeSlot=(P,s)=>{for(let i=Math.max(0,s);i<3;i++)if(!P.events[i])return i;return -1;};
 function raidPossible(g,p){const P=g.pl[p];if(P.raidersHome)return freeSlot(P,1)>=0;const k=P.events.findIndex(e=>e&&e.id==='raiders');return k===0||(k>0&&!P.events[k-1]);}
 async function doRaid(g,p){const P=g.pl[p];
- if(P.raidersHome){const i=freeSlot(P,1);if(i<0){log(g,'Nájezdníci nemají volné místo.');return;}P.events[i]={id:'raiders'};P.raidersHome=false;stt(g,'raid',p);log(g,`🏴‍☠️ ${g.names[p]}: Nájezdníci vyrážejí (pozice ${i+1}).`);return;}
+ if(P.raidersHome){const i=freeSlot(P,1);if(i<0){log(g,'Nájezdníci nemají volné místo.');return;}P.events[i]={id:'raiders'};P.raidersHome=false;stt(g,'raid',p);fx('convoy',null,String(p));log(g,`🏴‍☠️ ${g.names[p]}: Nájezdníci vyrážejí (pozice ${i+1}).`);return;}
  const k=P.events.findIndex(e=>e&&e.id==='raiders');if(k===0){P.events[0]=null;await resolveEvent(g,p,{id:'raiders'});}
  else if(k>0&&!P.events[k-1]){P.events[k-1]=P.events[k];P.events[k]=null;log(g,`🏴‍☠️ Nájezdníci postupují na pozici ${k}.`);}else log(g,'Nájezdníci nemohou postoupit.');}
 async function resolveEvent(g,p,e){g.tf.eventResolved=true;
@@ -1053,23 +1119,26 @@ function canUseAbility(g,p,r,ab){if(g.tf.resonator)return false;if(!isReadyRef(g
 async function useAbility(g,p,r,idx){const ab=abilitiesOf(g,p,r)[idx];if(!ab||!canUseAbility(g,p,r,ab))return;
  if(abCost(g,p,ab)>0)sfx('drop');g.water-=abCost(g,p,ab);const obj=r.t==='camp'?campOf(g,r):findP(g,r.uid).card;
  if(veraActive(g,p)&&!g.tf.vera){g.tf.vera=true;}else obj.used=true;g.tf.abilitiesUsed++;
- log(g,`⚙ ${g.names[p]}: ${nameRef(g,r)} – ${ab.text}`);await ab.run(g,p,r);if(ab.after)ab.after(g);}
+ log(g,`⚙ ${g.names[p]}: ${nameRef(g,r)} – ${ab.text}`);const _ps=SRCK;SRCK=keyOf(r);try{await ab.run(g,p,r);}finally{SRCK=_ps;}if(ab.after)ab.after(g);}
+let SRCK=null;function shot(tk){if(SRCK&&!SIM)fx('shot',tk,SRCK);}
 
 /* ===================== PRŮBĚH HRY ===================== */
 let G=null;const UI={screen:'menu',starter:false,rules:false,log:false};
 const isAI=(g,p)=>g.mode==='ai'&&p===1;
 const viewer=g=>g.mode==='ai'?0:g.cur;
-function newGame(mode,chap){UID=1;const CH=chap!=null?CHAP[chap]:null;const g={mode,camp:CH?chap:null,pl:[mkP(),mkP()],deck:[],discard:[],reshuffles:0,cur:0,water:0,firstTurn:true,tf:{},log:[],prompt:null,detail:null,busy:false,over:null,pass:null,pick:null,phase:'setup',diff:CH?CH.diff:(mode==='ai'?(UI.diff||'bandita'):null),names:CH?[UI.n1||'Hráč',CH.b]:mode==='ai'?[UI.n1||'Hráč',(UI.diff&&UI.diff!=='bandita'?'Automa '+DIFFS[UI.diff].n:'Automa')]:[UI.n1||'Hráč 1',UI.n2||'Hráč 2']};
- const deck=[];for(const[k,d]of Object.entries(PEOPLE))for(let i=0;i<d.n;i++)deck.push(k);for(const k of Object.keys(EVENTS))deck.push(k,k);g.deck=shuffle(deck);
+function newGame(mode,chap,daily){UID=1;const CH=chap!=null?CHAP[chap]:null;const DD=daily?dailyDef(daily):null;const g={mode,camp:CH?chap:null,daily:daily||null,pl:[mkP(),mkP()],deck:[],discard:[],reshuffles:0,cur:0,water:0,firstTurn:true,tf:{},log:[],prompt:null,detail:null,busy:false,over:null,pass:null,pick:null,phase:'setup',diff:DD?DD.diff:CH?CH.diff:(mode==='ai'?(UI.diff||'bandita'):null),names:DD?[UI.n1||'Hráč',DD.boss]:CH?[UI.n1||'Hráč',CH.b]:mode==='ai'?[UI.n1||'Hráč',(UI.diff&&UI.diff!=='bandita'?'Automa '+DIFFS[UI.diff].n:'Automa')]:[UI.n1||'Hráč 1',UI.n2||'Hráč 2']};
+ const deck=[];for(const[k,d]of Object.entries(PEOPLE))for(let i=0;i<d.n;i++)deck.push(k);for(const k of Object.keys(EVENTS))deck.push(k,k);g.deck=DD?withSeed(DD.seed+7,()=>shuffle(deck)):shuffle(deck);
  G=g;UI.screen='game';act(()=>setup(g));}
-async function setup(g){let ch;
- if(UI.starter)ch=[['garage','railgun','supply'],['reactor','cannon','totem']];
- if(UI.starter&&g.camp!=null){const C=CHAP[g.camp];ch[1]=C.camps.slice();ch[0]=['garage','railgun','supply'].map((k,i)=>C.camps.includes(k)?['atomic','catapult','nest'][i]:k);}
- else{const C=g.camp!=null?CHAP[g.camp]:null;const cd=shuffle(Object.keys(CAMPS).filter(k=>!C||!C.camps.includes(k)));ch=[];for(const p of[0,1]){if(C&&p===1){ch.push(C.camps.slice());continue;}const opts=cd.splice(0,6);if(isAI(g,p))ch.push(aiPickCamps(opts));else{if(g.mode==='hot')await passTo(g,p,'vybírá tábory');ch.push(await pickCamps(g,p,opts));}}}
+async function setup(g){let ch;const DD=g.daily?dailyDef(g.daily):null;
+ if(DD)ch=[DD.mine.slice(),DD.ai.slice()];
+ else if(UI.starter)ch=[['garage','railgun','supply'],['reactor','cannon','totem']];
+ if(!DD&&UI.starter&&g.camp!=null){const C=CHAP[g.camp];ch[1]=C.camps.slice();ch[0]=['garage','railgun','supply'].map((k,i)=>C.camps.includes(k)?['atomic','catapult','nest'][i]:k);}
+ else if(!DD&&!UI.starter){const C=g.camp!=null?CHAP[g.camp]:null;const cd=shuffle(Object.keys(CAMPS).filter(k=>!C||!C.camps.includes(k)));ch=[];for(const p of[0,1]){if(C&&p===1){ch.push(C.camps.slice());continue;}const opts=cd.splice(0,6);if(isAI(g,p))ch.push(aiPickCamps(opts));else{if(g.mode==='hot')await passTo(g,p,'vybírá tábory');ch.push(await pickCamps(g,p,opts));}}}
  for(const p of[0,1]){g.pl[p].camps=ch[p].map(id=>({id,damaged:!!CAMPS[id].startDamaged,destroyed:false,used:false}));}
  for(const p of[0,1])drawTo(g,p,g.pl[p].camps.reduce((s,c)=>s+CAMPS[c.id].draw,0));
  if(g.camp!=null&&CHAP[g.camp].cards)drawTo(g,1,CHAP[g.camp].cards);
- g.cur=(g.camp!=null&&CHAP[g.camp].first)?1:(Math.random()<.5?0:1);log(g,`🎲 Začíná: ${g.names[g.cur]} (v prvním tahu má jen 1 💧).`);await beginTurn(g);}
+ if(DD&&DD.cards)drawTo(g,1,DD.cards);
+ g.cur=DD?DD.first:(g.camp!=null&&CHAP[g.camp].first)?1:(Math.random()<.5?0:1);log(g,`🎲 Začíná: ${g.names[g.cur]} (v prvním tahu má jen 1 💧).`);await beginTurn(g);}
 function passTo(g,p,what){return new Promise(res=>{g.pass={p,what,res};render();});}
 function pickCamps(g,p,opts){return new Promise(res=>{g.pick={p,opts,sel:[],res};render();});}
 async function beginTurn(g){const p=g.cur;g.turnNo=(g.turnNo||0)+1;stt(g,'turns',p);UNDO.clear();g.tf={peoplePlayed:0,eventResolved:false,abilitiesUsed:0,resonator:false,firstEvent:false,vera:false,hg:-1,junks:0};
@@ -1117,11 +1186,12 @@ const SFX={
  heal:()=>{tone(660,.12,'sine',.22);tone(990,.18,'sine',.2,0,.09);tone(1320,.22,'sine',.15,0,.18);},
  drop:()=>tone(1000,.09,'sine',.22,-600),
  fuse:()=>{noise(.45,.14,5000,0,'highpass');tone(1800,.05,'square',.04,0,.1);},
- raid:()=>{tone(70,.8,'sawtooth',.22,60);tone(105,.8,'sawtooth',.15,90);noise(.8,.2,600);},
+ raid:()=>{tone(70,1.6,'sawtooth',.22,90);tone(105,1.6,'sawtooth',.15,120);tone(55,1.6,'square',.08,40,.25);noise(1.6,.22,600);},
  turn:()=>{tone(523,.09,'square',.12);tone(784,.14,'square',.12,0,.09);},
  punk:()=>{tone(300,.08,'square',.12,200);noise(.05,.2,3000,.05);},
- win:()=>[523,659,784,1046,1318].forEach((f,i)=>tone(f,i==4?.5:.16,'square',.14,0,i*.13)),
- lose:()=>[392,370,349,311].forEach((f,i)=>tone(f,i==3?.8:.32,'triangle',.25,i==3?-60:-10,i*.3)),
+ win:()=>{[523,659,784,1046].forEach((f,i)=>tone(f,.15,'square',.13,0,i*.12));[[523,659,784],[587,740,880],[659,830,988,1318]].forEach((ch,j)=>ch.forEach(f=>tone(f,j==2?1.1:.28,'square',.08,0,.55+j*.3)));noise(.12,.35,1500,.55);noise(.12,.35,1500,.85);noise(.5,.4,900,1.15);},
+ shot:()=>{noise(.08,.4,2600,0,'highpass');tone(900,.12,'square',.08,-700);},
+ lose:()=>{[392,370,349,311].forEach((f,i)=>tone(f,i==3?1.1:.36,'sawtooth',.13,i==3?-60:-12,i*.36));[196,185,175,156].forEach((f,i)=>tone(f,i==3?1.1:.36,'triangle',.2,i==3?-30:-6,i*.36));noise(1.2,.15,300,1.1);},
  click:()=>tone(1100,.025,'square',.05)};
 
 function busGains(){if(!AC)return;MASTER.gain.value=SET.mOn?SET.mV/100:0;MG.gain.value=SET.sfx?SET.eV/100*1.25:0;MUSB.gain.value=SET.muOn?SET.muV/100*.55:0;AMBB.gain.value=SET.amOn?SET.aV/100:0;}
@@ -1165,7 +1235,7 @@ const MSTY={
 };
 const MUS={timer:null,style:null,want:null,step:0,next:0};
 function musTick(){if(!AC||!MUS.style)return;let guard=0;while(MUS.next<AC.currentTime+.15&&guard++<64){if(MUS.step%16===0&&MUS.want){MUS.style=MUS.want;MUS.want=null;MUS.step=0;}
- const S=MSTY[MUS.style],sp=60/S.bpm/4;try{S.play(MUS.next,MUS.step,sp);}catch(e){}MUS.next+=sp;MUS.step=(MUS.step+1)%(16*S.bars);}}
+ const S=MSTY[MUS.style],fin=MUS.style!=='camp'&&finale(),sp=60/(S.bpm*(fin?1.2:1))/4;try{S.play(MUS.next,MUS.step,sp);if(fin){const i=MUS.step%16;if(i%2===1)hat(MUS.next,.05);if(i===2||i===10)kick(MUS.next,.55);if(i===14||i===15)snare(MUS.next,.22);}}catch(e){}MUS.next+=sp;MUS.step=(MUS.step+1)%(16*S.bars);}}
 function musStop(){if(MUS.timer)clearInterval(MUS.timer);MUS.timer=null;MUS.style=null;MUS.want=null;}
 function musWanted(){if(typeof document!=='undefined'&&document.hidden)return null;if(!SET.muOn||!SET.mOn||!SET.muV||!SET.mV)return null;if(SET.mus&&SET.mus!=='auto')return SET.mus;
  if(UI.screen!=='game'||!G||G.over||G.pick||G.pass)return 'camp';return isAI(G,G.cur)?'tension':'rock';}
@@ -1221,12 +1291,32 @@ function flyRun(list){let n=0;list.forEach(f=>{if(f.type!=='fly'||!f.r0)return;l
  anim.onfinish=done;setTimeout(()=>{if(gh.isConnected)done();},delay+900);});}
 const VIB={hit:30,boom:[70,40,140],win:[60,50,60,50,220],lose:[350]};
 function vib(n){try{if(SET.vib!==false&&VIB[n]&&navigator.vibrate)navigator.vibrate(VIB[n]);}catch(e){}}
+
+/* ---------- 3.3: střely, konvoj, konfety ---------- */
+function shotRun(f,old){const a=document.querySelector(`[data-k="${f.txt}"]`),b=document.querySelector(`[data-k="${f.key}"]`);const r0=(a&&a.getBoundingClientRect())||old['@'+f.txt],r1=(b&&b.getBoundingClientRect())||old[f.key];if(!r0||!r1)return;
+ const x0=r0.left+r0.width/2,y0=r0.top+r0.height/2,x1=r1.left+r1.width/2,y1=r1.top+r1.height/2,ang=Math.atan2(y1-y0,x1-x0)*180/Math.PI;
+ const sh=document.createElement('div');sh.className='shot';document.body.appendChild(sh);sfx('shot');
+ const an=sh.animate([{transform:`translate(${x0}px,${y0}px) rotate(${ang}deg) scale(.6)`},{transform:`translate(${x1}px,${y1}px) rotate(${ang}deg) scale(1.1)`}],{duration:240,easing:'ease-in'});
+ an.onfinish=()=>{sh.remove();const fl=document.createElement('div');fl.className='muzzle';fl.style.left=x1+'px';fl.style.top=y1+'px';document.body.appendChild(fl);setTimeout(()=>fl.remove(),300);};
+ const mz=document.createElement('div');mz.className='muzzle sm';mz.style.left=x0+'px';mz.style.top=y0+'px';document.body.appendChild(mz);setTimeout(()=>mz.remove(),250);}
+const MOTO=`<svg viewBox="0 0 90 56"><circle cx="18" cy="42" r="12" fill="#222" stroke="#111" stroke-width="3"/><circle cx="18" cy="42" r="5" fill="#aaa"/><circle cx="72" cy="42" r="12" fill="#222" stroke="#111" stroke-width="3"/><circle cx="72" cy="42" r="5" fill="#aaa"/><path d="M18 42 L34 26 H58 L72 42 M40 26 l-6-8 h10" fill="none" stroke="#111" stroke-width="4" stroke-linejoin="round"/><path d="M30 30 H62 L56 20 H38Z" fill="#ff3d7f" stroke="#111" stroke-width="3"/><path d="M60 22 l10-6" stroke="#111" stroke-width="4" stroke-linecap="round"/><circle cx="46" cy="10" r="8" fill="#ffe14d" stroke="#111" stroke-width="3"/><path d="M40 10 h12" stroke="#111" stroke-width="3"/><path d="M44 18 l-4 10 h12" fill="#5a1e5e" stroke="#111" stroke-width="3"/></svg>`;
+const CAR=`<svg viewBox="0 0 150 70"><path d="M8 50 V34 L28 30 L44 12 H96 L112 30 H140 V50Z" fill="#c2384a" stroke="#111" stroke-width="3.5" stroke-linejoin="round"/><path d="M50 16 H72 V30 H38Z M78 16 H94 L106 30 H78Z" fill="#9fe2ff" stroke="#111" stroke-width="3"/><path d="M140 36 l8-4 M140 44 l9 0 M8 40 l-6 -3 M8 46 l-7 2" stroke="#111" stroke-width="3" stroke-linecap="round"/>${[16,26,36,46,56,66,76,86,96,106,116,126].map(x=>`<path d="M${x} 50 l3 -6 l3 6" fill="#ddd" stroke="#111" stroke-width="1.5"/>`).join('')}<path d="M44 12 l-6 -8 M60 12 l0 -9 M80 12 l4 -8" stroke="#111" stroke-width="3" stroke-linecap="round"/><circle cx="36" cy="54" r="13" fill="#222" stroke="#111" stroke-width="3"/><circle cx="36" cy="54" r="5" fill="#ffe14d"/><circle cx="114" cy="54" r="13" fill="#222" stroke="#111" stroke-width="3"/><circle cx="114" cy="54" r="5" fill="#ffe14d"/><rect x="58" y="34" width="30" height="8" fill="#ffe14d" stroke="#111" stroke-width="2"/><text x="73" y="41" font-size="8" text-anchor="middle" font-family="Impact" fill="#111">RAD</text></svg>`;
+function convoyRun(p){const me=G?viewer(G):0;const rtl=p!==me;const c=document.createElement('div');c.className='convoy'+(rtl?' rtl':'');
+ c.innerHTML=`<div class="cv-row"><div class="cv-dust"></div><div class="cv-v moto">${MOTO}</div><div class="cv-v car">${CAR}</div><div class="cv-v moto m2">${MOTO}</div></div><div class="cv-txt">NÁJEZD!</div>`;
+ document.body.appendChild(c);setTimeout(()=>c.remove(),2300);}
+function confettiRun(){const c=document.createElement('div');c.className='confetti';const cols=['#ff3d7f','#ffe14d','#2bb3a3','#5ab8f5','#ff8a3d','#fff'];
+ c.innerHTML=Array.from({length:70},(_,i)=>`<i style="left:${Math.random()*100}%;background:${cols[i%cols.length]};animation-delay:${(Math.random()*.9).toFixed(2)}s;animation-duration:${(2.2+Math.random()*1.6).toFixed(2)}s;--r:${Math.floor(Math.random()*720-360)}deg;--x:${Math.floor(Math.random()*120-60)}px;width:${6+Math.random()*7|0}px;height:${10+Math.random()*8|0}px"></i>`).join('');
+ document.body.appendChild(c);setTimeout(()=>c.remove(),4600);}
+function gloomRun(){document.body.classList.add('gloom');const a=document.getElementById('app');if(a){a.classList.remove('shake');void a.offsetWidth;a.classList.add('shake');}setTimeout(()=>document.body.classList.remove('gloom'),2600);}
+function duckMusic(sec){try{if(!AC||!MUSB)return;const t=AC.currentTime,v=MUSB.gain.value;MUSB.gain.cancelScheduledValues(t);MUSB.gain.setValueAtTime(v,t);MUSB.gain.linearRampToValueAtTime(v*.15,t+.2);MUSB.gain.setValueAtTime(v*.15,t+sec);MUSB.gain.linearRampToValueAtTime(v,t+sec+1.2);}catch(e){}}
+function finale(){return !!(G&&UI.screen==='game'&&!G.over&&!G.pick&&G.pl.some(P=>P.camps.filter(c=>!c.destroyed).length===1));}
 const WORDS={hit:['BAM!','ŠMÁK!','PRÁSK!','KAPOW!'],destroy:['KABOOM!','BUM!','RÁNA!'],heal:['FIX!','✚'],play:['TADY!'],punk:['PANK!']};
-function grabRects(){const old={};if(typeof document.querySelector!=='function')return old;try{flyGrab(old);}catch(e){}FX.forEach(f=>{if(f.key){const el=document.querySelector(`[data-k="${f.key}"]`);if(el)old[f.key]=el.getBoundingClientRect();}});return old;}
+function grabRects(){const old={};if(typeof document.querySelector!=='function')return old;try{flyGrab(old);}catch(e){}FX.forEach(f=>{if(f.type==='shot'&&f.txt){const el=document.querySelector(`[data-k="${f.txt}"]`);if(el)old['@'+f.txt]=el.getBoundingClientRect();}});FX.forEach(f=>{if(f.key){const el=document.querySelector(`[data-k="${f.key}"]`);if(el)old[f.key]=el.getBoundingClientRect();}});return old;}
 function floatWord(r,txt,cls){const d=document.createElement('div');d.className='fxw '+(cls||'');d.textContent=txt;d.style.left=(r.left+r.width/2)+'px';d.style.top=(r.top+r.height/2)+'px';document.body.appendChild(d);setTimeout(()=>d.remove(),950);}
 function runFX(old){const list=FX.splice(0);if(!SET.anim||typeof document.querySelector!=='function')return;try{if(document.body.animate)flyRun(list);}catch(e){}
  list.forEach(f=>{try{
   if(f.type==='fly')return;
+  if(f.type==='shot'){shotRun(f,old);return;}if(f.type==='convoy'){convoyRun(+f.txt);return;}if(f.type==='confetti'){confettiRun();return;}if(f.type==='gloom'){gloomRun();return;}
   if(f.type==='banner'){const b=document.createElement('div');b.className='fxbanner';b.innerHTML=`<span>${f.txt}</span>`;document.body.appendChild(b);setTimeout(()=>b.remove(),1300);return;}
   const el=f.key?document.querySelector(`[data-k="${f.key}"]`):null;const r=(el&&el.getBoundingClientRect())||old[f.key];if(!r)return;
   const w=f.txt||(WORDS[f.type]||[''])[Math.floor(Math.random()*(WORDS[f.type]||['']).length)];
@@ -1389,9 +1479,17 @@ function discHTML(g){const n=g.discard.length;if(!n)return `<div class="sheet-bg
  <div class="ln" style="opacity:.75">V odhazovacím balíčku: ${n} ${n===1?'karta':n<5?'karty':'karet'}. Klepnutím na kartu níže ji zobrazíš.</div><div class="pcards">${row}</div><div class="ctrl"><button class="btn" data-act="discClose">Zavřít</button></div></div></div>`;}
 
 /* ---------- aktualizace jen po potvrzení ---------- */
-const CHANGES={'3.1':['🃏 Karty se pohybují: zahraná karta odletí z ruky na stůl, dobraná přiletí z balíčku a otočí se, odhozená letí do 🗑.','📳 Vibrace telefonu při zásahu, zničení tábora a konci hry. Vypnout jdou v okně 🔊 Zvuk.'],'3.0':['🗺 Kampaň Pustina: 6 kapitol s příběhem, bossy a jejich pevnými tábory. Každá další je těžší.','🏅 Úspěchy: 20 výzev – od první výhry po porážku Warlorda bez ztráty tábora. Nový úspěch se ohlásí přímo ve hře.','Úspěchy a statistiky najdeš v menu pod dlaždicí 🏅 Úspěchy.'],'2.10':['🤖 Tři obtížnosti Automy: Nováček, Bandita a Warlord (promýšlí tahy dopředu). Volba v okně ✏️ v menu.','📊 Statistiky: výhry a prohry podle obtížnosti, série, nejrychlejší výhra a nejúspěšnější tábory.','✨ Animace se teď zapínají v okně Zvuk – v menu je místo nich dlaždice Statistiky.'],'2.9':['💡 Nápověda tahu: zvýrazní, co teď můžeš udělat, a doporučí nejlepší akci.','↩ Krok zpět: vrátí poslední akci v tahu (když se nedobírala karta).','🎓 Rady pro začátečníky: krátké bubliny vysvětlí vodu, události, nájezd a ochranu. Vypnout a znovu zapnout jdou v okně ✏️.'],'2.8':['Úvodní animace – klepnutím vstoupíš do hry a zapneš zvuk.','Nové uspořádání menu s ikonami, jména a tábory v okně ✏️.','Živá scéna pustiny se západem slunce v menu i za herním stolem (v tahu Automy zrudne).','Pravidla po stránkách – listuj přejetím prstem.'],'2.7':['Detail karty na průhledném pozadí – karta vyskočí nad stůl.','Aktualizace jen po potvrzení: Aktualizovat / Teď ne / Přeskočit tuto verzi.','U nové verze se ukáže, co se opravilo a co přibylo.','V menu je tlačítko verze s panelem aktualizací.'],
+const CHANGES={'3.4':['📅 Denní výzva: každý den nová, pro všechny stejná – dané tábory, soupeř a zamíchaný balíček. Sbírej sérii dní.','💾 Záloha postupu: úspěchy, kampaň, statistiky, nastavení i rozehranou hru uložíš do souboru nebo jako text a nahraješ zpět (třeba na nový telefon).','🏅 Dva nové úspěchy za denní výzvy.'],'3.3':['💥 Poškozené karty mají praskliny a saze, ze zničených táborů stoupá kouř.','🔫 Při útoku přeletí střela od útočníka k cíli.','🏍🚙🏍 Nájezd: přes obrazovku projede konvoj – motorka, auto a motorka v oblaku prachu.','🎉 Konfety a fanfára při výhře, smutná znělka a zešednutí při prohře.','🥁 Finále: když někomu zbývá poslední tábor, hudba zrychlí a přidá bubny.'],'3.2':['📜 Seznam změn: celá historie verzí od 1.0 – v menu pod tlačítkem verze.'],'3.1':['🃏 Karty se pohybují: zahraná karta odletí z ruky na stůl, dobraná přiletí z balíčku a otočí se, odhozená letí do 🗑.','📳 Vibrace telefonu při zásahu, zničení tábora a konci hry. Vypnout jdou v okně 🔊 Zvuk.'],'3.0':['🗺 Kampaň Pustina: 6 kapitol s příběhem, bossy a jejich pevnými tábory. Každá další je těžší.','🏅 Úspěchy: 20 výzev – od první výhry po porážku Warlorda bez ztráty tábora. Nový úspěch se ohlásí přímo ve hře.','Úspěchy a statistiky najdeš v menu pod dlaždicí 🏅 Úspěchy.'],'2.10':['🤖 Tři obtížnosti Automy: Nováček, Bandita a Warlord (promýšlí tahy dopředu). Volba v okně ✏️ v menu.','📊 Statistiky: výhry a prohry podle obtížnosti, série, nejrychlejší výhra a nejúspěšnější tábory.','✨ Animace se teď zapínají v okně Zvuk – v menu je místo nich dlaždice Statistiky.'],'2.9':['💡 Nápověda tahu: zvýrazní, co teď můžeš udělat, a doporučí nejlepší akci.','↩ Krok zpět: vrátí poslední akci v tahu (když se nedobírala karta).','🎓 Rady pro začátečníky: krátké bubliny vysvětlí vodu, události, nájezd a ochranu. Vypnout a znovu zapnout jdou v okně ✏️.'],'2.8':['Úvodní animace – klepnutím vstoupíš do hry a zapneš zvuk.','Nové uspořádání menu s ikonami, jména a tábory v okně ✏️.','Živá scéna pustiny se západem slunce v menu i za herním stolem (v tahu Automy zrudne).','Pravidla po stránkách – listuj přejetím prstem.'],'2.7':['Detail karty na průhledném pozadí – karta vyskočí nad stůl.','Aktualizace jen po potvrzení: Aktualizovat / Teď ne / Přeskočit tuto verzi.','U nové verze se ukáže, co se opravilo a co přibylo.','V menu je tlačítko verze s panelem aktualizací.'],
  '2.6':['Animované obrázky na kartách.','Vysouvací okna.','Prohlížení odhozených karet (🗑).','Mini-záznam po klepnutí na prostřední řádek.'],
- '2.5':['Hudba ve 4 stylech a zvuky pustiny.']};
+ 
+ '2.5.1':['Oprava: tlačítko 📜 Záznam na konci hry se schovávalo pod výsledek.'],
+ '2.5':['🎵 Hudba ve 4 stylech (pustinový rock, western, napětí, klid u ohně) – automaticky podle situace.','🌵 Zvuky pustiny: vítr, oheň, vrány, vzdálený motor.','Posuvníky hudby a zvuků v panelu Zvuk.'],
+ '2.4.1':['Při odhazování karet z ruky jsou vidět celé karty, klepnutím se zvětší.','Hra přejmenovaná na Radlands 2 s novou ikonou lebky.'],
+ '2.4':['Na telefonu na šířku se ukáže „Otoč telefon“.','Panel zvuku: hlasitost všech zvuků a efektů, vypnutí animací.'],
+ '2.0–2.3':['Rámečky karet ve stylu verze 1.4, černé rámečky táborů.','Jména a ikony lidí a událostí podle originálu.','Oprava poskakování karet po konci tahu a useknutého jména události.','Komiksové zvuky a efekty (BAM!, KABOOM!, TVŮJ TAH!).'],
+ '1.5–1.7':['Hra jako aplikace pro Android (instalace z GitHubu, funguje offline).','Úpravy menu a celé obrazovky, tlačítko Výchozí tábory.','Karty opravené podle fotek originálu.'],
+ '1.4':['Návrat do menu s automatickým uložením a pokračování v rozehrané hře.','Počítač se jmenuje Automa, změna jména hráče.','Tlačítko celé obrazovky, tlačítko Konec a číslo verze.'],
+ '1.0–1.3':['První verze: hra proti počítači i ve dvou, pravidla v kostce.','Komiksové karty a symboly podle originálu.','Celá hra na jedné obrazovce bez posouvání, karty v poměru 63×88 mm, výběr táborů pomocí karet.']};
 const UPDKEY='radlands2_upd_v1';let UPDS={auto:true,skip:''};try{Object.assign(UPDS,JSON.parse(localStorage.getItem(UPDKEY)||'{}'));}catch(e){}
 function saveUpd(){try{localStorage.setItem(UPDKEY,JSON.stringify(UPDS));}catch(e){}}
 const UPD={reg:null,info:null,state:'',newer:false,busy:false};
@@ -1406,6 +1504,10 @@ async function doUpdate(){if(UPD.busy)return;UPD.busy=true;UPD.state='updating';
  try{const reg=UPD.reg||(await navigator.serviceWorker.getRegistration());if(!reg){location.reload();return;}if(!reg.waiting){await reg.update().catch(()=>{});await waitInstalled(reg,20000);}
   if(reg.waiting){reg.waiting.postMessage('SKIP');setTimeout(()=>location.reload(),4000);}else{UPD.busy=false;UPD.state='fail';render();}}catch(e){UPD.busy=false;UPD.state='fail';render();}}
 function notesHTML(arr){return `<ul class="unotes">${(arr||[]).map(n=>`<li>${n}</li>`).join('')}</ul>`;}
+
+function changelogHTML(){const ks=Object.keys(CHANGES);
+ return `<div class="sheet-bg"><div class="sheet clogsheet"><div class="dname">📜 Seznam změn</div><div class="clog">${ks.map((k,i)=>`<details ${i<3?'open':''}><summary><b>v${k}</b>${k===APP_VERSION?'<span class="cur">nainstalováno</span>':''}</summary>${notesHTML(CHANGES[k])}</details>`).join('')}</div>
+ <div class="ctrl"><button class="btn" data-act="clogClose">Zavřít</button></div></div></div>`;}
 function updAskHTML(){const j=UPD.info;return `<div class="sheet-bg updbg"><div class="sheet updsheet"><div class="dname">⬇️ Nová verze ${j.version}</div><div class="ln">Máš verzi <b>${APP_VERSION}</b>. Co je nového:</div>${notesHTML(j.notes)}
  ${UPD.state==='updating'?'<div class="bstate">⏳ Stahuji a instaluji…</div>':UPD.state==='fail'?'<div class="bstate">⚠ Nepodařilo se stáhnout. Zkus to později.</div>':''}
  <div class="ctrl ucol"><button class="btn" data-act="updGo" ${UPD.busy?'disabled':''}>⬇️ Aktualizovat</button><button class="btn sec" data-act="updLater">Teď ne</button><button class="btn sec" data-act="updSkip">Přeskočit tuto verzi</button></div><div class="ln" style="font-size:13px;opacity:.75;text-align:center">Rozehraná hra zůstane uložená.</div></div></div>`;}
@@ -1413,6 +1515,7 @@ function updPanelHTML(){const st={checking:'🔄 Kontroluji…',latest:'✅ Má�
  return `<div class="sheet-bg"><div class="sheet updsheet"><div class="dname">⬇️ Aktualizace</div><div class="ln" style="text-align:center">Nainstalovaná verze: <b>${APP_VERSION}</b></div>
  <label class="ucheck"><input type="checkbox" data-act="updAuto" ${UPDS.auto?'checked':''}> Kontrolovat nové verze při spuštění</label>${st?`<div class="bstate">${st}</div>`:''}
  <div class="ln"><b>Co je nového ve verzi ${APP_VERSION}:</b></div>${notesHTML(CHANGES[APP_VERSION])}
+ <button class="btn sec" data-act="clog" style="width:100%;margin:2px 0 6px">📜 Seznam všech změn</button>
  <div class="ctrl">${UPD.newer?'<button class="btn" data-act="updShow">🆕 Zobrazit novou verzi</button>':`<button class="btn sec" data-act="updCheck">🔄 Zkontrolovat teď</button>`}<button class="btn sec" data-act="updClose">Zavřít</button></div>
  <div class="ln" style="font-size:13px;opacity:.75;text-align:center">Bez tvého potvrzení se hra sama nezmění.</div></div></div>`;}
 
@@ -1509,13 +1612,13 @@ function stRecord(g){if(SIM||g!==G||g.statDone)return;g.statDone=true;const S=st
  else if(w===1){R.l++;S.streak=0;}else R.dr++;
  stSave(S);}
 function statsHTML(){const S=stLoad();const tabs=`<div class="stabs"><button class="chipb ${UI.stTab!=='st'?'on':''}" data-act="stTab" data-arg="ach">🏅 Úspěchy</button><button class="chipb ${UI.stTab==='st'?'on':''}" data-act="stTab" data-arg="st">📊 Statistiky</button></div>`;
- if(UI.stTab!=='st')return `<div class="sheet-bg"><div class="sheet stsheet">${tabs}${achHTML()}<div class="ctrl"><button class="btn" data-act="stClose">Zavřít</button></div></div></div>`;const rows=Object.entries(DIFFS).map(([k,D])=>{const R=S.ai[k]||{w:0,l:0,dr:0},n=R.w+R.l+R.dr;return `<tr><td>${D.i} ${D.n}</td><td>${R.w}</td><td>${R.l}</td><td>${n?Math.round(R.w/n*100)+' %':'–'}</td></tr>`;}).join('');
+ if(UI.stTab!=='st')return `<div class="sheet-bg"><div class="sheet stsheet">${tabs}${achHTML()}<div class="ctrl"><button class="btn sec" data-act="bk">💾 Záloha</button><button class="btn" data-act="stClose">Zavřít</button></div></div></div>`;const rows=Object.entries(DIFFS).map(([k,D])=>{const R=S.ai[k]||{w:0,l:0,dr:0},n=R.w+R.l+R.dr;return `<tr><td>${D.i} ${D.n}</td><td>${R.w}</td><td>${R.l}</td><td>${n?Math.round(R.w/n*100)+' %':'–'}</td></tr>`;}).join('');
  const top=Object.entries(S.camps).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k,n])=>`${CAMPS[k]?CAMPS[k].name:k} <b>${n}×</b>`).join(' · ')||'–';
  return `<div class="sheet-bg"><div class="sheet stsheet">${tabs}
  <table class="sttab"><tr><th>Proti Automě</th><th>Výhry</th><th>Prohry</th><th>Úspěšnost</th></tr>${rows}</table>
  <div class="stgrid"><div><b>${S.streak}</b>aktuální série výher</div><div><b>${S.best}</b>nejdelší série</div><div><b>${S.fast?S.fast:'–'}</b>nejrychlejší výhra (tahů)</div><div><b>${S.dest}</b>zničených táborů Automy</div><div><b>${S.lost}</b>ztracených táborů</div><div><b>${S.hot}</b>her ve dvou</div></div>
  <div class="ln">🏕️ Nejčastější tábory při výhře: ${top}</div>
- <div class="ctrl"><button class="btn sec" data-act="stReset">${UI.stConfirm?'⚠ Opravdu vynulovat?':'Vynulovat'}</button><button class="btn" data-act="stClose">Zavřít</button></div></div></div>`;}
+ <div class="ctrl"><button class="btn sec" data-act="bk">💾 Záloha</button><button class="btn sec" data-act="stReset">${UI.stConfirm?'⚠ Opravdu vynulovat?':'Vynulovat'}</button><button class="btn" data-act="stClose">Zavřít</button></div></div></div>`;}
 
 /* ---------- 3.0: úspěchy a kampaň ---------- */
 function stt(g,k,p){if(SIM||!g)return;const S=g.stt=g.stt||{};const key=k+p;S[key]=(S[key]||0)+1;}
@@ -1541,6 +1644,8 @@ const ACH=[
  {id:'s3',i:'🔗',n:'Série tří',d:'Vyhraj 3 hry proti Automě v řadě.',end:g=>W0(g)&&stLoad().streak>=3},
  {id:'w10',i:'🎖',n:'Veterán',d:'Vyhraj celkem 10 her proti Automě.',end:g=>W0(g)&&Object.values(stLoad().ai).reduce((a,r)=>a+r.w,0)>=10},
  {id:'hot',i:'👥',n:'Kámoš u stolu',d:'Dohraj hru ve dvou na jednom telefonu.',end:g=>g.mode==='hot'},
+ {id:'dl1',i:'📅',n:'Denní dávka',d:'Splň denní výzvu.',end:g=>W0(g)&&!!g.daily},
+ {id:'dl7',i:'🗓',n:'Týden v pustině',d:'Splň denní výzvu 7 dní po sobě.',end:g=>W0(g)&&!!g.daily&&dlLoad().streak>=7},
  {id:'c1',i:'🗺',n:'Na cestě',d:'Dokonči 1. kapitolu kampaně.',end:g=>W0(g)&&g.camp===0},
  {id:'c3',i:'🧭',n:'V půli cesty',d:'Dokonči 3. kapitolu kampaně.',end:g=>W0(g)&&g.camp===2},
  {id:'c6',i:'☠️',n:'Vládce pustiny',d:'Dokonči celou kampaň.',end:g=>W0(g)&&g.camp===5}];
@@ -1570,6 +1675,53 @@ function campaignHTML(){const done=cpDone();const sel=UI.chap;
  <div class="cplist">${CHAP.map((C,i)=>{const st=i<done?'done':i===done?'open':'lock';return `<button class="cpitem ${st}" ${st==='lock'?'disabled':''} data-act="chap" data-arg="${i}"><span class="cpn">${st==='done'?'✔':st==='lock'?'🔒':i+1}</span><span class="cpt"><b>${C.n}</b><small>${C.b} · ${DIFFS[C.diff].i} ${DIFFS[C.diff].n}</small></span>${st==='open'?'<span class="cpgo">▶</span>':''}</button>`;}).join('')}</div>
  ${done>=CHAP.length?'<div class="bstate">👑 Kampaň dokončena! Kapitoly můžeš hrát znovu.</div>':''}
  <div class="ctrl"><button class="btn" data-act="cpClose">Zavřít</button></div></div></div>`;}
+
+/* ---------- 3.4: denní výzva ---------- */
+function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function withSeed(seed,fn){const r=Math.random;Math.random=mulberry(seed);try{return fn();}finally{Math.random=r;}}
+function dayKey(d){d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function dayShift(k,n){const[y,m,d]=k.split('-').map(Number);return dayKey(new Date(y,m-1,d+n));}
+const DBOSS=['Písečná Zmije','Kapitán Šrot','Bratři Rzi','Madam Benzín','Starý Prorok','Kovová Vdova','Šílený Max','Kojot Joe','Baron Kanystr','Sestra Popel'];
+const DMODS=[{t:'Bez zvláštností.'},{t:'Soupeř začíná.',first:1},{t:'Soupeř má 2 karty navíc.',cards:2},{t:'Začínáš ty.',me:1},{t:'Soupeř má 1 kartu navíc a začíná.',cards:1,first:1}];
+function dailyDef(k){const[y,m,d]=k.split('-').map(Number);const seed=y*10000+m*100+d;const wd=new Date(y,m-1,d).getDay();
+ return withSeed(seed,()=>{const cs=shuffle(Object.keys(CAMPS));const mod=DMODS[Math.floor(Math.random()*DMODS.length)];
+  const diff=[ 'warlord','novacek','bandita','bandita','bandita','warlord','warlord'][wd];
+  return {k,seed,mine:cs.slice(0,3),ai:cs.slice(3,6),diff,boss:DBOSS[Math.floor(Math.random()*DBOSS.length)],mod:mod.t,cards:mod.cards||0,first:mod.first?1:mod.me?0:(Math.random()<.5?0:1)};});}
+const DLKEY='radlands2_daily_v1';
+function dlLoad(){let D=null;try{D=JSON.parse(lsGet(DLKEY)||'null');}catch(e){}return Object.assign({res:{},streak:0,best:0,lastWin:''},D||{});}
+function dlRecord(g){if(SIM||g!==G||!g.daily||g.dlDone)return;g.dlDone=true;const D=dlLoad(),k=g.daily,R=D.res[k]=D.res[k]||{w:0,tries:0};R.tries++;
+ if(W0(g)&&!R.w){R.w=1;R.t=(g.stt||{}).turns0||0;D.streak=(D.lastWin===dayShift(k,-1))?D.streak+1:1;D.lastWin=k;D.best=Math.max(D.best,D.streak);}
+ const ks=Object.keys(D.res).sort();if(ks.length>60)ks.slice(0,ks.length-60).forEach(x=>delete D.res[x]);lsSet(DLKEY,JSON.stringify(D));}
+function dlStreakNow(){const D=dlLoad(),t=dayKey();return (D.lastWin===t||D.lastWin===dayShift(t,-1))?D.streak:0;}
+function dailyHTML(){const k=dayKey(),Dd=dailyDef(k),D=dlLoad(),R=D.res[k],Df=DIFFS[Dd.diff];
+ const days=Array.from({length:7},(_,i)=>dayShift(k,i-6)).map(x=>{const r=D.res[x];const[,m,d]=x.split('-');return `<span class="dday ${r&&r.w?'w':r?'l':''} ${x===k?'today':''}"><b>${+d}.</b>${r&&r.w?'✔':r?'✖':'·'}</span>`;}).join('');
+ const nm=id=>CAMPS[id].name;
+ return `<div class="sheet-bg"><div class="sheet dlsheet"><div class="dname">📅 Denní výzva</div><div class="ln" style="text-align:center;opacity:.8">${new Date().toLocaleDateString('cs-CZ',{weekday:'long',day:'numeric',month:'long'})}</div>
+ <div class="cpboss"><span>${Df.i}</span><div><b>${Dd.boss}</b><small>${Df.n} · ${Dd.mod}</small></div></div>
+ <div class="dlcamps"><div><small>Tvé tábory</small>${Dd.mine.map(nm).join('<br>')}</div><div><small>Tábory soupeře</small>${Dd.ai.map(nm).join('<br>')}</div></div>
+ <div class="bstate">${R&&R.w?`✔ Dnešní výzva splněna${R.t?` za ${R.t} tahů`:''}! Můžeš ji hrát znovu.`:R?`Pokusů dnes: ${R.tries}. Zkus to znovu!`:'Dnes jsi ještě nehrál. Všichni mají stejné tábory i balíček.'}</div>
+ <div class="ddays">${days}</div><div class="ln" style="text-align:center">🔥 Série: <b>${dlStreakNow()}</b> ${dlStreakNow()===1?'den':dlStreakNow()>1&&dlStreakNow()<5?'dny':'dní'} · nejdelší ${D.best}</div>
+ <div class="ctrl"><button class="btn sec" data-act="dlClose">Zavřít</button><button class="btn" data-act="dlGo">⚔ Hrát výzvu</button></div></div></div>`;}
+/* ---------- 3.4: záloha ---------- */
+function bkData(){const o={};try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('radlands2_'))o[k]=localStorage.getItem(k);}}catch(e){}return {app:'radlands2',v:APP_VERSION,t:Date.now(),data:o};}
+function bkText(){return JSON.stringify(bkData());}
+function bkExport(){try{const b=new Blob([bkText()],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='radlands2-zaloha-'+dayKey()+'.json';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1500);UI.bkMsg='✔ Soubor se zálohou se stahuje (složka Stažené).';}catch(e){UI.bkMsg='⚠ Stažení se nepodařilo – použij Kopírovat jako text.';}render();}
+async function bkCopy(){try{await navigator.clipboard.writeText(bkText());UI.bkMsg='✔ Záloha zkopírována – vlož ji třeba do poznámek nebo zprávy.';}catch(e){UI.bkShow=true;UI.bkMsg='Zkopíruj text ze zobrazeného pole ručně.';}render();}
+function bkImport(txt){let o=null;try{o=JSON.parse(String(txt).trim());}catch(e){}
+ if(!o||o.app!=='radlands2'||!o.data||typeof o.data!=='object'){UI.bkMsg='⚠ Tohle není záloha Radlands 2.';render();return;}
+ try{Object.keys(o.data).forEach(k=>{if(k.startsWith('radlands2_'))localStorage.setItem(k,o.data[k]);});}catch(e){UI.bkMsg='⚠ Zálohu se nepodařilo uložit.';render();return;}
+ UI.bkMsg='✔ Záloha z '+new Date(o.t).toLocaleDateString('cs-CZ')+' nahrána. Hra se načte znovu…';render();setTimeout(()=>location.reload(),1200);}
+function backupHTML(){const n=Object.keys(bkData().data).length;
+ return `<div class="sheet-bg"><div class="sheet bksheet"><div class="dname">💾 Záloha postupu</div>
+ <div class="ln">Uloží úspěchy, kampaň, statistiky, denní výzvy, nastavení, jména i rozehranou hru (${n} ${n===1?'položka':n>1&&n<5?'položky':'položek'}). Hodí se při výměně telefonu nebo před smazáním dat prohlížeče.</div>
+ <div class="bkgrid"><button class="btn" data-act="bkExport">⬇️ Uložit do souboru</button><button class="btn sec" data-act="bkCopy">📋 Kopírovat jako text</button>
+ <label class="btn sec bkfile">⬆️ Nahrát ze souboru<input type="file" accept=".json,application/json,text/plain" data-bkfile="1" hidden></label><button class="btn sec" data-act="bkPaste">📥 Vložit text</button></div>
+ ${UI.bkShow?`<textarea class="bktxt" readonly onclick="this.select()">${bkText().replace(/</g,'&lt;')}</textarea>`:''}
+ ${UI.bkPaste?`<textarea class="bktxt" id="bkIn" placeholder="Sem vlož text zálohy…"></textarea><button class="btn" data-act="bkPasteGo" style="width:100%">Nahrát vložený text</button>`:''}
+ ${UI.bkMsg?`<div class="bstate">${UI.bkMsg}</div>`:''}
+ <div class="ln" style="font-size:13px;opacity:.75">Nahrání zálohy přepíše současný postup v tomto telefonu.</div>
+ <div class="ctrl"><button class="btn" data-act="bkClose">Zavřít</button></div></div></div>`;}
+document.addEventListener('change',e=>{const t=e.target;if(t&&t.dataset&&t.dataset.bkfile&&t.files&&t.files[0]){const r=new FileReader();r.onload=()=>bkImport(r.result);r.readAsText(t.files[0]);}});
 function logHTML(g){return `<div class="sheet-bg"><div class="sheet logsheet"><div class="dname">📜 Záznam hry</div><div class="loglist">${g.log.slice().reverse().map(s=>`<div>${s}</div>`).join('')}</div><div class="ctrl"><button class="btn" data-act="closeLog">Zavřít</button></div></div></div>`;}
 function menuHTML(){const sv=loadSaved();let cont='';
  if(sv){const g=sv.g;const alive=q=>3-g.pl[q].camps.filter(c=>c.destroyed).length;cont=`<button class="btn big mresume" data-act="resume">▶ Pokračovat ve hře</button><div class="svinfo">${g.names[0]} (${alive(0)}🏕) vs. ${g.names[1]} (${alive(1)}🏕) · ${new Date(sv.t).toLocaleString('cs-CZ',{day:'numeric',month:'numeric',hour:'2-digit',minute:'2-digit'})} · v${sv.v||'?'} <span data-act="delsave" class="dl">smazat</span></div>`;}
@@ -1578,7 +1730,7 @@ function menuHTML(){const sv=loadSaved();let cont='';
  <div class="mgap"></div>
  ${cont}
  <button class="btn big ${sv?'sec':''}" data-act="newAI">🤖 Hrát proti Automě</button>
- <div class="mrow"><button class="btn big cpbtn" data-act="cp">🗺 Kampaň <small>${cpDone()}/${CHAP.length}</small></button><button class="btn big teal" data-act="newHot">👥 Ve dvou</button></div>
+ <div class="mrow m3"><button class="btn big cpbtn" data-act="cp"><span class="mi">🗺</span>Kampaň<small>${cpDone()}/${CHAP.length}</small></button><button class="btn big dlbtn ${(dlLoad().res[dayKey()]||{}).w?'done':''}" data-act="dl"><span class="mi">📅</span>Výzva<small>${(dlLoad().res[dayKey()]||{}).w?'✔ splněno':'dnes nová!'}</small></button><button class="btn big teal" data-act="newHot"><span class="mi">👥</span>Ve&nbsp;dvou<small>1 telefon</small></button></div>
  <button class="mplayers" data-act="players"><span>👤 <b>${UI.n1||'Hráč'}</b></span><span>${DIFFS[UI.diff||'bandita'].i} <b>${DIFFS[UI.diff||'bandita'].n}</b></span><span>${UI.starter?'🏕️ výchozí tábory':'🎲 výběr táborů'}</span><span class="ed">✏️</span></button>
  <div class="mtiles">${tile('rules','📖','Pravidla')}${tile('snd',SET.mOn?'🔊':'🔇','Zvuk',SET.mOn)}${tile('stats','🏅','Úspěchy')}${FS_OK?tile('fs',ic(isFS()?'fsOff':'fsOn'),isFS()?'Zmenšit':'Na celou'):''}${tile('quit','🚪','Konec')}</div>
  <p class="foot"><button class="vbtn ${UPD.newer?'new':''}" data-act="upd">⬇️ Verze ${APP_VERSION}${UPD.newer?' · NOVÁ!':''}</button> · Neoficiální fanouškovská adaptace hry Daniela Piechnicka (Roxley / TLAMA games).</p>`;}
@@ -1594,7 +1746,9 @@ function pickHTML(g){const pk=g.pick;return `<div class="dname" style="margin-to
  <div class="picks">${pk.opts.map(id=>`<div class="pkc">${cardFace(g,CAMPS[id],{act:'pickT',arg:id,cls:pk.sel.includes(id)?'sel':''})}${pk.sel.includes(id)?'<span class="pkok">✔</span>':''}</div>`).join('')}</div>
  <button class="btn big" data-act="pickOK" ${pk.sel.length===3?'':'disabled'}>Potvrdit (${pk.sel.length}/3)</button>`;}
 function overHTML(g){return `<div class="full" style="background:var(--halft),rgba(255,225,77,.95)"><div style="font-size:60px">${g.over.winner==null?'🤝':(g.mode==='ai'&&g.over.winner===1?'💀':'🏆')}</div><h2>${g.over.msg}</h2>${g.camp!=null?(W0(g)?`<div class="bstate">🗺 Kapitola ${g.camp+1} „${CHAP[g.camp].n}“ dokončena!</div>`:`<div class="bstate">🗺 ${CHAP[g.camp].b} tě tentokrát porazil. Zkus to znovu!</div>`):''}
+ ${g.daily?(W0(g)?`<div class="bstate">📅 Denní výzva splněna! Série: ${dlLoad().streak} 🔥</div>`:`<div class="bstate">📅 Denní výzva zatím nesplněna – zkus to znovu.</div>`):''}
  ${(g.newAch||[]).length?`<div class="overach">${g.newAch.map(id=>{const a=ACH.find(x=>x.id===id);return `<span>${a.i} ${a.n}</span>`;}).join('')}</div>`:''}
+ ${g.daily&&!W0(g)?`<button class="btn big teal" data-act="dlAgain">↻ Zkusit znovu</button>`:''}
  ${g.camp!=null?`<button class="btn big teal" data-act="cpNext" data-arg="${W0(g)?Math.min(g.camp+1,CHAP.length-1):g.camp}">${W0(g)?(g.camp+1<CHAP.length?'▶ Další kapitola':'🗺 Kampaň'):'↻ Zkusit znovu'}</button>`:''}
  <button class="btn big" data-act="menu">Hlavní menu</button><button class="btn big sec" data-act="log">📜 Záznam</button></div>`;}
 function render(){if(SIM)return;let h='';const g=G;
@@ -1604,7 +1758,7 @@ function render(){if(SIM)return;let h='';const g=G;
  else if(g.pick)h=pickHTML(g);
  else if(!g.pl[0].camps.length||!g.pl[1].camps.length)h='<div class="status">Příprava…</div>';
  else{h=gameHTML(g);h+=hintBar(g);if(!g.prompt&&!g.over)h+=tipHTML(g);if(g.detail)h+=detailHTML(g);if(g.prompt)h+=promptHTML(g);if(UI.disc!=null&&UI.disc!==false)h+=discHTML(g);if(g.over&&!UI.log)h+=overHTML(g);if(UI.log)h+=logHTML(g);}
- if(g&&UI.screen==='game')saveGame(g);if(UI.snd)h+=sndHTML();if(UI.players)h+=playersHTML();if(UI.stats)h+=statsHTML();if(UI.cp)h+=campaignHTML();if(UI.upd)h+=updPanelHTML();if(UI.updAsk&&UPD.newer&&UPD.info&&(UI.screen==='menu'||!g)&&!UI.quit)h+=updAskHTML();if(UI.rules)h+=rulesHTML();$app.className=((g&&UI.screen==='game'&&!g.pass)?(g.pick?'pickmode':'game'):((UI.screen==='menu'||!g)&&!UI.quit?'menu':''))+(SET.anim?'':' noanim');
+ if(g&&UI.screen==='game')saveGame(g);if(UI.snd)h+=sndHTML();if(UI.players)h+=playersHTML();if(UI.stats)h+=statsHTML();if(UI.cp)h+=campaignHTML();if(UI.dl)h+=dailyHTML();if(UI.bk)h+=backupHTML();if(UI.upd)h+=updPanelHTML();if(UI.clog)h+=changelogHTML();if(UI.updAsk&&UPD.newer&&UPD.info&&(UI.screen==='menu'||!g)&&!UI.quit)h+=updAskHTML();if(UI.rules)h+=rulesHTML();$app.className=((g&&UI.screen==='game'&&!g.pass)?(g.pick?'pickmode':'game'):((UI.screen==='menu'||!g)&&!UI.quit?'menu':''))+(SET.anim?'':' noanim');
  try{$app.style.setProperty('--adl',(-(performance.now()/1000)%16).toFixed(2)+'s');}catch(e){}
  h+=toastHTML();const _old=grabRects();$app.innerHTML=h;hintGlow();fitCards();runFX(_old);try{handCache();}catch(e){}sheetIn();audioUpdate();sceneMode();UI._newLog=false;UI.rdir=0;}
 function hintGlow(){const H=UI._hk;if(!H||typeof document.querySelectorAll!=='function')return;H.ks.forEach(k=>{const el=document.querySelector(`#app [data-k="${k}"]`);if(el){el.classList.add('hintc');if(H.best&&H.best.k===k)el.classList.add('hintbest');}});}
@@ -1639,13 +1793,13 @@ document.addEventListener('visibilitychange',()=>audioUpdate());
 document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('.btn'))sfx('click');if(e.target.closest('input[data-name]'))return;const a=e.target.closest('[data-act]');
  if(a){const act_=a.dataset.act,arg=a.dataset.arg;handle(act_,arg,a);return;}
  const k=e.target.closest('[data-k]');if(k&&G){const key=k.dataset.k;if(G.prompt){const o=G.prompt.options.find(o=>o.ref&&keyOf(o.ref)===key);if(o&&o.ref.t!=='hand'){resolvePrompt(o);return;}}G.detail=key;render();return;}
- if(e.target.classList.contains('sheet-bg')){if(G)G.detail=null;UI.rules=false;UI.log=false;UI.snd=false;UI.disc=false;UI.upd=false;UI.players=false;UI.stats=false;UI.cp=false;UI.chap=null;if(!UPD.busy)UI.updAsk=false;render();}});
+ if(e.target.classList.contains('sheet-bg')){if(G)G.detail=null;UI.rules=false;UI.log=false;UI.snd=false;UI.disc=false;UI.upd=false;UI.players=false;UI.stats=false;UI.clog=false;UI.dl=false;UI.bk=false;UI.cp=false;UI.chap=null;if(!UPD.busy)UI.updAsk=false;render();}});
 function handle(a,arg,el){const g=G;const p=g?g.cur:0;
  switch(a){
  case 'newAI':newGame('ai');break;case 'newHot':newGame('hot');break;
  case 'starter':UI.starter=el.checked;break;
  case 'rules':UI.rules=true;UI.rpage=UI.rpage||0;render();break;case 'closeRules':UI.rules=false;render();break;
- case 'upd':UI.upd=true;render();break;case 'updClose':UI.upd=false;render();break;case 'updCheck':checkUpdate(true);break;case 'updShow':UI.upd=false;UI.updAsk=true;render();break;
+ case 'upd':UI.upd=true;render();break;case 'clog':UI.clog=true;render();break;case 'clogClose':UI.clog=false;render();break;case 'updClose':UI.upd=false;render();break;case 'updCheck':checkUpdate(true);break;case 'updShow':UI.upd=false;UI.updAsk=true;render();break;
  case 'updAuto':UPDS.auto=el.checked;saveUpd();break;case 'updGo':doUpdate();break;case 'updLater':UI.updAsk=false;render();break;case 'updSkip':UPDS.skip=UPD.info?UPD.info.version:'';saveUpd();UI.updAsk=false;render();break;
  case 'log':UI.log=true;UI.mlog=false;render();break;case 'mlog':UI.mlog=!UI.mlog;render();break;case 'mlClose':UI.mlog=false;render();break;
  case 'disc':UI.disc=0;UI.mlog=false;render();break;case 'discSel':UI.disc=+arg;render();break;case 'discClose':UI.disc=false;render();break;case 'closeLog':UI.log=false;render();break;
@@ -1659,7 +1813,9 @@ function handle(a,arg,el){const g=G;const p=g?g.cur:0;
  case 'sw':SET[arg]=el.checked;saveSet();if(ac()){busGains();audioUpdate();}render();if(el.checked&&(arg==='sfx'||arg==='mOn'))sfx('turn');if(el.checked&&arg==='amOn'){try{aCrow();}catch(x){}}break;
  case 'tAnim':SET.anim=!SET.anim;saveSet();render();break;
  case 'starterT':UI.starter=!UI.starter;render();break;case 'players':UI.players=true;render();break;case 'stats':UI.stats=true;render();break;case 'stTab':UI.stTab=arg;render();break;
- case 'cp':UI.cp=true;UI.chap=null;render();break;case 'cpClose':UI.cp=false;UI.chap=null;render();break;case 'chap':UI.chap=+arg;render();break;case 'chapBack':UI.chap=null;render();break;
+ case 'cp':UI.cp=true;UI.chap=null;render();break;
+ case 'dl':UI.dl=true;render();break;case 'dlClose':UI.dl=false;render();break;case 'dlGo':UI.dl=false;newGame('ai',null,dayKey());break;case 'dlAgain':{const k=g&&g.daily||dayKey();lsDel(SKEY);newGame('ai',null,k);break;}
+ case 'bk':UI.bk=true;UI.bkMsg='';UI.bkShow=false;UI.bkPaste=false;UI.stats=false;render();break;case 'bkClose':UI.bk=false;render();break;case 'bkExport':bkExport();break;case 'bkCopy':bkCopy();break;case 'bkPaste':UI.bkPaste=true;render();break;case 'bkPasteGo':{const t=document.getElementById('bkIn');bkImport(t?t.value:'');break;}case 'cpClose':UI.cp=false;UI.chap=null;render();break;case 'chap':UI.chap=+arg;render();break;case 'chapBack':UI.chap=null;render();break;
  case 'chapGo':{const i=UI.chap;UI.cp=false;UI.chap=null;newGame('ai',i);break;}
  case 'cpNext':{if(G)lsDel(SKEY);UI.screen='menu';UI.cp=true;UI.chap=+arg;G=null;render();break;}case 'stClose':UI.stats=false;render();break;case 'stReset':if(UI.stConfirm){lsDel(STKEY);UI.stConfirm=false;}else{UI.stConfirm=true;setTimeout(()=>{UI.stConfirm=false;render();},3000);}render();break;
  case 'diff':UI.diff=arg;saveNames();render();break;case 'playersClose':UI.players=false;render();break;
