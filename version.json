@@ -1,9 +1,11 @@
 {
-  "version": "3.4",
+  "version": "3.5",
   "date": "2026-11-19",
   "notes": [
-    "📅 Denní výzva: každý den nová, pro všechny stejná – dané tábory, soupeř a zamíchaný balíček. Sbírej sérii dní.",
-    "💾 Záloha postupu: úspěchy, kampaň, statistiky, nastavení i rozehranou hru uložíš do souboru nebo jako text a nahraješ zpět (třeba na nový telefon).",
-    "🏅 Dva nové úspěchy za denní výzvy."
+    "💤 Nepřipravení lidé jsou vybledlí s ikonou 💤, připravení k akci jemně svítí.",
+    "➕ Volná místa na stole ukážou „+“, když máš v ruce člověka, kterého můžeš zahrát.",
+    "💧 Placení vodou: kapky odletí k zahrané kartě nebo použité schopnosti, zvuk kapek podle ceny.",
+    "🤖 Během tahu Automy se ukáže „Automa přemýšlí…“.",
+    "💣 Doutnáky u událostí ve frontě – čím blíž k vyhodnocení, tím rychleji hoří a syčí."
   ]
 }

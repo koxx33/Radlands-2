@@ -1,6 +1,6 @@
 // Radlands 2 – ukládání pro hraní offline + aktualizace jen po potvrzení
 const PREFIX = 'radlands2-';
-const VERSION = PREFIX + '3.4';
+const VERSION = PREFIX + '3.5';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
 self.addEventListener('install', e => {
   // nová verze se stáhne do zásoby, ale počká, dokud hráč nepotvrdí „Aktualizovat“
